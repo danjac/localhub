@@ -19,8 +19,8 @@ from bleach.linkifier import TLDS, LinkifyFilter, build_url_re
 from markdownx.utils import markdownify as default_markdownify
 
 # Localhub
-from localhub.apps.hashtags.utils import linkify_hashtags
-from localhub.apps.users.utils import get_preview_attrs, linkify_mentions
+from localhub.hashtags.utils import linkify_hashtags
+from localhub.users.utils import get_preview_attrs, linkify_mentions
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "abbr",

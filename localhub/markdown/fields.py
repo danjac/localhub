@@ -20,8 +20,8 @@ from django.utils.safestring import mark_safe
 from markdownx.models import MarkdownxField
 
 # Localhub
-from localhub.apps.hashtags.utils import extract_hashtags
-from localhub.apps.users.utils import extract_mentions
+from localhub.hashtags.utils import extract_hashtags
+from localhub.users.utils import extract_mentions
 
 # Local
 from .utils import markdownify

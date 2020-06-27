@@ -9,8 +9,8 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
-from localhub.apps.hashtags.app_settings import HASHTAGS_TYPEAHEAD_CONFIG
-from localhub.apps.users.app_settings import MENTIONS_TYPEAHEAD_CONFIG
+from localhub.hashtags.app_settings import HASHTAGS_TYPEAHEAD_CONFIG
+from localhub.users.app_settings import MENTIONS_TYPEAHEAD_CONFIG
 
 
 class ClearableImageInput(forms.ClearableFileInput):

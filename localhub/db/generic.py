@@ -45,7 +45,7 @@ def get_generic_related_exists(
     relation.
 
     For an example see LikesAnnotationQuerySetMixin in
-    localhub.apps.likes/models.py.
+    localhub.likes/models.py.
 
     Args:
         model (Model or Queryset): model class or QuerySet instance
@@ -81,7 +81,7 @@ def get_generic_related_count_subquery(
     relation.
 
     For an example see LikesAnnotationQuerySetMixin in
-    localhub.apps.likes/models.py.
+    localhub.likes/models.py.
 
     Args:
         model (Model or Queryset): model class or QuerySet instance

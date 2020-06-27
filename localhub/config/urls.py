@@ -9,37 +9,33 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 # Localhub
-from localhub.apps.activities.views.streams import activity_stream_view
-from localhub.apps.communities.views import (
+from localhub.activities.views.streams import activity_stream_view
+from localhub.communities.views import (
     community_list_view,
     community_not_found_view,
     community_welcome_view,
 )
-from localhub.apps.users.views import (
-    dismiss_notice_view,
-    user_delete_view,
-    user_update_view,
-)
+from localhub.users.views import dismiss_notice_view, user_delete_view, user_update_view
 
 urlpatterns = [
     # Local
     path("", view=activity_stream_view, name="activity_stream"),
-    path("", include("localhub.apps.activities.urls")),
-    path("bookmarks/", include("localhub.apps.bookmarks.urls")),
-    path("comments/", include("localhub.apps.comments.urls")),
-    path("events/", include("localhub.apps.events.urls")),
-    path("flags/", include("localhub.apps.flags.urls")),
-    path("invites/", include("localhub.apps.invites.urls")),
-    path("join-requests/", include("localhub.apps.join_requests.urls")),
-    path("notifications/", include("localhub.apps.notifications.urls")),
-    path("favorites/", include("localhub.apps.likes.urls")),
-    path("messages/", include("localhub.apps.private_messages.urls")),
-    path("photos/", include("localhub.apps.photos.urls")),
-    path("polls/", include("localhub.apps.polls.urls")),
-    path("posts/", include("localhub.apps.posts.urls")),
-    path("people/", include("localhub.apps.users.urls")),
-    path("community/", include("localhub.apps.communities.urls")),
-    path("tags/", include("localhub.apps.hashtags.urls")),
+    path("", include("localhub.activities.urls")),
+    path("bookmarks/", include("localhub.bookmarks.urls")),
+    path("comments/", include("localhub.comments.urls")),
+    path("events/", include("localhub.events.urls")),
+    path("flags/", include("localhub.flags.urls")),
+    path("invites/", include("localhub.invites.urls")),
+    path("join-requests/", include("localhub.join_requests.urls")),
+    path("notifications/", include("localhub.notifications.urls")),
+    path("favorites/", include("localhub.likes.urls")),
+    path("messages/", include("localhub.private_messages.urls")),
+    path("photos/", include("localhub.photos.urls")),
+    path("polls/", include("localhub.polls.urls")),
+    path("posts/", include("localhub.posts.urls")),
+    path("people/", include("localhub.users.urls")),
+    path("community/", include("localhub.communities.urls")),
+    path("tags/", include("localhub.hashtags.urls")),
     path("communities/", community_list_view, name="community_list"),
     path("account/~update", user_update_view, name="user_update"),
     path("account/~delete", user_delete_view, name="user_delete"),

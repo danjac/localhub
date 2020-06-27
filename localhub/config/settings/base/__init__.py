@@ -55,22 +55,22 @@ ROOT_URLCONF = "localhub.config.urls"
 WSGI_APPLICATION = "localhub.config.wsgi.application"
 
 LOCAL_APPS = [
-    "localhub.apps.activities.apps.ActivitiesConfig",
-    "localhub.apps.bookmarks.apps.BookmarksConfig",
-    "localhub.apps.comments.apps.CommentsConfig",
-    "localhub.apps.communities.apps.CommunitiesConfig",
-    "localhub.apps.events.apps.EventsConfig",
-    "localhub.apps.flags.apps.FlagsConfig",
-    "localhub.apps.hashtags.apps.HashtagsConfig",
-    "localhub.apps.invites.apps.InvitesConfig",
-    "localhub.apps.join_requests.apps.JoinRequestsConfig",
-    "localhub.apps.likes.apps.LikesConfig",
-    "localhub.apps.notifications.apps.NotificationsConfig",
-    "localhub.apps.photos.apps.PhotosConfig",
-    "localhub.apps.polls.apps.PollsConfig",
-    "localhub.apps.posts.apps.PostsConfig",
-    "localhub.apps.private_messages.apps.PrivateMessagesConfig",
-    "localhub.apps.users.apps.UsersConfig",
+    "localhub.activities.apps.ActivitiesConfig",
+    "localhub.bookmarks.apps.BookmarksConfig",
+    "localhub.comments.apps.CommentsConfig",
+    "localhub.communities.apps.CommunitiesConfig",
+    "localhub.events.apps.EventsConfig",
+    "localhub.flags.apps.FlagsConfig",
+    "localhub.hashtags.apps.HashtagsConfig",
+    "localhub.invites.apps.InvitesConfig",
+    "localhub.join_requests.apps.JoinRequestsConfig",
+    "localhub.likes.apps.LikesConfig",
+    "localhub.notifications.apps.NotificationsConfig",
+    "localhub.photos.apps.PhotosConfig",
+    "localhub.polls.apps.PollsConfig",
+    "localhub.posts.apps.PostsConfig",
+    "localhub.private_messages.apps.PrivateMessagesConfig",
+    "localhub.users.apps.UsersConfig",
 ]
 
 
@@ -106,11 +106,11 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "localhub.middleware.turbolinks.TurbolinksMiddleware",
-    "localhub.apps.communities.middleware.CurrentCommunityMiddleware",
+    "localhub.communities.middleware.CurrentCommunityMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "localhub.apps.users.middleware.UserLocaleMiddleware",
+    "localhub.users.middleware.UserLocaleMiddleware",
     "django.middleware.gzip.GZipMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -156,7 +156,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = "account_login"
 LOGIN_REDIRECT_URL = HOME_PAGE_URL
 
-ACCOUNT_USER_DISPLAY = "localhub.apps.users.utils.user_display"
+ACCOUNT_USER_DISPLAY = "localhub.users.utils.user_display"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
@@ -167,7 +167,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-SOCIALACCOUNT_ADAPTER = "localhub.apps.users.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "localhub.users.adapters.SocialAccountAdapter"
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -224,7 +224,7 @@ MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
 }
 
 # https://micawber.readthedocs.io/en/latest/django.html
-MICAWBER_PROVIDERS = "localhub.apps.activities.oembed.bootstrap_oembed"
+MICAWBER_PROVIDERS = "localhub.activities.oembed.bootstrap_oembed"
 MICAWBER_TEMPLATE_EXTENSIONS = [("oembed_no_urlize", {"urlize_all": False})]
 
 # https://celery.readthedocs.io/en/latest/userguide/configuration.html
@@ -276,7 +276,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "localhub.apps.communities.context_processors.community",
+                "localhub.communities.context_processors.community",
                 "localhub.template.context_processors.home_page_url",
             ],
             "libraries": {"pagination": "localhub.pagination.templatetags"},
