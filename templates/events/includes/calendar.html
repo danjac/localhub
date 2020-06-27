@@ -34,14 +34,12 @@
          {% endif %}>
       {% if day %}
       <div class="h-10 lg:h-32 p-2 tracking-tight border-r border-b border-gray-500 align-middle">
-        <button class="float-right">
+        <button>
           {{ day }}
+          <span class="lg:hidden ml-1">
+            {% for event in events|slice:5 %}&middot;{% endfor %}
+          </span>
         </button>
-        {% if num_events %}
-        <button class="lg:hidden float-left font-bold">
-          {{ num_events }}
-        </button>
-        {% endif %}
         <div class="clear-both"></div>
         {% if events %}
         <div class="hidden lg:block text-xs{% if is_past %} text-gray-500{% endif %}">
