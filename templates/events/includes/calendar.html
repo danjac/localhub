@@ -3,7 +3,7 @@
 
 {% load i18n %}
 <div class="border-l border-t border-gray-500 min-w-100">
-  <div class="flex items-center justify-between bg-indigo-900 text-white px-4 py-2 border-r border-b border-gray-500">
+  <div class="flex items-center justify-between bg-indigo-900 text-white px-4 py-2 font-semibold">
     <a class="text-sm text-white hover:text-gray-200"
        href="{{ request.path }}?month={{ previous_month.month }}&year={{ previous_month.year }}">
       {% trans "Previous" %}
@@ -14,7 +14,7 @@
       {% trans "Next" %}
     </a>
   </div>
-  <div class="flex flex-wrap justify-between text-center items-center py-4 px-0 bg-gray-100 border-r border-b border-gray-500">
+  <div class="flex flex-wrap justify-between text-center items-center py-4 px-0 bg-blue-600 text-white font-semibold">
     <div class="text-sm calendar-item">{% trans "Mon" %}</div>
     <div class="text-sm calendar-item">{% trans "Tue" %}</div>
     <div class="text-sm calendar-item">{% trans "Wed" %}</div>
