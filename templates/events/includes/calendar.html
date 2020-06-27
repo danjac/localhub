@@ -2,8 +2,8 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div class="border-l border-t border-gray-500 min-w-100">
-  <div class="flex items-center justify-between bg-indigo-900 text-white px-4 py-2 font-semibold">
+<div class="border-gray-500 min-w-100">
+  <div class="flex items-center justify-between bg-indigo-900 text-white px-4 py-2 font-semibold border-r border-l border-t border-gray-500">
     <a class="text-sm text-white hover:text-gray-200"
        href="{{ request.path }}?month={{ previous_month.month }}&year={{ previous_month.year }}">
       {% trans "Previous" %}
@@ -14,7 +14,7 @@
       {% trans "Next" %}
     </a>
   </div>
-  <div class="flex flex-wrap justify-between text-center items-center py-4 px-0 bg-blue-600 text-white font-semibold">
+  <div class="flex flex-wrap justify-between text-center items-center py-4 px-0 bg-blue-600 text-white font-semibold border-r border-l border-gray-500">
     <div class="text-sm calendar-item">{% trans "Mon" %}</div>
     <div class="text-sm calendar-item">{% trans "Tue" %}</div>
     <div class="text-sm calendar-item">{% trans "Wed" %}</div>
@@ -23,7 +23,7 @@
     <div class="text-sm calendar-item">{% trans "Sat" %}</div>
     <div class="text-sm calendar-item">{% trans "Sun" %}</div>
   </div>
-  <div class="flex flex-wrap">
+  <div class="flex flex-wrap border-l border-gray-500">
     {% for day, is_past, events in slots %}
     {% with num_events=events|length %}
     <div class="calendar-item text-xs{% if not day %} bg-gray-200{% elif day == today.day and is_current_month %} bg-blue-600 {% if num_events %}hover:bg-blue-500{% endif %} text-white{% elif num_events %} bg-indigo-900 text-white hover:bg-indigo-700{% endif %}{% if num_events %} cursor-pointer{% endif %}"
