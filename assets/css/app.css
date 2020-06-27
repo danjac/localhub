@@ -95,6 +95,10 @@ a.btn-secondary {
   @apply border border-gray-500 text-black;
 }
 
+.btn-secondary:hover {
+  @apply bg-blue-100;
+}
+
 .calendar-item {
   max-width: 14.28%;
   flex: 0 0 14.28%;
