@@ -9,3 +9,5 @@ from .base.secure import *  # noqa
 
 # Required for Heroku SSL
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+BROKER_POOL_LIMIT = None
