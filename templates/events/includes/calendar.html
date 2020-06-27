@@ -3,13 +3,13 @@
 
 {% load i18n %}
 <div class="border-l border-t border-gray-500 min-w-100">
-  <div class="flex items-center justify-between bg-gray-200 px-4 py-2 border-r border-b border-gray-500">
-    <a class="text-sm text-black"
+  <div class="flex items-center justify-between bg-indigo-900 text-white px-4 py-2 border-r border-b border-gray-500">
+    <a class="text-sm text-white hover:text-gray-200"
        href="{{ request.path }}?month={{ previous_month.month }}&year={{ previous_month.year }}">
       {% trans "Previous" %}
     </a>
     <div class="font-semibold">{{ current_month|date:"F Y" }}</div>
-    <a class="text-sm text-black"
+    <a class="text-sm text-white hover:text-gray-200"
        href="{{ request.path }}?month={{ next_month.month }}&year={{ next_month.year }}">
       {% trans "Next" %}
     </a>
@@ -26,7 +26,7 @@
   <div class="flex flex-wrap">
     {% for day, is_past, events in slots %}
     {% with num_events=events|length %}
-    <div class="calendar-item text-xs{% if not day %} bg-gray-200{% elif day == today.day and is_current_month %} bg-blue-100{% elif num_events %} bg-gray-100{% endif %}{% if num_events %} cursor-pointer{% endif %}"
+    <div class="calendar-item text-xs{% if not day %} bg-gray-200{% elif day == today.day and is_current_month %} bg-blue-600 text-white{% elif num_events %} bg-indigo-900 text-white{% endif %}{% if num_events %} cursor-pointer{% endif %}"
          {% if num_events %}
          data-controller="linkify"
          data-action="click->linkify#fetch"
@@ -37,12 +37,17 @@
         <button class="float-right">
           {{ day }}
         </button>
+        {% if num_events %}
+        <button class="lg:hidden float-left font-bold">
+          {{ num_events }}
+        </button>
+        {% endif %}
         <div class="clear-both"></div>
         {% if events %}
         <div class="hidden lg:block text-xs{% if is_past %} text-gray-500{% endif %}">
           {% for event in events|slice:":2" %}
 
-          <a class="block text-xs{% if not event.is_attendable %} line-through{% elif event.is_attending %} font-semibold{% endif %}"
+          <a class="block text-white text-xs{% if not event.is_attendable %} line-through{% elif event.is_attending %} font-semibold{% endif %}"
              href="{{ event.get_absolute_url }}"
              title="{{ event.title }}">{{ event.title }}</a>
 
@@ -56,7 +61,7 @@
 
         </div>
         {% endif %}
-     </div>
+      </div>
       {% else %}
       <div class="h-10 lg:h-32 p-2 border-b border-r border-gray-500"></div>
       {% endif %}
