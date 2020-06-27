@@ -3,7 +3,7 @@
 
 {% load i18n %}
 
-<div class="card{% if css_class %} {{ css_class }}{% endif %}"
+<div class="card{% if activity_css_class %} {{ activity_css_class }}{% endif %}"
      data-controller="clipboard"
      data-clipboard-message="{% trans 'Markdown content has been copied' %}">
   <div class="mb-3">
