@@ -16,7 +16,11 @@
         <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
         {% endif %}
       </span>
-      <span class="tag inline-block mr-2">{% trans object_type|capfirst %}</span>
+      <a class="tag inline-block mr-2 hover:text-gray-300"
+         href="{{ object|resolve_url:"list" }}">
+        {{ object_type|title }}
+      </a>
+
       <span class="tag inline-block">{% trans "Pinned" %}</span>
     </div>
     {% endblock title %}
