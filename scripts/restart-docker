@@ -3,4 +3,4 @@
 
 #!/usr/bin/env
 
-docker-compose -f local.yml restart
+docker-compose -f local.yml restart $@
