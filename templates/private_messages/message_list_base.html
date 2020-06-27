@@ -4,11 +4,25 @@
 {% extends "private_messages/base.html" %}
 
 {% load i18n %}
+{% load rules %}
 {% load private_messages %}
 
 {% block content %}
-<h1 class="page-header mb-3">{% trans "Messages" %}</h1>
 
+{% has_perm "private_messages.create_message" user community as can_create_message %}
+
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+  <h1 class="page-header mb-3">{% trans "Messages" %}</h1>
+
+
+  {% if can_create_message %}
+  <div class="page-nav mt-3 lg:mt-0">
+    <a class="page-nav-item"
+       href="{% url 'private_messages:message_create' %}">{% trans "Send Message "%} </a>
+  </div>
+  {% endif %}
+
+</div>
 {% with search=view.search_query %}
 <div class="tabs text-sm">
   <a class="tab-item"
