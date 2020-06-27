@@ -30,7 +30,7 @@
          {% if num_events %}
          data-controller="linkify"
          data-action="click->linkify#fetch"
-         data-linkify-url="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
+         data-linkify-url="{% if num_events == 1 %}{{ events.0.get_absolute_url }}{% else %}{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}{% endif %}"
          {% endif %}>
       {% if day %}
       <div class="h-10 lg:h-32 p-2 tracking-tight border-r border-b border-gray-500 align-middle">
