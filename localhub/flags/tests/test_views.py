@@ -8,7 +8,7 @@ from django.urls import reverse
 import pytest
 
 # Localhub
-from localhub.posts.factories import PostFactory
+from localhub.activities.posts.factories import PostFactory
 
 # Local
 from ..factories import FlagFactory

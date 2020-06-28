@@ -8,12 +8,12 @@ from django.utils import timezone
 import pytest
 
 # Localhub
+from localhub.activities.posts.factories import PostFactory
 from localhub.bookmarks.factories import BookmarkFactory
 from localhub.communities.factories import MembershipFactory
 from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
-from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory
 
 # Local

@@ -5,7 +5,7 @@
 import pytest
 
 # Localhub
-from localhub.posts.notifications import PostAdapter
+from localhub.activities.posts.notifications import PostAdapter
 
 # Local
 from ..factories import NotificationFactory

@@ -56,19 +56,19 @@ WSGI_APPLICATION = "localhub.config.wsgi.application"
 
 LOCAL_APPS = [
     "localhub.activities.apps.ActivitiesConfig",
+    "localhub.activities.events.apps.EventsConfig",
+    "localhub.activities.photos.apps.PhotosConfig",
+    "localhub.activities.polls.apps.PollsConfig",
+    "localhub.activities.posts.apps.PostsConfig",
     "localhub.bookmarks.apps.BookmarksConfig",
     "localhub.comments.apps.CommentsConfig",
     "localhub.communities.apps.CommunitiesConfig",
-    "localhub.events.apps.EventsConfig",
     "localhub.flags.apps.FlagsConfig",
     "localhub.hashtags.apps.HashtagsConfig",
     "localhub.invites.apps.InvitesConfig",
     "localhub.join_requests.apps.JoinRequestsConfig",
     "localhub.likes.apps.LikesConfig",
     "localhub.notifications.apps.NotificationsConfig",
-    "localhub.photos.apps.PhotosConfig",
-    "localhub.polls.apps.PollsConfig",
-    "localhub.posts.apps.PostsConfig",
     "localhub.private_messages.apps.PrivateMessagesConfig",
     "localhub.users.apps.UsersConfig",
 ]

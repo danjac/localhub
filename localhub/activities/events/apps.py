@@ -5,5 +5,5 @@
 from django.apps import AppConfig
 
 
-class PhotosConfig(AppConfig):
-    name = "localhub.photos"
+class EventsConfig(AppConfig):
+    name = "localhub.activities.events"

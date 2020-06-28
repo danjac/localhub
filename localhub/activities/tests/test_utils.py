@@ -11,13 +11,13 @@ from django.utils import timezone
 import pytest
 
 # Localhub
-from localhub.events.factories import EventFactory
-from localhub.events.models import Event
-from localhub.photos.factories import PhotoFactory
-from localhub.photos.models import Photo
-from localhub.polls.models import Poll
-from localhub.posts.factories import PostFactory
-from localhub.posts.models import Post
+from localhub.activities.events.factories import EventFactory
+from localhub.activities.events.models import Event
+from localhub.activities.photos.factories import PhotoFactory
+from localhub.activities.photos.models import Photo
+from localhub.activities.polls.models import Poll
+from localhub.activities.posts.factories import PostFactory
+from localhub.activities.posts.models import Post
 
 # Local
 from ..utils import (

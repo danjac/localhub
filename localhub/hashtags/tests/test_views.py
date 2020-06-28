@@ -11,10 +11,10 @@ from pytest_django.asserts import assertTemplateUsed
 from taggit.models import Tag
 
 # Localhub
+from localhub.activities.events.factories import EventFactory
+from localhub.activities.photos.factories import PhotoFactory
+from localhub.activities.posts.factories import PostFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
-from localhub.events.factories import EventFactory
-from localhub.photos.factories import PhotoFactory
-from localhub.posts.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

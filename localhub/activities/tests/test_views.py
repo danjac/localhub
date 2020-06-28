@@ -9,10 +9,10 @@ from django.urls import reverse
 import pytest
 
 # Localhub
+from localhub.activities.events.factories import EventFactory
+from localhub.activities.polls.factories import AnswerFactory, PollFactory
+from localhub.activities.posts.factories import PostFactory
 from localhub.communities.factories import MembershipFactory
-from localhub.events.factories import EventFactory
-from localhub.polls.factories import AnswerFactory, PollFactory
-from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory
 
 pytestmark = pytest.mark.django_db

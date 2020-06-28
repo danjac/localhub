@@ -8,7 +8,7 @@ from django.utils import timezone
 import pytest
 
 # Localhub
-from localhub.posts.factories import PostFactory
+from localhub.activities.posts.factories import PostFactory
 
 # Local
 from ..templatetags.activities import (

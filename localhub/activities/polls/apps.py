@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 
 class PollsConfig(AppConfig):
-    name = "localhub.polls"
+    name = "localhub.activities.polls"

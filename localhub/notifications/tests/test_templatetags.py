@@ -8,8 +8,8 @@ from django.template import engines
 import pytest
 
 # Localhub
+from localhub.activities.posts.factories import PostFactory
 from localhub.communities.factories import MembershipFactory
-from localhub.posts.factories import PostFactory
 
 # Local
 from ..factories import NotificationFactory

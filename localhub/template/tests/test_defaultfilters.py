@@ -10,7 +10,7 @@ from django.urls import NoReverseMatch, reverse
 import pytest
 
 # Localhub
-from localhub.posts.models import Post
+from localhub.activities.posts.models import Post
 
 # Local
 from ..defaultfilters import (

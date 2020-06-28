@@ -10,17 +10,17 @@ import pytest
 from taggit.models import Tag
 
 # Localhub
+from localhub.activities.events.models import Event
+from localhub.activities.photos.models import Photo
+from localhub.activities.posts.factories import PostFactory
+from localhub.activities.posts.models import Post
 from localhub.bookmarks.factories import BookmarkFactory
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Community
-from localhub.events.models import Event
 from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
-from localhub.photos.models import Photo
-from localhub.posts.factories import PostFactory
-from localhub.posts.models import Post
 from localhub.users.factories import UserFactory
 
 pytestmark = pytest.mark.django_db

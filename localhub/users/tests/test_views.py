@@ -10,13 +10,13 @@ import pytest
 from pytest_django.asserts import assertTemplateUsed
 
 # Localhub
+from localhub.activities.events.factories import EventFactory
+from localhub.activities.posts.factories import PostFactory
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import MembershipFactory
-from localhub.events.factories import EventFactory
 from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
 from localhub.notifications.models import Notification
-from localhub.posts.factories import PostFactory
 from localhub.private_messages.factories import MessageFactory
 
 # Local

@@ -15,17 +15,17 @@ import pytest
 from PIL import Image
 
 # Localhub
+from localhub.activities.events.factories import EventFactory
+from localhub.activities.photos.factories import PhotoFactory
+from localhub.activities.polls.factories import PollFactory
+from localhub.activities.posts.factories import PostFactory
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Membership
-from localhub.events.factories import EventFactory
 from localhub.invites.factories import InviteFactory
 from localhub.join_requests.factories import JoinRequestFactory
 from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
-from localhub.photos.factories import PhotoFactory
-from localhub.polls.factories import PollFactory
-from localhub.posts.factories import PostFactory
 from localhub.private_messages.factories import MessageFactory
 from localhub.users.factories import UserFactory
 

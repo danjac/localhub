@@ -9,6 +9,7 @@ from django.utils import timezone
 import pytest
 
 # Localhub
+from localhub.activities.posts.factories import PostFactory
 from localhub.bookmarks.factories import BookmarkFactory
 from localhub.bookmarks.models import Bookmark
 from localhub.communities.factories import MembershipFactory
@@ -18,7 +19,6 @@ from localhub.likes.factories import LikeFactory
 from localhub.likes.models import Like
 from localhub.notifications.factories import NotificationFactory
 from localhub.notifications.models import Notification
-from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory
 
 # Local

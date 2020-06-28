@@ -5,9 +5,9 @@
 import pytest
 
 # Localhub
+from localhub.activities.posts.factories import PostFactory
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
-from localhub.posts.factories import PostFactory
 
 # Local
 from ..factories import FlagFactory
