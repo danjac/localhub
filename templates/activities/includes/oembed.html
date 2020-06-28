@@ -5,7 +5,15 @@
 {% load micawber_tags %}
 {% load activities %}
 
-{% if object.url %}
+{% if object.url|is_audio_url %}
+<audio controls
+       class="w-full"
+       src="{{ object.url }}">
+  <source src="{{ object.url }}"
+          type="{{ object.url|media_type }}" />
+  Your browser does not support audio.
+</audio>
+{% elif object_url %}
 <div data-controller="oembed"
      data-oembed-video-class="relative block w-full overflow-hidden lg:h-screen"
      data-oembed-image-class="block max-w-100 h-auto"

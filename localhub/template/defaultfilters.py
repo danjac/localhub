@@ -16,7 +16,13 @@ from django.utils.translation import gettext as _
 from bs4 import BeautifulSoup
 
 # Localhub
-from localhub.utils.http import URLResolver, get_root_url, is_image_url
+from localhub.utils.http import (
+    URLResolver,
+    get_media_type,
+    get_root_url,
+    is_audio_url,
+    is_image_url,
+)
 
 register = template.Library()
 
@@ -177,6 +183,11 @@ def domain(url):
 
 
 @register.filter
+def media_type(url):
+    return get_media_type(url)
+
+
+@register.filter
 def linkify(url, text=None):
     """
     Creates a "safe" external link to a new tab.
@@ -192,9 +203,6 @@ def linkify(url, text=None):
         return url
 
     return _external_link(url, text)
-
-
-register.filter(is_image_url)
 
 
 @register.filter
@@ -224,3 +232,7 @@ def _external_link(url, text, css_class=""):
     return mark_safe(
         f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank"{css_class}>{text}</a>'
     )
+
+
+register.filter(is_image_url)
+register.filter(is_audio_url)

@@ -10,7 +10,9 @@ from ..http import (
     URLResolver,
     get_domain,
     get_filename,
+    get_media_type,
     get_root_url,
+    is_audio_url,
     is_https,
     is_image_url,
     is_url,
@@ -132,6 +134,19 @@ class TestIsImageUrl:
 
     def test_if_is_not_image(self):
         assert not is_image_url("https://example.com/test.txt")
+
+
+class TestIsAudioUrl:
+    def test_if_is_audio(self):
+        assert is_audio_url("https://example.com/test.mp3")
+
+    def test_if_is_not_audio(self):
+        assert not is_audio_url("https://example.com/test.txt")
+
+
+class TestGetMediaType:
+    def test_get_media_type(self):
+        assert get_media_type("https://example.com/test.mp3") == "audio/mpeg"
 
 
 class TestGetRootUrl:

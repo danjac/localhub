@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Standard Library
+import mimetypes
 import os
 from urllib.parse import urlparse
 
@@ -27,6 +28,18 @@ IMAGE_EXTENSIONS = (
     ".tif",
     ".tiff",
     ".webp",
+)
+
+AUDIO_EXTENSIONS = (
+    ".aac",
+    ".au",
+    ".flac",
+    ".m4a",
+    ".mp3",
+    ".ogg",
+    ".wav",
+    ".webm",
+    ".wma",
 )
 
 
@@ -71,6 +84,12 @@ class URLResolver:
         self.parts = urlparse(self._url)
 
     @property
+    def extension(self):
+        """Returns file extension (always lowercase)"""
+        _, ext = os.path.splitext(self.filename.lower())
+        return ext
+
+    @property
     def is_https(self):
         """Checks if URL is SSL i.e. starts with https://
 
@@ -89,8 +108,26 @@ class URLResolver:
         Returns:
             bool
         """
-        _, ext = os.path.splitext(self.filename.lower())
-        return ext in IMAGE_EXTENSIONS
+        return self.extension in IMAGE_EXTENSIONS
+
+    @property
+    def is_audio(self):
+        """Checks if URL points to an audio file.
+
+        Args:
+            url (str)
+
+        Returns:
+            bool
+        """
+        return self.extension in AUDIO_EXTENSIONS
+
+    @property
+    def media_type(self):
+        """Returns file media type, if any"""
+
+        media_type, _ = mimetypes.guess_type(self.url)
+        return media_type
 
     @property
     def root(self):
@@ -156,6 +193,21 @@ def is_image_url(url):
         return False
 
 
+def is_audio_url(url):
+    """Checks if URL points to an audio file.
+
+    Args:
+        url (str)
+
+    Returns:
+        bool
+    """
+    try:
+        return URLResolver(url).from_url(url).is_audio
+    except URLResolver.Invalid:
+        return False
+
+
 def get_root_url(url):
     """Returns the root domain URL minus path etc. For example:
     http://google.com/abc/ -> http://google.com
@@ -202,6 +254,21 @@ def get_filename(url):
     """
     try:
         return URLResolver.from_url(url).filename
+    except URLResolver.Invalid:
+        return None
+
+
+def get_media_type(url):
+    """Returns media type from url
+
+    Args:
+        url (str)
+
+    Returns:
+        str or None
+    """
+    try:
+        return URLResolver.from_url(url).media_type
     except URLResolver.Invalid:
         return None
 

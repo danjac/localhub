@@ -6,7 +6,7 @@
 from django import template
 
 # Localhub
-from localhub.utils.http import is_https
+from localhub.utils.http import is_audio_url, is_https
 
 # Local
 from ..oembed import bootstrap_oembed
@@ -78,6 +78,8 @@ def is_oembed_url(user, url):
         or not user.show_embedded_content
     ):
         return False
+    if is_audio_url(url):
+        return True
     return _oembed_registry.provider_for_url(url) is not None
 
 
