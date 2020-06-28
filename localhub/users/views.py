@@ -504,10 +504,7 @@ class UserAutocompleteListView(BaseUserListView):
         search_term = self.request.GET.get("q", "").strip()
         if search_term:
             return qs.filter(
-                Q(
-                    Q(username__istartswith=search_term)
-                    | Q(name__istartswith=search_term)
-                )
+                Q(Q(username__icontains=search_term) | Q(name__icontains=search_term))
             )[: settings.DEFAULT_PAGE_SIZE]
         return qs.none()
 
