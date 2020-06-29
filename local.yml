@@ -51,7 +51,6 @@ services:
     build:
       context: .
       dockerfile: local.dockerfile
-    env_file: .env
     restart: on-failure
     privileged: true
     environment: *default-env
