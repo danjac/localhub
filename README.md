@@ -29,3 +29,7 @@ To run Django commands through docker:
 To run unit tests:
 
 > ./scripts/runtests [options...]
+
+# Deployment
+
+TBD
