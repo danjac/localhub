@@ -32,4 +32,8 @@ To run unit tests:
 
 ### Deployment
 
-TBD
+Localhub is currently configured to deploy to Heroku. A PostgreSQL and Redis buildpack are required to run the Heroku instances. Production emails require Mailgun. Assets and user uploaded media share a single S3 bucket.
+
+A Gitlab CI/CD configuration is provided, which assumes a long-running "release" branch. To deploy, just merge from your master branch into release and push. The pipeline takes care of assets deployment and tests.
+
+Pull requests are welcome for other deployment and production environments.
