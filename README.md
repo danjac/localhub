@@ -1,20 +1,20 @@
-# Concept
+### Concept
 
 Open source, small footprint social network platform.
 
-# Tech
+### Tech
 
 Python/Django, Docker, PostgreSQL, Turbolinks, Stimulus, Tailwind.
 
-# License
+### License
 
 Localhub is licensed under the **GNU Affero Public License**. A copy of the license is provided in this repository.
 
-# Credits
+### Credits
 
 Favicon: https://www.iconfinder.com/3ab2ou (Creative Commons Attribution)
 
-# Development
+### Development
 
 You should have docker and docker-compose installed on your development machine.
 
@@ -30,6 +30,6 @@ To run unit tests:
 
 > ./scripts/runtests [options...]
 
-# Deployment
+### Deployment
 
 TBD
