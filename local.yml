@@ -28,11 +28,9 @@ services:
 
   redis:
     image: redis:5.0.7
-    restart: always
 
   mailhog:
     image: mailhog/mailhog:v1.0.0
-    restart: always
     ports:
       - '8025:8025'
       - '1025:1025'

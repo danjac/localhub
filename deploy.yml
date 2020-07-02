@@ -21,7 +21,6 @@ services:
 
   redis:
     image: redis:5.0.7
-    restart: always
 
   webpack:
     build:
