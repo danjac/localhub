@@ -30,7 +30,7 @@ export default function instantClick(interval = 50, sensitivity = 5) {
             const link = document.createElement('link');
             link.setAttribute('rel', 'prefetch');
             link.setAttribute('href', href);
-            prefetcher = document.body.appendChild(link);
+            prefetcher = document.head.appendChild(link);
           }
         },
         () => {},
