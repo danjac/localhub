@@ -7,13 +7,12 @@
 #
 -r base.txt
 -r test.txt
-autopep8==1.5.3           # via django-silk
+autopep8==1.5.4           # via django-silk
 django-silk==4.0.1        # via -r local.in
 gprof2dot==2019.11.30     # via django-silk
 jinja2==2.11.2            # via django-silk
 markupsafe==1.1.1         # via jinja2
 pycodestyle==2.6.0        # via autopep8
-toml==0.10.1              # via autopep8
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
