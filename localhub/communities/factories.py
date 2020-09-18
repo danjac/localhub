@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Third Party Libraries
-from factory import DjangoModelFactory, Faker, Sequence, SubFactory
+from factory import Faker, Sequence, SubFactory
+from factory.django import DjangoModelFactory
 
 # Localhub
 from localhub.users.factories import UserFactory

@@ -8,7 +8,8 @@ from datetime import timedelta
 from django.utils import timezone
 
 # Third Party Libraries
-from factory import DjangoModelFactory, Faker, LazyFunction, SubFactory
+from factory import Faker, LazyFunction, SubFactory
+from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyDateTime
 
 # Localhub

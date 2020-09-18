@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Third Party Libraries
-from factory import DjangoModelFactory, SubFactory
+from factory import SubFactory
+from factory.django import DjangoModelFactory
 
 # Localhub
 from localhub.activities.posts.factories import PostFactory

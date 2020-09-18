@@ -1,7 +1,8 @@
 # Copyright (c) 2020 by Dan Jacob
 
 # Third Party Libraries
-from factory import DjangoModelFactory, Faker, SubFactory
+from factory import Faker, SubFactory
+from factory.django import DjangoModelFactory
 
 # Localhub
 from localhub.communities.factories import CommunityFactory

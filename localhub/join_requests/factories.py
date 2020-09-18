@@ -1,5 +1,6 @@
 # Third Party Libraries
-from factory import DjangoModelFactory, SubFactory
+from factory import SubFactory
+from factory.django import DjangoModelFactory
 
 # Localhub
 from localhub.communities.factories import CommunityFactory
