@@ -7,8 +7,8 @@
 #
 -r aws.txt
 -r base.txt
-django-anymail[mailgun]==8.0  # via -r heroku.in
-gunicorn==20.0.4          # via -r heroku.in
+django-anymail[mailgun]==8.0  # via -r requirements/heroku.in
+gunicorn==20.0.4          # via -r requirements/heroku.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

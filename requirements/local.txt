@@ -8,7 +8,7 @@
 -r base.txt
 -r test.txt
 autopep8==1.5.4           # via django-silk
-django-silk==4.1.0        # via -r local.in
+django-silk==4.1.0        # via -r requirements/local.in
 gprof2dot==2019.11.30     # via django-silk
 jinja2==2.11.2            # via django-silk
 markupsafe==1.1.1         # via jinja2

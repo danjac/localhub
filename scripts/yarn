@@ -3,7 +3,4 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-# shortcut to run pytest under docker compose
-
-docker-compose -f local.yml exec django pytest $@
-
+docker-compose -f local.yml exec webpack yarn $@
