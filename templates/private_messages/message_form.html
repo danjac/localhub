@@ -33,11 +33,11 @@
 
 {% if parent %}
 {% render_message request user parent is_detail=True %}
-{% include "includes/forms/ajax_form.html" with css_class="px-2 py-5 border border-gray-500 w-full" %}
 {% else %}
 <h1 class="page-header mb-3">{% trans "Send Message" %}</h1>
-{% include "includes/forms/ajax_form.html" %}
 {% endif %}
+
+{% include "includes/forms/ajax_form.html" %}
 
 
 {% endblock %}
