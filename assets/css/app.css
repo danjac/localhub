@@ -139,7 +139,7 @@ a.btn-secondary {
 }
 
 .typeahead-menu {
-  @apply absolute border border-gray-500 bg-gray-100 p-1 w-1/2 overflow-y-auto h-32 max-h-full shadow-xl;
+  @apply absolute border border-gray-500 bg-gray-100 p-1 w-1/2 overflow-y-auto shadow-xl;
 }
 
 @screen lg {
