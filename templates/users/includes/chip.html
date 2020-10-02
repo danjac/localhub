@@ -2,18 +2,18 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load account %}
-{% load users %}
 {% user_display profile as profile_name %}
 {% with object_url=profile_url|default:profile.get_absolute_url %}
-<div class="flex rounded-full items-center text-sm pr-3 bg-gray-300 {% if css_class %} {{ css_class }}{% endif %}"
+<div {% if css_class %}
+     class="{{ css_class }}"
+     {% endif %}
      data-controller="hovercard"
      data-hovercard-url="{% url 'users:preview' profile.username %}"
      data-hovercard-object-url="{{ object_url }}"
      data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
   <div class="inline-block hidden"
        data-target="hovercard.container"></div>
-  {% avatar profile "16" css_class="mr-2 h-4 w-4 text-xs" %}
-  <a class="truncate text-gray-900"
-     href="{{ object_url }}">{{ profile.username }}</a>
+  <a class="truncate text-sm"
+     href="{{ object_url }}">@{{ profile.username }}</a>
 </div>
 {% endwith %}

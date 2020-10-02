@@ -113,7 +113,7 @@ a.btn-secondary {
 }
 
 .dropdown-menu {
-  @apply absolute border border-gray-500 bg-gray-100 p-1 w-1/2;
+  @apply absolute border border-gray-500 bg-gray-100 p-1 w-1/2 shadow-xl;
 }
 
 @screen sm {
@@ -139,7 +139,7 @@ a.btn-secondary {
 }
 
 .typeahead-menu {
-  @apply absolute border border-gray-500 bg-gray-100 p-1 w-1/2 overflow-y-auto h-32 max-h-full;
+  @apply absolute border border-gray-500 bg-gray-100 p-1 w-1/2 overflow-y-auto h-32 max-h-full shadow-xl;
 }
 
 @screen lg {
