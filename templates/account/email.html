@@ -25,7 +25,7 @@
 
 <form action="{% url 'account_email' %}"
       method="POST"
-      class="p-5 border border-gray-500">
+      class="p-5 border border-gray-500 max-w-xl">
   {% csrf_token %}
 
   {% for emailaddress in emailaddresses %}
@@ -78,7 +78,7 @@
 
 <form method="POST"
       action="{% url 'account_email' %}"
-      class="p-5 border border-gray-500">
+      class="p-5 border border-gray-500 max-w-xl">
   {% include "includes/forms/fields.html" %}
   <button name="action_add"
           class="btn btn-primary"
