@@ -25,7 +25,7 @@
 
 <form action="{% url 'account_email' %}"
       method="POST"
-      class="p-5 border border-gray-500 max-w-xl">
+      class="p-5 border border-gray-500 bg-gray-100 max-w-xl">
   {% csrf_token %}
 
   {% for emailaddress in emailaddresses %}
@@ -72,13 +72,13 @@
 
 {% endwith %}
 
-<h2 class="my-4 font-semibold pb-2 border-b border-gray-500">
+<h2 class="my-4 font-semibold mb-2">
   {% trans "Add E-mail Address" %}
 </h2>
 
 <form method="POST"
       action="{% url 'account_email' %}"
-      class="p-5 border border-gray-500 max-w-xl">
+      class="p-5 border border-gray-500 bg-gray-100 max-w-xl">
   {% include "includes/forms/fields.html" %}
   <button name="action_add"
           class="btn btn-primary"

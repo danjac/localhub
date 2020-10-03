@@ -12,14 +12,14 @@
       {% if form_id %}
       id="{{ form_id }}"
       {% endif %}
-      class="{{ css_class|default:"p-1 md:p-3 border border-gray-500 max-w-xl" }}"
+      class="{{ css_class|default:"p-1 md:p-3 border border-gray-500 bg-gray-100 max-w-xl" }}"
       {% block form_extra_attrs %}{% endblock %}
       {% endspaceless %}>
 
   {% block form_fields %}
   {% include "includes/forms/fields.html" %}
   {% endblock form_fields %}
-  <div class="flex text-center mt-2 pt-2 border-t">
+  <div class="flex text-center mt-2 pt-3 border-t border-gray-500">
     {% block form_buttons %}
     <button type="submit"
             name="submit"
