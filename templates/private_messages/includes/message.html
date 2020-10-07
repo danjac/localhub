@@ -12,7 +12,7 @@
 
   <div class="flex flex-wrap items-center mb-3">
     {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url css_class="mr-2" %}
-    <div class="mr-2">
+    <div class="mr-2 text-muted text-sm">
       {% trans "to" %}
     </div>
     {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url css_class="mr-2" %}
