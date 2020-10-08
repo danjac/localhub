@@ -226,8 +226,8 @@ MICAWBER_PROVIDERS = "localhub.activities.oembed.bootstrap_oembed"
 MICAWBER_TEMPLATE_EXTENSIONS = [("oembed_no_urlize", {"urlize_all": False})]
 
 # https://celery.readthedocs.io/en/latest/userguide/configuration.html
-result_backend = CELERY_BROKER_URL = REDIS_URL
-result_serializer = "json"
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
+CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
 
 # https://django-taggit.readthedocs.io/en/latest/getting_started.html
 
