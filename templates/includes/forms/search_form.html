@@ -8,9 +8,9 @@
 
 <form method="GET"
       action="{{ request.path }}"
-      data-controller="form{% if selector %} search{% endif %}"
-      data-action="form#submit"
+      data-controller="search"
       data-search-param="{{ view.search_parameter|default:'q' }}"
+      data-action="search#submit"
       class="my-2 search-form">
   {% for name, value in non_search_params.items %}
   <input type="hidden"

@@ -40,18 +40,16 @@ export default class extends ApplicationController {
 
   select() {
     const { value } = this.selectorTarget;
-    const param = this.data.get('param') || 'q';
     const search = this.inputTarget.value;
     if (value && search) {
-      Turbolinks.visit(`${value}?${param}=${search}`);
+      Turbolinks.visit(`${value}?${this.searchParam}=${search}`);
     }
   }
 
   submit() {
-    const param = this.data.get('param') || 'q';
     const search = this.inputTarget.value;
     if (search) {
-      Turbolinks.visit(`${value}?${param}=${search}`);
+      Turbolinks.visit(`${value}?${this.searchParam}=${search}`);
     }
   }
 
@@ -61,5 +59,9 @@ export default class extends ApplicationController {
     } else {
       this.selectorTarget.setAttribute('disabled', true);
     }
+  }
+
+  get searchParam() {
+    return this.data.get('param') || 'q';
   }
 }
