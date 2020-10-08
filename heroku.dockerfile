@@ -22,7 +22,7 @@ COPY . /app
 
 # https://testdriven.io/blog/deploying-django-to-heroku-with-docker/
 #
-RUN -e SECRET_KEY=${SECRET_KEY} \
+RUN -e SECRET_KEY \
     -e DJANGO_SETTINGS_MODULE=localhub.config.settings.production \
     python manage.py collectstatic --noinput
 
