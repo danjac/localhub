@@ -8,7 +8,7 @@ DEFAULT_FILE_STORAGE = "localhub.config.aws.MediaStorage"
 # STATICFILES_STORAGE = "localhub.config.aws.StaticStorage"
 
 AWS_MEDIA_LOCATION = "media"
-# AWS_STATIC_LOCATION = "static"
+AWS_STATIC_LOCATION = "static"
 
 AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY")
