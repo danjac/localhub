@@ -26,4 +26,5 @@ AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=600"}
 STATIC_HOST = AWS_S3_CUSTOM_DOMAIN
 STATIC_URL = "https://" + STATIC_HOST + "/static/"
 
-# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+WHITENOISE_MANIFEST_STRICT = False
