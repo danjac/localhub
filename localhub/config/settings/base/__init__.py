@@ -75,8 +75,6 @@ LOCAL_APPS = [
 
 
 INSTALLED_APPS = [
-    # grappelli must go before django-admin
-    "grappelli",
     "django.forms",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -230,10 +228,6 @@ MICAWBER_TEMPLATE_EXTENSIONS = [("oembed_no_urlize", {"urlize_all": False})]
 # https://celery.readthedocs.io/en/latest/userguide/configuration.html
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
 CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
-
-# https://django-grappelli.readthedocs.io/en/latest/customization.html
-
-GRAPPELLI_ADMIN_TITLE = env.str("ADMIN_TITLE", default="Localhub Admin")
 
 # https://django-taggit.readthedocs.io/en/latest/getting_started.html
 

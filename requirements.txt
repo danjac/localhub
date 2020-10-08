@@ -34,7 +34,6 @@ django-celery-email==3.0.0  # via -r requirements.in
 django-countries==6.1.3   # via -r requirements.in
 django-environ==0.4.5     # via -r requirements.in
 django-extensions==3.0.9  # via -r requirements.in
-django-grappelli==2.14.2  # via -r requirements.in
 django-markdownx==3.0.1   # via -r requirements.in
 django-model-utils==4.0.0  # via -r requirements.in
 django-redis==4.12.1      # via -r requirements.in
