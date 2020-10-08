@@ -9,7 +9,6 @@ x-env: &default-env
   EMAIL_HOST: mailhog
   EMAIL_PORT: 1025
   # These keys are for development only! Do not copy into a production environment.
-  SECRET_KEY: seekrit
   VAPID_PUBLIC_KEY: BJDR4XCoFCYRmCIGcf_1fSCX4CQKFaBzruaoRhhPgVi23MLrxVkeBsgA-WYZdffCesA7DmAfy-gPHHysG3I8R-c
   VAPID_PRIVATE_KEY: vZH9Nz6KMSo8L8ksJFgJyK3vXfU9vIaxZcAcxavKEAk
   VAPID_ADMIN_EMAIL: admin@example.com
