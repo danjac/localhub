@@ -100,6 +100,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sites.middleware.CurrentSiteMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -247,7 +248,7 @@ MEDIA_URL = env.str("MEDIA_URL", default="/media/")
 STATIC_URL = env.str("STATIC_URL", default="/static/")
 
 MEDIA_ROOT = BASE_DIR / "media"
-# STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS = [BASE_DIR / "assets"]
 
 TEMPLATES = [
@@ -285,3 +286,6 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "loggers": {"root": {"handlers": ["console"], "level": "INFO"}},
 }
+
+# http://whitenoise.evans.io/en/stable/django.html#use-a-content-delivery-network
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"

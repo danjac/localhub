@@ -42,3 +42,4 @@ rules
 sorl-thumbnail
 unidecode
 werkzeug
+whitenoise[brotli]
