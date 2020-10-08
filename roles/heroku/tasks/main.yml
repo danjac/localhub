@@ -1,4 +1,3 @@
 - name: Deploy to Heroku
   shell: |
-    docker-compose -f {{compose_file}} run --rm \
-    heroku dpl --provider=heroku --app={{heroku_app_name}} --api-key={{heroku_api_key}} --skip-cleanup
+    git push heroku master
