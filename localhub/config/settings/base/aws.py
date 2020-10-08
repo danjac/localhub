@@ -24,6 +24,6 @@ AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=600"}
 
 # http://whitenoise.evans.io/en/stable/django.html#use-a-content-delivery-network
 STATIC_HOST = AWS_S3_CUSTOM_DOMAIN
-STATIC_URL = STATIC_HOST + "/static/"
+STATIC_URL = "https://" + STATIC_HOST + "/static/"
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
