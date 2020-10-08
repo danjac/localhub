@@ -7,7 +7,7 @@ import Turbolinks from 'turbolinks';
 
 import { Application } from 'stimulus';
 
-import controllers from './controllers';
+import controllers from './controllers/*.js';
 import instantClick from './utils/instant-click';
 
 // Axios setup
@@ -19,7 +19,9 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 const application = Application.start();
 
 Object.keys(controllers).forEach((name) => {
-  application.register(name, controllers[name]);
+  if (name.endsWith('-controller')) {
+    application.register(name.slice(0, -11), controllers[name].default);
+  }
 });
 
 // Instant click setup
