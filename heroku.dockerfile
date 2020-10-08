@@ -8,6 +8,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONFAULTHANDLER=1
 ENV PYTHONHASHSEED=random
 ENV DISABLE_COLLECTSTATIC=1
+ENV SECRET_KEY=$SECRET_KEY
+ENV DJANGO_SETTINGS_MODULE=localhub.config.settings.heroku
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y postgresql-client-11 \
@@ -22,9 +24,7 @@ COPY . /app
 
 # https://testdriven.io/blog/deploying-django-to-heroku-with-docker/
 #
-RUN -e SECRET_KEY \
-    -e DJANGO_SETTINGS_MODULE=localhub.config.settings.production \
-    python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
 
 RUN useradd -m user
 USER user
