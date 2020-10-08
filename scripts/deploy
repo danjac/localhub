@@ -12,6 +12,3 @@ docker-compose run --rm \
 
 echo "Deploying to Heroku..."
 git push heroku master
-
-
-
