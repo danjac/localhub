@@ -35,10 +35,10 @@ services:
       - '8025:8025'
       - '1025:1025'
 
-  yarn:
+  assets:
     build:
       context: .
-      dockerfile: yarn.dockerfile
+      dockerfile: assets.dockerfile
     privileged: true
     command: yarn dev
     volumes:

@@ -101,7 +101,7 @@ class Exif:
             s = float(s0) / float(s1)
 
             return d + (m / 60.0) + (s / 3600.0)
-        except (IndexError, ValueError, ZeroDivisionError):
+        except (IndexError, ValueError, TypeError, ZeroDivisionError):
             raise self.Invalid(f"Unable to convert to degress:{value}")
 
     def build_gps_dict(self):
