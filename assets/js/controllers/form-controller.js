@@ -35,14 +35,22 @@ export default class extends ApplicationController {
 
   submit(event) {
     event.preventDefault();
-
     this.data.delete('changed');
 
     const method = this.element.getAttribute('method');
     const url = this.element.getAttribute('action');
     const multipart = this.element.getAttribute('enctype') === 'multipart/form-data';
 
-    this.handleSubmit(method, url, new FormData(this.element));
+    const data = new FormData(this.element);
+
+    // add button element value if any
+    const { currentTarget } = event;
+
+    if (currentTarget.nodeName === 'BUTTON') {
+      data.append(currentTarget.getAttribute('name'), currentTarget.value);
+    }
+
+    this.handleSubmit(method, url, data);
 
     return false;
   }
