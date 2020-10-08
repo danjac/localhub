@@ -1,3 +1,0 @@
-- name: Run unit tests
-  shell: |
-    docker-compose run --rm -e SECRET_KEY="{{secret_key}}" django pytest --reuse-db

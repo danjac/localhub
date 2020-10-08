@@ -1,5 +1,0 @@
-- name: Deploy to Heroku
-  # heroku stack:set container
-  # heroku git:remote -a localhub
-  shell: |
-    git push heroku master
