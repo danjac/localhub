@@ -41,3 +41,6 @@ celerybeat-schedule
 # Common typos
 :w
 '
+
+# ansible
+vars.yml

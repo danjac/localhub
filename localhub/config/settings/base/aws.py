@@ -4,8 +4,8 @@
 # Local
 from . import env
 
-DEFAULT_FILE_STORAGE = "localhub.config.storages.MediaStorage"
-STATICFILES_STORAGE = "localhub.config.storages.StaticStorage"
+DEFAULT_FILE_STORAGE = "localhub.config.aws.MediaStorage"
+STATICFILES_STORAGE = "localhub.config.aws.StaticStorage"
 
 AWS_MEDIA_LOCATION = "media"
 AWS_STATIC_LOCATION = "static"

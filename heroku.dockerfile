@@ -14,11 +14,8 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./requirements/base.txt /requirements/base.txt
-COPY ./requirements/aws.txt /requirements/aws.txt
-COPY ./requirements/heroku.txt /requirements/heroku.txt
-
-RUN pip install -r requirements/heroku.txt
+COPY ./requirements.txt /requirements.txt
+RUN pip install -r requirements.txt
 
 WORKDIR /app
 COPY . /app

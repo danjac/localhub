@@ -13,11 +13,8 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./requirements/base.txt /requirements/base.txt
-COPY ./requirements/test.txt /requirements/test.txt
-COPY ./requirements/local.txt /requirements/local.txt
-
-RUN pip install -r requirements/local.txt
+COPY ./requirements.txt /requirements.txt
+RUN pip install -r requirements.txt
 
 WORKDIR /app
 

@@ -48,7 +48,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: local.dockerfile
+      dockerfile: django.dockerfile
     restart: on-failure
     privileged: true
     environment: *default-env

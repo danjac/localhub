@@ -1,5 +1,0 @@
--r base.in
--r aws.in
-
-django-anymail[mailgun]
-gunicorn
