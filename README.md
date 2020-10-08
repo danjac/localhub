@@ -20,19 +20,17 @@ You should have docker and docker-compose installed on your development machine.
 
 > ./docker-compose up [-d]
 
-To run Django commands through docker:
+To run Django management commands through docker:
 
-> ./docker-compose django ./manage.py
+> ./scripts/manage [...]
 
 To run unit tests:
 
-> ./docker-compose django pytest
+> ./scripts/runtests [...]
 
 ### Deployment
 
 Localhub is currently configured to deploy to Heroku. A PostgreSQL and Redis buildpack are required to run the Heroku instances. Production emails require Mailgun. Assets and user uploaded media share a single S3 bucket.
-
-Ansible roles have been included to run unit tests, build and deploy assets to S3, and deploy to Heroku.
 
 To set up Heroku containerized deployment:
 
@@ -42,8 +40,8 @@ Assuming "localhub" is the name of your Heroku instance:
 
 > heroku git:remote -a localhub
 
-Next, copy vars.yml.example to vars.yml and add your AWS and Heroku keys.
+Next, copy .env.example to .env and add your AWS, Heroku, and other secret keys.
 
-To deploy master branch to Heroku:
+To deploy master branch to Heroku and S3:
 
-> ansible-deploy site.yml
+> ./scripts/deploy
