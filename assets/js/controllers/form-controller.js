@@ -42,7 +42,7 @@ export default class extends ApplicationController {
     const url = this.element.getAttribute('action');
     const multipart = this.element.getAttribute('enctype') === 'multipart/form-data';
 
-    this.handleSubmit(method, url, this.serialize(event, multipart));
+    this.handleSubmit(method, url, new FormData(this.element));
 
     return false;
   }
@@ -106,48 +106,6 @@ export default class extends ApplicationController {
   enableFormControls() {
     this.data.delete('disabled');
     this.formElements.forEach((el) => el.removeAttribute('disabled'));
-  }
-
-  serialize(event, multipart) {
-    const data = multipart ? new FormData() : new URLSearchParams();
-
-    this.formElements.forEach((field) => {
-      if (field.name && !field.disabled) {
-        switch (field.type) {
-          case 'reset':
-          case 'button':
-          case 'submit':
-            // if the event is triggered from a button, append the value
-            // do this in markup by explictly adding a name/value and
-            // data-action="form#submit" to the button
-            if (event.target.name === field.name && field.value) {
-              data.append(field.name, field.value);
-            }
-            break;
-          case 'file':
-            if (multipart) {
-              data.append(field.name, field.files[0]);
-            }
-            break;
-          case 'radio':
-          case 'checkbox':
-            if (field.checked) {
-              data.append(field.name, field.value);
-            }
-            break;
-          case 'select-multiple':
-            Array.from(field.options)
-              .filter((option) => option.selected)
-              .forEach((option) => {
-                data.append(field.name, option.value);
-              });
-            break;
-          default:
-            data.append(field.name, field.value);
-        }
-      }
-    });
-    return data;
   }
 
   get formElements() {

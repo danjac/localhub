@@ -110,7 +110,7 @@ class PhotoForm(ActivityForm):
         if cleaned_data.get("clear_gps_data"):
             latitude, longitude = (None, None)
 
-        elif cleaned_data["extract_gps_data"]:
+        elif exif and cleaned_data["extract_gps_data"]:
 
             try:
                 latitude, longitude = exif.locate()
