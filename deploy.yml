@@ -22,13 +22,13 @@ services:
   redis:
     image: redis:5.0.7
 
-  webpack:
+  assets:
     build:
       context: .
-      dockerfile: webpack.dockerfile
+      dockerfile: assets.dockerfile
       cache_from:
-        - '${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}'
-    image: '${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}'
+        - '${CI_REGISTRY_IMAGE-deploy}/assets:${CI_COMMIT_SHORT_SHA-deploy}'
+    image: '${CI_REGISTRY_IMAGE-deploy}/assets:${CI_COMMIT_SHORT_SHA-deploy}'
     volumes:
       - .:/app
       - /app/node_modules

@@ -40,7 +40,7 @@ build:
   script:
     - docker-compose -f deploy.yml build
     - docker-compose -f deploy.yml push
-    - docker-compose -f deploy.yml run webpack yarn build
+    - docker-compose -f deploy.yml run assets yarn build
   only:
     - release
 
