@@ -7,6 +7,7 @@ build:
 
 release:
   command:
+    - python manage.py collectstatic
     - python manage.py migrate
     # run this after reset migrations
     # - python manage.py migrate --fake-initial
