@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import 'leaflet/dist/leaflet.css';
+//import 'leaflet/dist/leaflet.css';
 
 import L from 'leaflet';
 import ApplicationController from './application-controller';

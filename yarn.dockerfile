@@ -5,7 +5,6 @@ FROM node:14.4-buster-slim
 
 WORKDIR /app
 
-COPY webpack.config.js ./webpack.config.js
 COPY postcss.config.js ./postcss.config.js
 COPY tailwind.config.js ./tailwind.config.js
 COPY package.json ./package.json

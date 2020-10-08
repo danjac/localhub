@@ -3,7 +3,7 @@
 
 import axios from 'axios';
 
-import { isTouchDevice, maximizeZIndex, fitIntoViewport } from '@/utils/dom-helpers';
+import { isTouchDevice, maximizeZIndex, fitIntoViewport } from '~/utils/dom-helpers';
 import ApplicationController from './application-controller';
 
 // cached URL results - if we have more than one card on a page with identical URL,

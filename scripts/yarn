@@ -3,4 +3,4 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-docker-compose -f local.yml exec webpack yarn $@
+docker-compose -f local.yml exec yarn yarn $@

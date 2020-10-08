@@ -3,7 +3,7 @@
 
 import axios from 'axios';
 
-import { urlB64ToUint8Array } from '@/utils/encoders';
+import { urlB64ToUint8Array } from '~/utils/encoders';
 import ApplicationController from './application-controller';
 
 let registration = null;

@@ -3,9 +3,9 @@
 
 import { Controller } from 'stimulus';
 
-import { ClassList } from '@/utils/class-list';
-import EventBus from '@/utils/event-bus';
-import Toaster from '@/utils/toaster';
+import { ClassList } from '~/utils/class-list';
+import EventBus from '~/utils/event-bus';
+import Toaster from '~/utils/toaster';
 
 export default class extends Controller {
   // base controller for application. All controllers should

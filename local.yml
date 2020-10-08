@@ -35,12 +35,12 @@ services:
       - '8025:8025'
       - '1025:1025'
 
-  webpack:
+  yarn:
     build:
       context: .
-      dockerfile: webpack.dockerfile
+      dockerfile: yarn.dockerfile
     privileged: true
-    command: yarn run dev
+    command: yarn dev
     volumes:
       - .:/app
       - /app/node_modules

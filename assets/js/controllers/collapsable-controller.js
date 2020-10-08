@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import * as classList from '@/utils/class-list';
+import * as classList from '~/utils/class-list';
 
 import ApplicationController from './application-controller';
 

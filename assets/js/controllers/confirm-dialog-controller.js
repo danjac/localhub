@@ -1,8 +1,8 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Events, Keys } from '@/constants';
-import { maximizeZIndex } from '@/utils/dom-helpers';
+import { Events, Keys } from '~/constants';
+import { maximizeZIndex } from '~/utils/dom-helpers';
 
 import ApplicationController from './application-controller';
 
