@@ -52,11 +52,6 @@ export default class extends ApplicationController {
       return;
     }
 
-    if (method === 'GET') {
-      Turbolinks.visit(`${url}?${data}`);
-      return;
-    }
-
     this.bus.pub(Events.FORM_FETCHING);
 
     const referrer = location.href;

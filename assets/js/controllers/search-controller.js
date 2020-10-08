@@ -23,11 +23,13 @@ export default class extends ApplicationController {
   static targets = ['input', 'selector'];
 
   connect() {
-    this.toggleSelector();
-    const { pathname } = window.location;
-    for (const option of this.selectorTarget.options) {
-      if (option.value === pathname) {
-        option.setAttribute('selected', true);
+    if (this.hasSelectorTarget) {
+      this.toggleSelector();
+      const { pathname } = window.location;
+      for (const option of this.selectorTarget.options) {
+        if (option.value === pathname) {
+          option.setAttribute('selected', true);
+        }
       }
     }
   }
@@ -41,6 +43,14 @@ export default class extends ApplicationController {
     const param = this.data.get('param') || 'q';
     const search = this.inputTarget.value;
     if (value && search) {
+      Turbolinks.visit(`${value}?${param}=${search}`);
+    }
+  }
+
+  submit() {
+    const param = this.data.get('param') || 'q';
+    const search = this.inputTarget.value;
+    if (search) {
       Turbolinks.visit(`${value}?${param}=${search}`);
     }
   }
