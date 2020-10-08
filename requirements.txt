@@ -15,7 +15,6 @@ billiard==3.6.3.0         # via celery
 bleach==3.2.1             # via -r requirements.in
 boto3==1.15.14            # via -r requirements.in
 botocore==1.18.14         # via boto3, s3transfer
-brotli==1.0.9             # via whitenoise
 celery==5.0.0             # via -r requirements.in, django-celery-email
 certifi==2020.6.20        # via requests
 cffi==1.14.3              # via cryptography
@@ -111,7 +110,6 @@ vine==5.0.0               # via amqp, celery
 wcwidth==0.2.5            # via prompt-toolkit
 webencodings==0.5.1       # via bleach
 werkzeug==1.0.1           # via -r requirements.in
-whitenoise[brotli]==5.2.0  # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

@@ -45,7 +45,6 @@ urlpatterns = [
     # Third-party
     path("account/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),
-    path("grappelli/", include("grappelli.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
 ]
 

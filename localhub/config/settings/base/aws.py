@@ -5,7 +5,7 @@
 from . import env
 
 DEFAULT_FILE_STORAGE = "localhub.config.aws.MediaStorage"
-# STATICFILES_STORAGE = "localhub.config.aws.StaticStorage"
+STATICFILES_STORAGE = "localhub.config.aws.StaticStorage"
 
 AWS_MEDIA_LOCATION = "media"
 AWS_STATIC_LOCATION = "static"
@@ -21,10 +21,3 @@ AWS_IS_GZIPPED = True
 AWS_DEFAULT_ACL = "public-read"
 
 AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=600"}
-
-# http://whitenoise.evans.io/en/stable/django.html#use-a-content-delivery-network
-STATIC_HOST = AWS_S3_CUSTOM_DOMAIN
-STATIC_URL = "https://" + STATIC_HOST + "/static/"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-WHITENOISE_MANIFEST_STRICT = False

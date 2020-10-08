@@ -11,6 +11,6 @@ TEMPLATES[0]["OPTIONS"]["debug"] = True
 
 SITE_ID = 1
 
-INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS + ["silk"]
+INSTALLED_APPS += ["silk"]
 
 MIDDLEWARE = ["silk.middleware.SilkyMiddleware"] + MIDDLEWARE
