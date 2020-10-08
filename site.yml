@@ -6,13 +6,13 @@
 #roles:
 #- tests
 
-- name: Build and deploy assets to S3
-  hosts: localhost
-  gather_facts: no
-  vars_files:
-    - vars.yml
-  roles:
-    - assets
+#- name: Build and deploy assets to S3
+#hosts: localhost
+#gather_facts: no
+#vars_files:
+#- vars.yml
+#roles:
+#- assets
 
 - name: Deploy to Heroku
   hosts: localhost

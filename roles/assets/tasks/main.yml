@@ -1,7 +1,7 @@
 - name: Build frontend assets
   shell: |
     docker-compose -f {{compose_file}} run --rm \
-    -e BASE_URL={{ base_url }} deploy:assets  yarn build
+    -e BASE_URL={{ base_url }} deploy_assets  yarn build
 
 - name: Deploy assets to S3
   shell: |
@@ -11,4 +11,4 @@
     -e AWS_ACCESS_KEY_ID={{aws_access_key_id}} \
     -e AWS_SECRET_ACCESS_KEY={{aws_secret_access_key}} \
     -e AWS_STORAGE_BUCKET_NAME={{aws_storage_bucket_name}} \
-    deploy:django ./manage.py collectstatic --noinput
+    deploy_django ./manage.py collectstatic --noinput

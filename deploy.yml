@@ -22,7 +22,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
 
-  deploy:assets:
+  deploy_assets:
     build:
       context: .
       dockerfile: assets.dockerfile
@@ -31,7 +31,7 @@ services:
       - .:/app
       - /app/node_modules
 
-  deploy:django: &django
+  deploy_django: &django
     build:
       context: .
       dockerfile: django.dockerfile
