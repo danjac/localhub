@@ -5,9 +5,6 @@ import ApplicationController from './application-controller';
 
 const DEFAULT_ZOOM = 13;
 
-// Leaflet library loaded in CDN
-const L = window.L;
-
 export default class extends ApplicationController {
   /*
   Inserts an OpenStreetMap into the element on page load.
@@ -19,6 +16,9 @@ export default class extends ApplicationController {
 
   */
   connect() {
+    // Leaflet library loaded in CDN
+    const L = window.L;
+
     const coords = [this.latitude, this.longitude];
     const map = L.map(this.element.id).setView(coords, this.defaultZoom);
 
