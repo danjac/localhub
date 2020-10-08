@@ -1,18 +1,18 @@
-#- name: Run all tests
-#hosts: localhost
-#gather_facts: no
-#vars_files:
-#- vars.yml
-#roles:
-#- tests
+- name: Run all tests
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  roles:
+    - tests
 
-#- name: Build and deploy assets to S3
-#hosts: localhost
-#gather_facts: no
-#vars_files:
-#- vars.yml
-#roles:
-#- assets
+- name: Build and deploy assets to S3
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  roles:
+    - assets
 
 - name: Deploy to Heroku
   hosts: localhost

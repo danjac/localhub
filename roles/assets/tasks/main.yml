@@ -1,14 +1,14 @@
 - name: Build frontend assets
   shell: |
-    docker-compose -f {{compose_file}} run --rm \
-    -e BASE_URL={{ base_url }} deploy_assets  yarn build
+    docker-compose run --rm \
+    -e BASE_URL={{ base_url }} assets  yarn build
 
 - name: Deploy assets to S3
   shell: |
-    docker-compose -f {{compose_file}} run --rm \
+    docker-compose run --rm \
     -e DJANGO_SETTINGS_MODULE=localhub.config.settings.deploy \
     -e SECRET_KEY="{{secret_key}}" \
     -e AWS_ACCESS_KEY_ID={{aws_access_key_id}} \
     -e AWS_SECRET_ACCESS_KEY={{aws_secret_access_key}} \
     -e AWS_STORAGE_BUCKET_NAME={{aws_storage_bucket_name}} \
-    deploy_django ./manage.py collectstatic --noinput
+    django ./manage.py collectstatic --noinput
