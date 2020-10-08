@@ -369,5 +369,3 @@ a.btn-secondary {
 }
 
 @tailwind utilities;
-
-@import 'leaflet/dist/leaflet.css';
