@@ -24,4 +24,5 @@ RUN useradd -m user
 USER user
 
 # https://testdriven.io/blog/deploying-django-to-heroku-with-docker/
-RUN python manage.py collectstatic --noinput
+#
+RUN python ./manage.py collectstatic --noinput
