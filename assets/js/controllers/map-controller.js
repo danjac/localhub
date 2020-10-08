@@ -1,27 +1,12 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//import 'leaflet/dist/leaflet.css';
-
-import L from 'leaflet';
 import ApplicationController from './application-controller';
 
-// https://github.com/PaulLeCam/react-leaflet/issues/255
-
-import iconUrl from 'leaflet/dist/images/marker-icon.png';
-import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
-import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
-
-/* eslint-disable-next-line no-underscore-dangle */
-delete L.Icon.Default.prototype._getIconUrl;
-
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl,
-  iconUrl,
-  shadowUrl,
-});
-
 const DEFAULT_ZOOM = 13;
+
+// Leaflet library loaded in CDN
+const L = window.L;
 
 export default class extends ApplicationController {
   /*
