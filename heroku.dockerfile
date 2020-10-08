@@ -8,8 +8,10 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONFAULTHANDLER=1
 ENV PYTHONHASHSEED=random
 ENV DISABLE_COLLECTSTATIC=1
+
 ENV SECRET_KEY=$SECRET_KEY
-ENV DJANGO_SETTINGS_MODULE=localhub.config.settings.heroku
+ENV DATABASE_URL=$DATABASE_URL
+ENV DJANGO_SETTINGS_MODULE=localhub.config.settings.deploy
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y postgresql-client-11 \
