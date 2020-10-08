@@ -18,22 +18,32 @@ Favicon: https://www.iconfinder.com/3ab2ou (Creative Commons Attribution)
 
 You should have docker and docker-compose installed on your development machine.
 
-This script should (re)build your docker environment as needed and start up the containers in a detached mode:
-
-> ./scripts/start-docker
+> ./docker-compose up [-d]
 
 To run Django commands through docker:
 
-> ./scripts/manage [command...]
+> ./docker-compose django ./manage.py
 
 To run unit tests:
 
-> ./scripts/runtests [options...]
+> ./docker-compose django pytest
 
 ### Deployment
 
 Localhub is currently configured to deploy to Heroku. A PostgreSQL and Redis buildpack are required to run the Heroku instances. Production emails require Mailgun. Assets and user uploaded media share a single S3 bucket.
 
-A Gitlab CI/CD configuration is provided, which assumes a long-running "release" branch. To deploy, just merge from your master branch into release and push. The pipeline takes care of assets deployment and tests.
+Ansible roles have been included to run unit tests, build and deploy assets to S3, and deploy to Heroku.
 
-Pull requests are welcome for other deployment and production environments.
+To set up Heroku containerized deployment:
+
+> heroku stack:set container
+
+Assuming "localhub" is the name of your Heroku instance:
+
+> heroku git:remote -a localhub
+
+Next, copy vars.yml.example to vars.yml and add your AWS and Heroku keys.
+
+To deploy master branch to Heroku:
+
+> ansible-deploy site.yml
