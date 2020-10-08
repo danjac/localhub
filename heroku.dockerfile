@@ -25,5 +25,5 @@ USER user
 
 # https://testdriven.io/blog/deploying-django-to-heroku-with-docker/
 #
-COPY ./manage.py /app/manage.py
-RUN python /app/manage.py collectstatic --noinput
+COPY ./manage.py /manage.py
+RUN python manage.py collectstatic --noinput
