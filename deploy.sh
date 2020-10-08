@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 echo "Building assets..."
 docker-compose run --rm -e BASE_URL assets yarn build
 
