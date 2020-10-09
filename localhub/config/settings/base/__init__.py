@@ -284,7 +284,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "handlers": {
         "console": {"class": "logging.StreamHandler"},
-        "null": {"level": "DEBUG", "class": "logging.NullHandler",},
+        "null": {"level": "DEBUG", "class": "logging.NullHandler"},
     },
     "loggers": {
         "root": {"handlers": ["console"], "level": "INFO"},
