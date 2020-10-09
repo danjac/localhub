@@ -69,8 +69,11 @@ class Exif:
         """
         gps_dict = self.build_gps_dict()
 
-        lat = gps_dict["GPSLatitude"][0]
-        lng = gps_dict["GPSLongitude"][0]
+        try:
+            lat = self.convert_to_decimal(*gps_dict["GPSLatitude"])
+            lng = self.convert_to_decimal(*gps_dict["GPSLongitude"])
+        except ValueError as e:
+            raise self.Invalid(f"Invalid GPS dict: {gps_dict}") from e
 
         if gps_dict["GPSLatitudeRef"] != "N":
             lat = 0 - lat
@@ -79,6 +82,9 @@ class Exif:
             lng = 0 - lng
 
         return lat, lng
+
+    def convert_to_decimal(self, degrees, minutes, seconds):
+        return round(degrees + (minutes / 60) + (seconds / 3600), 5)
 
     def build_gps_dict(self):
         raw_values = {}
