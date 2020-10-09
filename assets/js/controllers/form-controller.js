@@ -39,7 +39,6 @@ export default class extends ApplicationController {
 
     const method = this.element.getAttribute('method');
     const url = this.element.getAttribute('action');
-    const multipart = this.element.getAttribute('enctype') === 'multipart/form-data';
 
     const data = new FormData(this.element);
 
