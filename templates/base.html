@@ -91,7 +91,7 @@
         <form method="GET"
               action="{% url 'activities:search' %}"
               data-controller="search"
-              data-action="search#submit">
+              data-action="search#search">
           <input type="search"
                  placeholder="{% trans "Search..." %}"
                  data-target="search.input"
@@ -130,7 +130,7 @@
       <form method="GET"
             action="{% url 'activities:search' %}"
             data-controller="search"
-            data-action="search#submit">
+            data-action="search#search">
         <input type="search"
                placeholder="{% trans "Search..." %}"
                data-target="search.input"

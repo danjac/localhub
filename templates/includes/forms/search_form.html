@@ -10,7 +10,7 @@
       action="{{ request.path }}"
       data-controller="search"
       data-search-param="{{ view.search_parameter|default:'q' }}"
-      data-action="search#submit"
+      data-action="search#search"
       class="my-2 search-form">
   {% for name, value in non_search_params.items %}
   <input type="hidden"
@@ -27,7 +27,7 @@
            {% if selector %}
            data-target="search.input"
            {% endif %}
-           data-action="keyup->search#change"
+           data-action="keyup->search#toggleSelector"
            placeholder="{% trans "Search..." %}"
            value="{{ view.search_query|default:"" }}">
   </div>
@@ -35,7 +35,7 @@
   <div class="relative mb-3">
     <select class="appearance-none border border-gray-500 w-full p-1 text-gray-900"
             data-target="search.selector"
-            data-action="search#select">
+            data-action="search#search">
       <option value="">{% trans "Search in..." %}</option>
       <option value="{% url 'activities:search' %}">{% trans "Activity Stream" %}</option>
       <option value="{% url 'private_messages:inbox' %}">{% trans "Messages - Inbox" %}</option>

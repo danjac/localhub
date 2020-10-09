@@ -34,22 +34,14 @@ export default class extends ApplicationController {
     }
   }
 
-  change() {
-    this.toggleSelector();
-  }
-
-  select() {
-    const { value } = this.selectorTarget;
+  search(event) {
+    event.preventDefault();
+    const url = this.hasSelectorTarget
+      ? this.selectorTarget.value
+      : this.element.getAttribute('action');
     const search = this.inputTarget.value;
-    if (value && search) {
-      Turbolinks.visit(`${value}?${this.searchParam}=${search}`);
-    }
-  }
-
-  submit() {
-    const search = this.inputTarget.value;
-    if (search) {
-      Turbolinks.visit(`${value}?${this.searchParam}=${search}`);
+    if (url && search) {
+      Turbolinks.visit(`${url}?${this.searchParam}=${search}`);
     }
   }
 
