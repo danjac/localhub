@@ -69,8 +69,8 @@ class Exif:
         """
         gps_dict = self.build_gps_dict()
 
-        lat = self.convert_to_degress(gps_dict["GPSLatitude"])
-        lng = self.convert_to_degress(gps_dict["GPSLongitude"])
+        lat = gps_dict["GPSLatitude"][0]
+        lng = gps_dict["GPSLongitude"][0]
 
         if gps_dict["GPSLatitudeRef"] != "N":
             lat = 0 - lat
@@ -79,30 +79,6 @@ class Exif:
             lng = 0 - lng
 
         return lat, lng
-
-    def convert_to_degress(self, value):
-        """
-        Convert GPS coordinate to degress in float
-        """
-        try:
-            d0 = value[0][0]
-            d1 = value[0][1]
-
-            d = float(d0) / float(d1)
-
-            m0 = value[1][0]
-            m1 = value[1][1]
-
-            m = float(m0) / float(m1)
-
-            s0 = value[2][0]
-            s1 = value[2][1]
-
-            s = float(s0) / float(s1)
-
-            return d + (m / 60.0) + (s / 3600.0)
-        except (IndexError, ValueError, TypeError, ZeroDivisionError) as e:
-            raise self.Invalid(f"Unable to convert to degress:{value}") from e
 
     def build_gps_dict(self):
         raw_values = {}
