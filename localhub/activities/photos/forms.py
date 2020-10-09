@@ -91,18 +91,20 @@ class PhotoForm(ActivityForm):
         except KeyError:
             return cleaned_data
 
+        exif = None
+
         try:
             exif = Exif.from_image(image)
-        except Exif.Invalid:
-            exif = None
+        except Exif.Invalid as e:
+            logger.exception(e)
 
         # try and rotate image if orientation provided
 
         if exif:
             try:
                 exif.rotate()
-            except Exif.Invalid:
-                pass
+            except Exif.Invalid as e:
+                logger.exception(e)
 
         latitude = cleaned_data.get("latitude")
         longitude = cleaned_data.get("longitude")
@@ -114,7 +116,8 @@ class PhotoForm(ActivityForm):
 
             try:
                 latitude, longitude = exif.locate()
-            except Exif.Invalid:
+            except Exif.Invalid as e:
+                logger.exception(e)
                 latitude, longitude = (None, None)
 
         cleaned_data["latitude"] = latitude
