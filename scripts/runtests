@@ -2,5 +2,5 @@
 
 set -euo pipefail
 
-docker-compose exec django pytest $@
+docker-compose run --rm django pytest $@
 
