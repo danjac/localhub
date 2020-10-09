@@ -287,8 +287,8 @@ LOGGING = {
         "root": {"handlers": ["console"], "level": "INFO"},
         "django.security.DisallowedHost": {"handlers": ["null"], "propagate": False},
         "django.request": {"handlers": ["console"], "level": "ERROR"},
-        "localhub.activities.photos.forms": {"handlers": ["console"], "level": "INFO",},
-        "localhub.notifications.adapter": {"handlers": ["console"], "level": "INFO",},
-        "localhub.notifications.tasks": {"handlers": ["console"], "level": "INFO",},
+        "localhub.activities.photos.forms": {"handlers": ["console"], "level": "INFO"},
+        "localhub.notifications.adapter": {"handlers": ["console"], "level": "INFO"},
+        "localhub.notifications.tasks": {"handlers": ["console"], "level": "INFO"},
     },
 }
