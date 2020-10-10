@@ -127,7 +127,7 @@ class EventCreateView(TimezoneOverrideMixin, ActivityCreateView):
             day = int(self.request.GET["day"])
             month = int(self.request.GET["month"])
             year = int(self.request.GET["year"])
-            return datetime.datetime(day=day, month=month, year=year, hour=9,)
+            return datetime.datetime(day=day, month=month, year=year, hour=9)
         except (KeyError, ValueError):
             return None
 
