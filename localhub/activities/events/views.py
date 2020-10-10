@@ -124,9 +124,9 @@ class EventCreateView(TimezoneOverrideMixin, ActivityCreateView):
 
     def get_start_date(self):
         try:
-            day = int(self.request.GET["day"])
-            month = int(self.request.GET["month"])
-            year = int(self.request.GET["year"])
+            [day, month, year] = [
+                int(self.request.GET[param]) for param in ("day", "month", "year")
+            ]
             return datetime.datetime(day=day, month=month, year=year, hour=9)
         except (KeyError, ValueError):
             return None
