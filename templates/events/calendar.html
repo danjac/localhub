@@ -9,18 +9,30 @@
 {% block subtitle %} / {% trans "Events" %} / {% trans "Calendar" %}{% endblock %}
 
 {% block content %}
+
+{% has_perm 'activities.create_activity' user community as can_create_activity %}
+
 {% if current_date %}
-<ul class="breadcrumbs mb-3">
-  <li class="breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
-  <li class="breadcrumb-item">
-    <a href="{{ request.path }}?month={{ current_date.month }}&year={{ current_date.year }}">
-      {{ current_date|date:"F Y" }}
+<div class="flex items-center justify-between">
+  <ul class="breadcrumbs mb-3">
+    <li class="breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
+    <li class="breadcrumb-item">
+      <a href="{{ request.path }}?month={{ current_date.month }}&year={{ current_date.year }}">
+        {{ current_date|date:"F Y" }}
+      </a>
+    </li>
+    <li class="breadcrumb-item">
+      {{ current_date|date:"d F Y" }}
+    </li>
+  </ul>
+  {% if can_create_activity %}
+  <div class="page-nav">
+    <a href="{% url 'events:create' %}?day={{ current_date.day }}&month={{ current_date.month }}&year={{ current_date.year }}">
+      {% trans "Submit New Event" %}
     </a>
-  </li>
-  <li class="breadcrumb-item">
-    {{ current_date|date:"d F Y" }}
-  </li>
-</ul>
+  </div>
+  {% endif %}
+</div>
 {% endif %}
 
 <div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
@@ -28,10 +40,9 @@
 
   {% if not current_date %}
   <div class="page-nav mt-3 lg:mt-0">
-    {% has_perm 'activities.create_activity' user community as can_create_activity %}
     {% if can_create_activity %}
     <a class="page-nav-item"
-       href="{% url 'events:create' %}">
+       href="{% url 'events:create' %}?day=1&month={{ current_month.month }}&year={{ current_month.year }}">
       {% trans "Submit Event" %}
     </a>
     {% endif %}

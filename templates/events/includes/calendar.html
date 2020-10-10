@@ -33,35 +33,45 @@
          data-linkify-url="{% if num_events == 1 %}{{ events.0.get_absolute_url }}{% else %}{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}{% endif %}"
          {% endif %}>
       {% if day %}
-      <div class="h-10 lg:h-32 p-2 tracking-tight border-r border-b border-gray-500 align-middle">
-        <button>
-          {{ day }}
-          <span class="lg:hidden ml-1">
-            {% for event in events|slice:5 %}&middot;{% endfor %}
-          </span>
-        </button>
-        <div class="clear-both"></div>
-        {% if events %}
-        <div class="hidden lg:block text-xs{% if is_past %} text-gray-500{% endif %}">
-          {% for event in events|slice:":2" %}
+      {% comment %}
+      {% elif can_create_activity %}
+      {% endcomment %}
+      {% if can_create_activity and not events %}
+      <div class="h-10 lg:h-32 p-2 border-b border-r border-gray-500 cursor-pointer"
+           data-controller="linkify"
+           data-action="click->linkify#fetch"
+           data-linkify-url="{% url 'events:create' %}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}">
+        {% else %}
+        <div class="h-10 lg:h-32 p-2 tracking-tight border-r border-b border-gray-500 align-middle">
+          {% endif %}
+          <button>
+            {{ day }}
+            <span class="lg:hidden ml-1">
+              {% for event in events|slice:5 %}&middot;{% endfor %}
+            </span>
+          </button>
+          <div class="clear-both"></div>
+          {% if events %}
+          <div class="hidden lg:block text-xs{% if is_past %} text-gray-500{% endif %}">
+            {% for event in events|slice:":2" %}
 
-          <div class="{% if not event.is_attendable %} line-through{% elif event.is_attending %} font-semibold{% endif %}">{{ event.title }}</div>
+            <div class="{% if not event.is_attendable %} line-through{% elif event.is_attending %} font-semibold{% endif %}">{{ event.title }}</div>
 
-          {% endfor %}
+            {% endfor %}
 
-          {% if num_events > 2 %}
-          <div href="#">{{ num_events|add:"-2" }} {% trans "More..." %}
+            {% if num_events > 2 %}
+            <div href="#">{{ num_events|add:"-2" }} {% trans "More..." %}
+            </div>
+            {% endif %}
+
           </div>
           {% endif %}
-
         </div>
+        {% else %}
+        <div class="h-10 lg:h-32 p-2 border-b border-r border-gray-500"></div>
         {% endif %}
       </div>
-      {% else %}
-      <div class="h-10 lg:h-32 p-2 border-b border-r border-gray-500"></div>
-      {% endif %}
+      {% endwith %}
+      {% endfor %}
     </div>
-    {% endwith %}
-    {% endfor %}
   </div>
-</div>

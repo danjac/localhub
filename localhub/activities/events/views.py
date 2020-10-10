@@ -119,7 +119,17 @@ class EventCreateView(TimezoneOverrideMixin, ActivityCreateView):
     def get_initial(self):
         initial = super().get_initial()
         initial["timezone"] = self.request.user.default_timezone
+        initial["starts"] = self.get_start_date()
         return initial
+
+    def get_start_date(self):
+        try:
+            day = int(self.request.GET["day"])
+            month = int(self.request.GET["month"])
+            year = int(self.request.GET["year"])
+            return datetime.datetime(day=day, month=month, year=year, hour=9,)
+        except (KeyError, ValueError):
+            return None
 
 
 class EventListView(TimezoneOverrideMixin, ActivityListView):
@@ -247,8 +257,7 @@ class EventCalendarView(
         }
 
     def get_slots(self):
-        """Group events by day into tuples of (number, events)
-        """
+        """Group events by day into tuples of (number, events)"""
 
         return [
             (
