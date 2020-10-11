@@ -1,7 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-FROM node:14.4-buster-slim
+FROM node:14.13.1-buster-slim
 
 WORKDIR /app
 
