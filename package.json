@@ -5,7 +5,7 @@
     "build": "run-p build:css build:js",
     "watch:js": "parcel watch ./assets/js/app.js --out-dir ./assets/dist",
     "watch:css": "postcss ./assets/css/app.css -o ./assets/dist/app.css -w",
-    "build:js": "NODE_ENV=production parcel build ./assets/js/app.js --out-dir ./assets/dist",
+    "build:js": "NODE_ENV=production parcel build ./assets/js/app.js --dist-dir ./assets/dist",
     "build:css": "NODE_ENV=production postcss ./assets/css/app.css -o ./assets/dist/app.css"
   },
   "devDependencies": {
