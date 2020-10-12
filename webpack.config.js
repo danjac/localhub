@@ -14,6 +14,9 @@ module.exports = {
     },
   },
   watch: !isProduction,
+  watchOptions: {
+    ignored: ['node_modules/**'],
+  },
   module: {
     rules: [
       {
