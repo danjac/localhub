@@ -6,6 +6,7 @@ module.exports = {
   entry: path.resolve(__dirname, 'assets', 'js', 'app.js'),
   output: {
     path: path.resolve(__dirname, 'assets', 'dist'),
+    filename: 'app.js',
   },
   resolve: {
     alias: {
