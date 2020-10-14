@@ -4,7 +4,7 @@
 {% load i18n %}
 <div class="flex items-center {{ css_class }}">
   {% if owner %}
-  {% include "users/includes/chip.html" with profile=owner css_class="mr-2" %}
+  {% include "users/includes/chip.html" with profile=owner css_class="text-sm mr-2" %}
   {% endif %}
   <div class="inline-block text-sm text-muted">
     {% if verb %}
