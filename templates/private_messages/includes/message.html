@@ -10,13 +10,13 @@
      data-controller="clipboard"
      data-clipboard-message="{% trans 'Markdown content has been copied' %}">
 
-  <div class="flex flex-wrap items-center mb-3">
+  <div class="flex flex-wrap items-center text-sm mb-3">
     {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url css_class="mr-2" %}
-    <div class="mr-2 text-muted text-sm">
+    <div class="mr-2 text-muted">
       {% trans "to" %}
     </div>
     {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url css_class="mr-2" %}
-    <span class="mr-2 text-muted text-sm">
+    <span class="mr-2 text-muted">
       {% blocktrans with created=message.created|timesince %}
       {{ created }} ago
       {% endblocktrans %}
