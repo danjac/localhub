@@ -9,11 +9,11 @@ export default class extends ApplicationController {
   toggle(event) {
     event.preventDefault();
     this.mainTarget.classList.toggle('hidden');
-    this.navTarget.classList.toggle('hidden');
+    this.navTargets.forEach((el) => el.classList.toggle('hidden'));
   }
 
   reset() {
     this.mainTarget.classList.remove('hidden');
-    this.navTarget.classList.add('hidden');
+    this.navTargets.forEach((el) => el.classList.add('hidden'));
   }
 }

@@ -48,14 +48,7 @@
         href="{% static 'apple-touch-icon.png' %}">
   <link rel="stylesheet"
         href="{% static 'dist/app.css' %}">
-  <link rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-          defer
-          integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-          crossorigin=""></script>
+  {% include "includes/leaflet.html" %}
   <script src="{% static 'dist/app.js' %}"></script>
 </head>
 
@@ -69,11 +62,20 @@
       <div class="flex items-center flex-shrink-0 mr-6">
         {% if is_member %}
         {% block mobile_menu_button %}
-        <button class="lg:hidden mr-3"
+        <button class="lg:hidden mr-3 focus:outline-none"
                 data-action="sidebar#toggle"
+                data-target="sidebar.nav"
                 type="button">
           {% svg "menu" "white" size="24" %}
         </button>
+
+        <button class="hidden lg:hidden mr-3 focus:outline-none"
+                data-action="sidebar#toggle"
+                data-target="sidebar.nav"
+                type="button">
+          {% svg "x" "white" size="24" %}
+        </button>
+
         {% endblock mobile_menu_button %}
         {% endif %}
         {% thumbnail community.logo "32" format="PNG" as logo %}

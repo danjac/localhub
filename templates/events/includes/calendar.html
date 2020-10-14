@@ -26,7 +26,7 @@
   <div class="flex flex-wrap border-l border-gray-500">
     {% for day, is_past, events in slots %}
     {% with num_events=events|length %}
-    <div class="calendar-item text-xs{% if not day %} bg-gray-200{% elif day == today.day and is_current_month %} bg-blue-600 {% if num_events %}hover:bg-blue-500{% endif %} text-white{% elif num_events %} bg-indigo-900 text-white hover:bg-indigo-700{% endif %}{% if num_events %} cursor-pointer{% endif %}"
+    <div class="calendar-item text-xs{% if not day %} bg-gray-200{% elif day == today.day and is_current_month %} bg-blue-600 {% if num_events %}hover:bg-blue-500{% endif %} text-white{% elif num_events %} bg-indigo-900 text-white hover:bg-indigo-700{% endif %}{% if num_events %} cursor-pointer focus:outline-none{% endif %}"
          {% if num_events %}
          data-controller="linkify"
          data-action="click->linkify#fetch"
@@ -37,7 +37,7 @@
       {% elif can_create_activity %}
       {% endcomment %}
       {% if can_create_activity and not events %}
-      <div class="h-10 lg:h-32 p-2 border-b border-r border-gray-500 cursor-pointer"
+      <div class="h-10 lg:h-32 p-2 border-b border-r border-gray-500 cursor-pointer focus:outline-none"
            data-controller="linkify"
            data-action="click->linkify#fetch"
            data-linkify-url="{% url 'events:create' %}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}">

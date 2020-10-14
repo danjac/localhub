@@ -13,13 +13,6 @@
 <nav class="hidden lg:block text-sm w-full lg:w-1/6"
      data-target="sidebar.nav">
 
-  <button class="btn btn-block lg:hidden mb-3 text-base"
-          data-action="sidebar#toggle"
-          data-target="sidebar.nav">
-    {% trans "Close Menu" %}
-  </button>
-
-
   {% has_perm "activities.create_activity" user community as can_create_activity %}
   {% has_perm "communities.moderate_community" user community as can_moderate_community %}
   {% has_perm "communities.manage_community" user community as can_manage_community %}
