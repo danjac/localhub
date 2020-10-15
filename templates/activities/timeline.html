@@ -7,7 +7,6 @@
 {% block subtitle %} / {% trans "Timeline" %}{% endblock %}
 
 {% block content %}
-{% now "Y" as default_year %}
 
 {% if date_filters or current_year or current_month %}
 <ul class="breadcrumbs mb-3">
@@ -44,11 +43,10 @@
   <a class="page-nav-item"
      href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
   {% endfor %}
-  {% endif %}
-  {% if not current_month %}
+  {% elif not current_month %}
   {% for counter, name in months %}
   <a class="page-nav-item"
-     href="{{ request.path }}?month={{ counter }}&year={{ current_year|default:default_year }}&order={{ order }}">{{ name }}</a>
+     href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
   {% endfor %}
   {% endif %}
 </div>
