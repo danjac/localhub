@@ -245,10 +245,11 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         """
         Get months for *current* year as list of tuples of (order, name)
         """
+
         return [
             (date.strftime("%-m"), date.strftime(self.get_month_format()))
             for date in dates
-            if date.year == self.current_year
+            if self.current_year is None or date.year == self.current_year
         ]
 
     def get_years(self, dates):
@@ -335,8 +336,7 @@ timeline_view = TimelineView.as_view()
 
 
 class PrivateView(SearchMixin, BaseActivityStreamView):
-    """Activities that are only visible to owner (published NULL).
-    """
+    """Activities that are only visible to owner (published NULL)."""
 
     template_name = "activities/private.html"
 
