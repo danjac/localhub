@@ -12,7 +12,7 @@
       {% if form_id %}
       id="{{ form_id }}"
       {% endif %}
-      class="{{ css_class|default:"p-1 md:p-3 border border-gray-500 bg-gray-100 max-w-xl" }}"
+      class="{% block css_class %}{{ css_class|default:"p-1 md:p-3 border border-gray-500 bg-gray-100" }}{% endblock %}"
       {% block form_extra_attrs %}{% endblock %}
       {% endspaceless %}>
 

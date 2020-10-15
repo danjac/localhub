@@ -5,6 +5,8 @@
 
 {% load i18n %}
 
+{% block css_class %}{{ block.super }} max-w-xl{% endblock %}
+
 {% block form_fields %}
 
 {% if redirect_field_value %}
