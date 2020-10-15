@@ -4,12 +4,8 @@
     href="{% static 'favicon.png' %}">
 <link rel="apple-touch-icon image_src"
     href="{% static 'apple-touch-icon.png' %}">
-{% if debug %}
+{% with dist_dir=debug|yesno:"local,production" %}
 <link rel="stylesheet"
-      href="{% static 'dist/local/app.css' %}">
-<script src="{% static 'dist/local/app.js' %}"></script>
-{% else %}
-<link rel="stylesheet"
-      href="{% static 'dist/production/app.css' %}">
-<script src="{% static 'dist/production/app.js' %}"></script>
-{% endif %}
+      href="{% static dist_dir|add:'/app.css' %}">
+<script src="{% static dist_dir|add:'/app.js' %}"></script>
+{% endwith %}
