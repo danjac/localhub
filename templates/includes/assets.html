@@ -1,0 +1,15 @@
+{% load static %}
+<link rel="icon"
+    type="image/png"
+    href="{% static 'favicon.png' %}">
+<link rel="apple-touch-icon image_src"
+    href="{% static 'apple-touch-icon.png' %}">
+{% if debug %}
+<link rel="stylesheet"
+      href="{% static 'dist/local/app.css' %}">
+<script src="{% static 'dist/local/app.js' %}"></script>
+{% else %}
+<link rel="stylesheet"
+      href="{% static 'dist/production/app.css' %}">
+<script src="{% static 'dist/production/app.js' %}"></script>
+{% endif %}

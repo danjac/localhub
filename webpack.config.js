@@ -5,7 +5,12 @@ module.exports = {
   mode: process.env.NODE_ENV,
   entry: path.resolve(__dirname, 'assets', 'js', 'app.js'),
   output: {
-    path: path.resolve(__dirname, 'assets', 'dist'),
+    path: path.resolve(
+      __dirname,
+      'assets',
+      'dist',
+      isProduction ? 'production' : 'local'
+    ),
     filename: 'app.js',
   },
   resolve: {
