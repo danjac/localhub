@@ -31,17 +31,17 @@
 {% endif %}
 
 {% if object_list %}
-<div class="flex flex-wrap justify-between">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-3">
   {% for photo in object_list %}
   <div class="mb-3">
     <a href="{{ photo.get_absolute_url }}"
        title="{{ photo.title }}">
       {% if photo.image|is_portrait %}
-      {% thumbnail photo.image "480x270" upscale=False crop="top" as image %}
+      {% thumbnail photo.image "500x300" upscale=False crop="top" as image %}
       {% include "photos/includes/image.html" with title=photo.title %}
       {% endthumbnail %}
       {% else %}
-      {% thumbnail photo.image "480" upscale=False as image %}
+      {% thumbnail photo.image "500" upscale=False as image %}
       {% include "photos/includes/image.html" with title=photo.title %}
       {% endthumbnail %}
       {% endif %}
