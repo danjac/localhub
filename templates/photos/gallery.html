@@ -37,11 +37,11 @@
     <a href="{{ photo.get_absolute_url }}"
        title="{{ photo.title }}">
       {% if photo.image|is_portrait %}
-      {% thumbnail photo.image "500x300" upscale=False crop="top" as image %}
+      {% thumbnail photo.image "480x270" upscale=False crop="top" as image %}
       {% include "photos/includes/image.html" with title=photo.title %}
       {% endthumbnail %}
       {% else %}
-      {% thumbnail photo.image "500" upscale=False as image %}
+      {% thumbnail photo.image "480" upscale=False as image %}
       {% include "photos/includes/image.html" with title=photo.title %}
       {% endthumbnail %}
       {% endif %}
