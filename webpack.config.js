@@ -3,14 +3,14 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
   mode: process.env.NODE_ENV,
-  entry: path.resolve(__dirname, 'assets', 'js', 'app.js'),
+  entry: path.resolve(__dirname, 'static', 'js', 'app.js'),
   output: {
-    path: path.resolve(__dirname, 'assets', isProduction ? 'production' : 'local'),
+    path: path.resolve(__dirname, 'static', isProduction ? 'production' : 'local'),
     filename: 'app.js',
   },
   resolve: {
     alias: {
-      '~': path.resolve(__dirname, 'assets', 'js'),
+      '~': path.resolve(__dirname, 'static', 'js'),
     },
   },
   watch: !isProduction,

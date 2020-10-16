@@ -28,10 +28,9 @@ npm-debug.log*
 *.pot
 
 # Django media/static dirs
-static/
 media/
-assets/local/
-assets/production/
+static/local/
+static/production/
 
 .ipython/
 .env
