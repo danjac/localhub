@@ -1,10 +1,12 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load static %}
 <link rel="icon"
     type="image/png"
     href="{% static 'favicon.png' %}">
 <link rel="apple-touch-icon image_src"
     href="{% static 'apple-touch-icon.png' %}">
-{% with dist_dir=debug|yesno:"local,production" %}
+{% with dist_dir=debug|yesno:"local,dist" %}
 <link rel="stylesheet"
       href="{% static dist_dir|add:'/app.css' %}">
 <script src="{% static dist_dir|add:'/app.js' %}"></script>

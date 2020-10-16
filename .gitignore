@@ -30,7 +30,7 @@ npm-debug.log*
 # Django media/static dirs
 media/
 static/local/
-static/production/
+static/dist/
 
 .ipython/
 .env
