@@ -47,11 +47,12 @@ class FlagAnnotationsQuerySetMixin:
 class Flag(TimeStampedModel):
     class Reason(models.TextChoices):
         SPAM = "spam", _("Spam")
-        ABUSE = "abuse", _("Abuse")
+        ABUSE = "abuse", _("Personal, racial or other abuse")
         RULES = "rules", _("Breach of community rules")
         ILLEGAL = "illegal_activity", _("Illegal activity")
         PR0N = "pornography", _("Pornography")
         WAREZ = "copyright", _("Breach of copyright")
+        FAKE_NEWS = "fake_news", _("Fake news or harmful misinformation")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
