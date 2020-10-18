@@ -5,19 +5,14 @@ import { fadeOut } from '~/utils/dom-helpers';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  /*
-  Used with an server-side rendered alert element that "fades out" after a few seconds
-  after page load.
-
-  */
   connect() {
-    this.timeout = setTimeout(() => {
-      this.dismiss();
-      clearTimeout(this.timeout);
-    }, 3000);
+    if (!window.localStorage.getItem('cookie-notice')) {
+      this.element.classList.remove('hidden');
+    }
   }
 
   dismiss() {
-    fadeOut(this.element, () => this.element.remove());
+    window.localStorage.setItem('cookie-notice', true);
+    this.element.classList.add('hidden');
   }
 }
