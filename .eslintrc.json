@@ -4,7 +4,9 @@
     "es6": true,
     "browser": true
   },
-  "globals": ["require"],
+  "globals": {
+    "require": true
+  },
   "rules": {
     "prettier/prettier": "error"
   },

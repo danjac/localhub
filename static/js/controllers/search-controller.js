@@ -46,7 +46,7 @@ export default class extends ApplicationController {
   }
 
   toggleSelector() {
-    if (!!this.inputTarget.value) {
+    if (this.inputTarget.value) {
       this.selectorTarget.removeAttribute('disabled');
     } else {
       this.selectorTarget.setAttribute('disabled', true);
