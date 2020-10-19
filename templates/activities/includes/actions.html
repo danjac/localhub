@@ -21,12 +21,14 @@
     <a class="dropdown-menu-item line-through"
        href="{{ object|resolve_url:"unpin" }}"
        class="line-through"
+       role="button"
        data-turbolinks="false"
        data-controller="ajax"
        data-action="ajax#post">{% trans "Pin" %}</a>
     {% else %}
     <a class="dropdown-menu-item"
        href="{{ object|resolve_url:"pin" }}"
+       role="button"
        data-turbolinks="false"
        data-controller="ajax"
        data-action="ajax#post">{% trans "Pin" %}</a>
@@ -63,6 +65,7 @@
     {% has_perm "activities.reshare_activity" user object as can_reshare %}
     {% if can_reshare %}
     <a class="dropdown-menu-item"
+       role="button"
        data-controller="ajax"
        data-turbolinks="false"
        data-action="ajax#post"
@@ -83,6 +86,7 @@
 
     {% if not object.published %}
     <a class="dropdown-menu-item"
+       role="button"
        data-controller="ajax"
        data-turbolinks="false"
        data-action="ajax#post"
@@ -104,6 +108,7 @@
     {% if can_delete %}
     <a class="dropdown-menu-item"
        href="{{ object|resolve_url:"delete" }}"
+       role="button"
        data-turbolinks="false"
        data-controller="ajax"
        data-action="ajax#post"
@@ -118,6 +123,7 @@
     {% if object.description %}
     <a class="dropdown-menu-item"
        href="#"
+       role="button"
        data-turbolinks="false"
        data-target="clipboard.button"
        data-action="clipboard#copy">
