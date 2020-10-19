@@ -7,13 +7,17 @@
 
 {% block content %}
 <ul class="breadcrumb-item">
-  <li class="breadcrumb-item"">
-    <a
-      href="{{ activity|resolve_url:"list" }}">{{ activity|verbose_name_plural|title }}</a>
+  <li class="breadcrumb-item">
+    <a href="{{ activity|resolve_url:"list" }}">{{ activity|verbose_name_plural|title }}</a>
   </li>
-  <li class="breadcrumb-item""><a href="{{ activity.get_absolute_url }}">{{ activity|truncatechars:60 }}</a></li>
-  <li class="breadcrumb-item"">
+  <li class="breadcrumb-item">
+    <a href="{{ activity.get_absolute_url }}">
+      {{ activity|truncatechars:60 }}
+    </a>
+  </li>
+  <li class="breadcrumb-item">
     <a data-turbolinks="false"
+       role="button"
        href="#">{% trans "Flag" %}</a>
   </li>
 </ul>

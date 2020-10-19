@@ -157,6 +157,7 @@
           {% if can_delete_comment %}
           <a href="{% url 'comments:delete' comment.id %}"
              class="dropdown-menu-item"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
@@ -171,6 +172,7 @@
           {% if not comment.is_blocked %}
           <a href="#"
              class="dropdown-menu-item"
+             role="button"
              data-turbolinks="false"
              data-target="clipboard.button"
              data-action="clipboard#copy">

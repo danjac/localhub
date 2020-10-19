@@ -11,7 +11,8 @@
 {% has_perm "events.attend" user object as can_attend %}
 
 {% if can_attend %}
-<div data-controller="ajax" data-ajax-replace>
+<div data-controller="ajax"
+     data-ajax-replace>
   {% include "events/includes/attend.html" with is_attending=object.is_attending %}
 </div>
 {% endif %}
@@ -19,6 +20,7 @@
 {% if object.is_attendable %}
 <a href="{% url 'events:download' object.id %}"
    class="dropdown-menu-item"
+   role="button"
    data-turbolinks="false"
    download>
   {% trans 'Download' %}

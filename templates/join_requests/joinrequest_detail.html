@@ -35,6 +35,7 @@
 <div class="page-nav mb-3 border-b pb-3">
   {% if is_pending or is_rejected %}
   <a class="page-nav-item"
+     role="button"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
@@ -46,6 +47,7 @@
   {% endif %}
   {% if is_pending %}
   <a class="page-nav-item"
+     role="button"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
@@ -55,6 +57,7 @@
      href="{% url 'join_requests:reject' object.id %}">{% trans "Reject" %}</a>
   {% endif %}
   <a class="page-nav-item"
+     role="button"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"

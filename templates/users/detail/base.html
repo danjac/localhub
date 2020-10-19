@@ -80,6 +80,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
         {% if is_blocking %}
         <a class="dropdown-menu-item line-through"
            href="{% url 'users:unblock' user_obj.username %}"
+           role="button"
            data-turbolinks="false"
            data-controller="ajax"
            data-target="ajax.button"
@@ -90,6 +91,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
         {% else %}
         <a href="{% url 'users:block' user_obj.username %}"
            class="dropdown-menu-item"
+           role="button"
            data-turbolinks="false"
            data-controller="ajax"
            data-target="ajax.button"

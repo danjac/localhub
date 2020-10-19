@@ -11,15 +11,19 @@
 
 <ul class="breadcrumb-item">
   {% if object.published %}
-  <li class="breadcrumb-item""><a href="{{ object|resolve_url:"list" }}">{{ object|verbose_name_plural|title }} </a>
+  <li class="breadcrumb-item""><a href="
+      {{ object|resolve_url:"list" }}">{{ object|verbose_name_plural|title }} </a>
   </li>
   {% else %}
-  <li class="breadcrumb-item""><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
+  <li class="breadcrumb-item""><a href="
+      {% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
   {% endif %}
-  <li class="breadcrumb-item""><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
+  <li class="breadcrumb-item""><a href="
+      {{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
   <li class="breadcrumb-item"">
     <a data-turbolinks="false"
-       href="#">{% trans "Delete" %}</a>
+      role="button"
+      href="#">{% trans "Delete" %}</a>
   </li>
 </ul>
 

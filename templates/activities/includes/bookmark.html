@@ -4,12 +4,14 @@
 {% if has_bookmarked %}
 <a class="dropdown-menu-item line-through"
    href="{{ object|resolve_url:"remove_bookmark" }}"
+   role="button"
    data-turbolinks="false"
    data-target="ajax.button"
    data-action="ajax#post">{% trans "Bookmark" %}</a>
 {% else %}
 <a class="dropdown-menu-item"
    href="{{ object|resolve_url:"bookmark" }}"
+   role="button"
    data-turbolinks="false"
    data-target="ajax.button"
    data-action="ajax#post">{% trans "Bookmark" %}</a>

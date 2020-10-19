@@ -5,12 +5,14 @@
 {% if has_liked %}
 <a href="{% url 'comments:dislike' object.id %}"
    class="dropdown-menu-item line-through"
+   role="button"
    data-turbolinks="false"
    data-target="ajax.button"
    data-action="ajax#post">{% trans "Like" %}</a>
 {% else %}
 <a href="{% url 'comments:like' object.id %}"
    class="dropdown-menu-item"
+   role="button"
    data-turbolinks="false"
    data-target="ajax.button"
    data-action="ajax#post">{% trans "Like" %}</a>

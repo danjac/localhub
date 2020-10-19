@@ -80,12 +80,14 @@
           {% if invite.is_pending %}
           <a class="table-nav-item"
              href="{% url 'invites:resend' invite.id %}"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Re-send" %}</a>
           {% endif %}
           <a class="table-nav-item"
              href="{% url 'invites:delete' invite.id %}"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"

@@ -4,12 +4,14 @@
 {% if has_liked %}
 <a class="dropdown-menu-item line-through"
    href="{{ object|resolve_url:"dislike" }}"
+   role="button"
    data-turbolinks="false"
    data-target="ajax.button"
    data-action="ajax#post">{% trans "Like" %}</a>
 {% else %}
 <a class="dropdown-menu-item"
    href="{{ object|resolve_url:"like" }}"
+   role="button"
    data-turbolinks="false"
    data-target="ajax.button"
    data-action="ajax#post">{% trans "Like" %}</a>

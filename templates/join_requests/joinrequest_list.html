@@ -79,6 +79,7 @@
         <div class="table-nav">
           {% if is_pending or is_rejected %}
           <a class="table-nav-item"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
@@ -89,6 +90,7 @@
           {% endif %}
           {% if is_pending %}
           <a class="table-nav-item"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
@@ -97,6 +99,7 @@
              href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
           {% endif %}
           <a class="table-nav-item"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"

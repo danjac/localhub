@@ -18,12 +18,14 @@
     {% if is_unread_notifications %}
     <a class="page-nav-item"
        href="{% url 'notifications:mark_all_read' %}"
+       role="button"
        data-turbolinks="false"
        data-controller="ajax"
        data-action="ajax#post">{% trans "Mark All Read" %}</a>
     {% endif %}
     <a class="page-nav-item"
        href="{% url 'notifications:delete_all' %}"
+       role="button"
        data-turbolinks="false"
        data-controller="ajax"
        data-action="ajax#post"
@@ -88,12 +90,14 @@ You can enable emails for your notifications
           {% if not notification.is_read %}
           <a class="table-nav-item"
              href="{% url 'notifications:mark_read_redirect' notification.pk %}"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Mark Read" %}</a>
           {% endif %}
           <a class="table-nav-item"
              href="{% url 'notifications:delete' notification.pk %}"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Delete" %}</a>

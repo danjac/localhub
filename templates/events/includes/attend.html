@@ -5,12 +5,14 @@
 {% load i18n %}
 {% if is_attending %}
 <a href="{% url 'events:unattend' object.id %}"
+   role="button"
    data-turbolinks="false"
    class="dropdown-menu-item line-through"
    data-target="ajax.button"
    data-action="ajax#post">{% trans "Attending" %}</a>
 {% else %}
 <a href="{% url 'events:attend' object.id %}"
+   role="button"
    data-turbolinks="false"
    class="dropdown-menu-item"
    data-target="ajax.button"

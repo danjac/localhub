@@ -25,6 +25,7 @@
   {% if can_delete %}
   <a class="{{ nav_item_class }}"
      href="{% url 'communities:membership_delete' member.id %}"
+     role="button"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"

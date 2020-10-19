@@ -4,6 +4,7 @@
 {% load i18n %}
 {% if is_following %}
 <a href="{% url 'users:unfollow' object.username %}"
+   role="button"
    data-turbolinks="false"
    class="line-through"
    data-target="ajax.button"
@@ -12,6 +13,7 @@
 </a>
 {% else %}
 <a href="{% url 'users:follow' object.username %}"
+   role="button"
    data-turbolinks="false"
    data-target="ajax.button"
    data-action="ajax#post">

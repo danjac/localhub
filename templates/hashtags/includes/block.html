@@ -5,6 +5,7 @@
 
 {% if is_blocked %}
 <a href="{% url 'hashtags:unblock' object.id %}"
+   role="button"
    data-turbolinks="false"
    class="line-through"
    data-target="ajax.button"
@@ -13,6 +14,7 @@
 </a>
 {% else %}
 <a href="{% url 'hashtags:block' object.id %}"
+   role="button"
    data-turbolinks="false"
    data-target="ajax.button"
    data-action="ajax#post">

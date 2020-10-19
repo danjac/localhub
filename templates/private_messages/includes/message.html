@@ -51,6 +51,7 @@
           {% if is_recipient and not message.read %}
           <a href="{% url 'private_messages:message_mark_read' message.id %}"
              class="dropdown-menu-item"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
@@ -76,6 +77,7 @@
           {% endif %}
           <a href="{% url 'private_messages:message_delete' message.id %}"
              class="dropdown-menu-item"
+             role="button"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
@@ -85,6 +87,7 @@
 
           <a href="#"
              class="dropdown-menu-item"
+             role="button"
              data-turbolinks="false"
              data-target="clipboard.button"
              data-action="clipboard#copy">
