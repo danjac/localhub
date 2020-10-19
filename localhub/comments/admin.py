@@ -17,5 +17,8 @@ class CommentAdmin(MarkdownFieldMixin, admin.ModelAdmin):
     list_display = ("owner", "community", "created")
     ordering = ("-created",)
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("community")
+
     def community(self, obj):
-        return obj.activity.community.name
+        return obj.community.name
