@@ -94,3 +94,9 @@ To deploy master branch to Heroku and S3:
 > ./scripts/deploy
 
 Note that your local .env AWS settings should be the same as in production, so that the deployment script can push static assets to the same S3 bucket.
+
+Once you have deployed for the first time to your Heroku instance, you can set up an admin user and communities:
+
+> heroku run -a localhub ./manage.py createcommunity domain name --admin=...
+
+Each community should have its own domain. You need to configure Heroku and your DNS accordingly. If you want to use a wildcard with multiple subdomains, each community still requires the full domain e.g. *demo.localhub.social*, *ourclub.localhub.social*.
