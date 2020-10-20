@@ -58,26 +58,26 @@ Localhub is currently configured to deploy to Heroku. A PostgreSQL and Redis bui
 
 You will need to add a number of environment variables in your Heroku dashboard settings panel:
 
-- ADMINS: comma separated in form _my full name <name@mysite.com>,other name <othername@mysite.com>_
-- ADMIN_URL: should be something other than "admin/". Must end in forward slash.
-- ALLOWED_HOSTS: enter the wildcard domain e.g. *mysite.com*
-- AWS_STORAGE_BUCKET_NAME: see your S3 settings
-- AWS_ACCESS_KEY_ID: see your S3 settings
-- AWS_S3_CUSTOM_DOMAIN: your cloudfront domain
-- CSRF_COOKIE_NAME: should be same as your domain, preceded by "." e.g. *.mysite.com*
-- CSRF_TRUSTED_ORIGINS: should be same as CSRF_COOKIE_NAME
-- SESSION_COOKIE_DOMAIN: e.g. *mysite.com*
-- DATABASE_URL: provided by Heroku PostgreSQL buildpack
-- DISABLE_COLLECTSTATIC: set to "1"
-- DJANGO_SETTINGS_MODULE: should always be *localhub.config.settings.heroku*
-- MAILGUN_API_KEY: see your Mailgun settings
-- MAILGUN_SENDER_DOMAIN: see your Mailgun settings
-- REDIS_URL: provided by Heroku Redis buildpack
-- SECRET_KEY: Django secret key. Use e.g. https://miniwebtool.com/django-secret-key-generator/ to create new key.
-- VAPID_ADMIN_EMAIL: Your email address
-- VAPID_PRIVATE_KEY: See https://d3v.one/vapid-key-generator/
-- VAPID_PUBLIC_KEY: See https://d3v.one/vapid-key-generator/
-- WEBPUSH_ENABLED: set to "yes" to enable webpush notifications on the site, "no" to disable
+- **ADMINS**: comma separated in form _my full name <name@mysite.com>,other name <othername@mysite.com>_
+- **ADMIN_URL**: should be something other than "admin/". Must end in forward slash.
+- **ALLOWED_HOSTS**: enter the wildcard domain e.g. *mysite.com*
+- **AWS_STORAGE_BUCKET_NAME**: see your S3 settings
+- **AWS_ACCESS_KEY_ID**: see your S3 settings
+- **AWS_S3_CUSTOM_DOMAIN**: your cloudfront domain e.g. *xyz123abcdefg.cloudfront.net*
+- **CSRF_COOKIE_NAME**: should be same as your domain, preceded by "." e.g. *.mysite.com*
+- **CSRF_TRUSTED_ORIGINS**: should be same as CSRF_COOKIE_NAME
+- **SESSION_COOKIE_DOMAIN**: e.g. *mysite.com*
+- **DATABASE_URL**: provided by Heroku PostgreSQL buildpack
+- **DISABLE_COLLECTSTATIC**: set to "1"
+- **DJANGO_SETTINGS_MODULE**: should always be *localhub.config.settings.heroku*
+- **MAILGUN_API_KEY**: see your Mailgun settings
+- **MAILGUN_SENDER_DOMAIN**: see your Mailgun settings
+- **REDIS_URL**: provided by Heroku Redis buildpack
+- **SECRET_KEY**: Django secret key. Use e.g. https://miniwebtool.com/django-secret-key-generator/ to create new key.
+- **VAPID_ADMIN_EMAIL**: Your email address
+- **VAPID_PRIVATE_KEY**: See https://d3v.one/vapid-key-generator/
+- **VAPID_PUBLIC_KEY**: See https://d3v.one/vapid-key-generator/
+- **WEBPUSH_ENABLED**: set to "yes" to enable webpush notifications on the site, "no" to disable
 
 To set up Heroku containerized deployment:
 
