@@ -66,17 +66,17 @@ You will need to add a number of environment variables in your Heroku dashboard 
 - AWS_S3_CUSTOM_DOMAIN: your cloudfront domain
 - CSRF*COOKIE_NAME: should be same as your domain, preceded by "." e.g. *.mysite.com\_
 - CSRF_TRUSTED_ORIGINS: should be same as CSRF_COOKIE_NAME
-- SESSION*COOKIE_DOMAIN: e.g. \_mysite.com*
+- SESSION_COOKIE_DOMAIN: e.g. \_mysite.com\*
 - DATABASE_URL: provided by Heroku PostgreSQL buildpack
 - DISABLE_COLLECTSTATIC: set to "1"
-- DJANGO*SETTINGS_MODULE: should always be \_localhub.config.settings.heroku*
+- DJANGO_SETTINGS_MODULE: should always be \_localhub.config.settings.heroku\*
 - MAILGUN_API_KEY: see your Mailgun settings
 - MAILGUN_SENDER_DOMAIN: see your Mailgun settings
 - REDIS_URL: provided by Heroku Redis buildpack
-- SECRET_KEY: Django secret key. Use e.g. https://miniwebtool.com/django*secret*key*generator/ to create new key.
+- SECRET_KEY: Django secret key. Use e.g. https://miniwebtool.com/django-secret-key-generator/ to create new key.
 - VAPID_ADMIN_EMAIL: Your email address
-- VAPID_PRIVATE_KEY: See https://d3v.one/vapid*key*generator/
-- VAPID_PUBLIC_KEY: See https://d3v.one/vapid*key*generator/
+- VAPID_PRIVATE_KEY: See https://d3v.one/vapid-key-generator/
+- VAPID_PUBLIC_KEY: See https://d3v.one/vapid-key-generator/
 - WEBPUSH_ENABLED: set to "yes" to enable webpush notifications on the site, "no" to disable
 
 To set up Heroku containerized deployment:
