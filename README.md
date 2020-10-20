@@ -60,16 +60,16 @@ You will need to add a number of environment variables in your Heroku dashboard 
 
 - ADMINS: comma separated in form _my full name <name@mysite.com>,other name <othername@mysite.com>_
 - ADMIN_URL: should be something other than "admin/". Must end in forward slash.
-- ALLOWED*HOSTS: enter the wildcard domain e.g. \_mysite.com*
+- ALLOWED_HOSTS: enter the wildcard domain e.g. *mysite.com*
 - AWS_STORAGE_BUCKET_NAME: see your S3 settings
 - AWS_ACCESS_KEY_ID: see your S3 settings
 - AWS_S3_CUSTOM_DOMAIN: your cloudfront domain
-- CSRF*COOKIE_NAME: should be same as your domain, preceded by "." e.g. *.mysite.com\_
+- CSRF_COOKIE_NAME: should be same as your domain, preceded by "." e.g. *.mysite.com*
 - CSRF_TRUSTED_ORIGINS: should be same as CSRF_COOKIE_NAME
-- SESSION_COOKIE_DOMAIN: e.g. \_mysite.com\*
+- SESSION_COOKIE_DOMAIN: e.g. *mysite.com*
 - DATABASE_URL: provided by Heroku PostgreSQL buildpack
 - DISABLE_COLLECTSTATIC: set to "1"
-- DJANGO_SETTINGS_MODULE: should always be \_localhub.config.settings.heroku\*
+- DJANGO_SETTINGS_MODULE: should always be *localhub.config.settings.heroku*
 - MAILGUN_API_KEY: see your Mailgun settings
 - MAILGUN_SENDER_DOMAIN: see your Mailgun settings
 - REDIS_URL: provided by Heroku Redis buildpack
