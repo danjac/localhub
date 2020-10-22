@@ -5,7 +5,7 @@ module.exports = {
   mode: process.env.NODE_ENV,
   entry: path.resolve(__dirname, 'static', 'js', 'app.js'),
   output: {
-    path: path.resolve(__dirname, 'static', isProduction ? 'dist' : 'local'),
+    path: path.resolve(__dirname, 'static', 'dist'),
     filename: 'app.js',
   },
   resolve: {
@@ -26,7 +26,10 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env'],
-            plugins: ['@babel/plugin-proposal-class-properties'],
+            plugins: [
+              '@babel/plugin-proposal-class-properties',
+              '@babel/transform-runtime',
+            ],
           },
         },
       },

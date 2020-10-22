@@ -147,33 +147,29 @@ export default class extends ApplicationController {
     return true;
   }
 
-  doSearch(text, searchUrl) {
-    axios
-      .get(searchUrl, {
+  async doSearch(text, searchUrl) {
+    try {
+      const response = await axios.get(searchUrl, {
         params: {
           q: text,
         },
-      })
-      .then((response) => {
-        if (response.data) {
-          this.selectorTarget.innerHTML = response.data;
-          const results = this.selectorTarget.querySelectorAll(
-            '[data-typeahead-value]'
-          );
-          if (
-            results.length &&
-            results[0].getAttribute(`data-${this.identifier}-value`) !==
-              text.toLowerCase()
-          ) {
-            this.openSelector();
-          } else {
-            this.closeSelector();
-          }
-        }
-      })
-      .catch(() => {
-        this.closeSelector();
       });
+      if (response.data) {
+        this.selectorTarget.innerHTML = response.data;
+        const results = this.selectorTarget.querySelectorAll('[data-typeahead-value]');
+        if (
+          results.length &&
+          results[0].getAttribute(`data-${this.identifier}-value`) !==
+            text.toLowerCase()
+        ) {
+          this.openSelector();
+        } else {
+          this.closeSelector();
+        }
+      }
+    } catch (err) {
+      this.closeSelector();
+    }
   }
 
   handleSelection(item) {

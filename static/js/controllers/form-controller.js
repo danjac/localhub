@@ -54,7 +54,7 @@ export default class extends ApplicationController {
     return false;
   }
 
-  handleSubmit(method, url, data) {
+  async handleSubmit(method, url, data) {
     if (this.data.has('disabled')) {
       return;
     }
@@ -63,40 +63,43 @@ export default class extends ApplicationController {
 
     const referrer = location.href;
 
-    axios({
-      data,
-      headers: {
-        'Turbolinks-Referrer': referrer,
-      },
-      method,
-      url,
-    })
-      .then((response) => {
-        window.onbeforeunload = null;
-        const contentType = response.headers['content-type'];
-
-        if (contentType.match(/html/)) {
-          // errors in form, re-render
-          this.bus.pub(Events.FORM_COMPLETE);
-          Turbolinks.controller.cache.put(
-            referrer,
-            Turbolinks.Snapshot.wrap(response.data)
-          );
-          Turbolinks.visit(referrer, {
-            action: 'restore',
-          });
-        } else if (contentType.match(/javascript/)) {
-          /* eslint-disable-next-line no-eval */
-          eval(response.data);
-        }
-      })
-      .catch((err) => {
-        this.bus.pub(Events.FORM_COMPLETE);
-        if (err.response) {
-          const { status, statusText } = err.response;
-          this.toaster.error(`${status}: ${statusText}`);
-        }
+    try {
+      const response = await axios({
+        data,
+        headers: {
+          'Turbolinks-Referrer': referrer,
+        },
+        method,
+        url,
       });
+      this.handleResponse(response, referrer);
+    } catch (err) {
+      this.bus.pub(Events.FORM_COMPLETE);
+      if (err.response) {
+        const { status, statusText } = err.response;
+        this.toaster.error(`${status}: ${statusText}`);
+      }
+    }
+  }
+
+  handleResponse(response, referrer) {
+    window.onbeforeunload = null;
+    const contentType = response.headers['content-type'];
+
+    if (contentType.match(/html/)) {
+      // errors in form, re-render
+      this.bus.pub(Events.FORM_COMPLETE);
+      Turbolinks.controller.cache.put(
+        referrer,
+        Turbolinks.Snapshot.wrap(response.data)
+      );
+      Turbolinks.visit(referrer, {
+        action: 'restore',
+      });
+    } else if (contentType.match(/javascript/)) {
+      /* eslint-disable-next-line no-eval */
+      eval(response.data);
+    }
   }
 
   disableFormControls() {

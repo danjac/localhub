@@ -45,7 +45,7 @@ export default class extends ApplicationController {
     this.resetForm(['opengraph_image', 'opengraph_description']);
   }
 
-  fetch(event) {
+  async fetch(event) {
     event.preventDefault();
 
     this.containerTarget.innerHTML = '';
@@ -70,21 +70,20 @@ export default class extends ApplicationController {
 
     this.bus.pub(Events.FORM_FETCHING);
 
-    axios
-      .get(this.data.get('preview-url'), { params: { url } })
-      .then((response) => {
-        const { html, fields } = response.data;
-        this.syncForm(fields);
-        this.containerTarget.innerHTML = html;
-        this.clearButtonTarget.removeAttribute('disabled');
-      })
-      .catch(() => {
-        this.resetForm();
-        this.toaster.error(this.data.get('errorMessage'));
-      })
-      .finally(() => {
-        this.bus.pub(Events.FORM_COMPLETE);
+    try {
+      const response = await axios.get(this.data.get('preview-url'), {
+        params: { url },
       });
+      const { html, fields } = response.data;
+      this.syncForm(fields);
+      this.containerTarget.innerHTML = html;
+      this.clearButtonTarget.removeAttribute('disabled');
+    } catch (err) {
+      this.resetForm();
+      this.toaster.error(this.data.get('errorMessage'));
+    } finally {
+      this.bus.pub(Events.FORM_COMPLETE);
+    }
   }
 
   resetForm(names = ['title', 'opengraph_description', 'opengraph_image']) {

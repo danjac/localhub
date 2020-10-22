@@ -37,26 +37,27 @@ export default class extends ApplicationController {
     }
   }
 
-  dispatch(method, target) {
+  async dispatch(method, target) {
     const url =
       this.data.get('url') ||
       target.getAttribute(`data-${this.identifier}-url`) ||
       target.getAttribute('href');
 
-    axios({
-      headers: {
-        'Turbolinks-Referrer': location.href,
-      },
-      method,
-      url,
-    })
-      .then((response) => this.handleResponse(response))
-      .catch((err) => {
-        if (err.response) {
-          const { status, statusText } = err.response;
-          this.toaster.error(`${status}: ${statusText}`);
-        }
+    try {
+      const response = await axios({
+        headers: {
+          'Turbolinks-Referrer': location.href,
+        },
+        method,
+        url,
       });
+      this.handleResponse(response);
+    } catch (err) {
+      if (err.response) {
+        const { status, statusText } = err.response;
+        this.toaster.error(`${status}: ${statusText}`);
+      }
+    }
   }
 
   handleResponse(response) {

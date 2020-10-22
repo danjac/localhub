@@ -2,12 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load static %}
 <link rel="icon"
-    type="image/png"
-    href="{% static 'favicon.png' %}">
+      type="image/png"
+      href="{% static 'favicon.png' %}">
 <link rel="apple-touch-icon image_src"
-    href="{% static 'apple-touch-icon.png' %}">
-{% with dist_dir=debug|yesno:"local,dist" %}
+      href="{% static 'apple-touch-icon.png' %}">
 <link rel="stylesheet"
-      href="{% static dist_dir|add:'/app.css' %}">
-<script src="{% static dist_dir|add:'/app.js' %}"></script>
-{% endwith %}
+      href="{% static 'dist/app.css' %}">
+<script src="{% static 'dist/app.js' %}"></script>
