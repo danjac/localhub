@@ -4,10 +4,10 @@
 
 {# server-side #}
 {% if messages %}
-<div class="flex justify-center mt-12">
+<div class="flex justify-center">
   {% for message in messages %}
   <div data-controller="alert"
-       class="fixed z-50 w-4/5 lg:w-1/3 flex items-center p-3 rounded shadow-xl message {{ message.tags }}">
+       class="fixed z-50 w-4/5 lg:w-1/3 flex items-center p-3 rounded shadow-xl mt-3 message {{ message.tags }}">
     <div class="mx-auto text-center">{{ message }}</div>
     <button data-action="alert#dismiss"
             class="float-right">
