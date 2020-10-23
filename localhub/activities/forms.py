@@ -33,6 +33,7 @@ class ActivityForm(forms.ModelForm):
         help_texts = {
             "hashtags": _("#tags can also be added to title and description."),
             "mentions": _("@mentions can also be added to title and description."),
+            "allow_comments": _("Comments are only allowed on public activities."),
         }
 
 
