@@ -3,7 +3,6 @@
 
 # Django
 from django import template
-from django.utils.safestring import mark_safe
 
 # Localhub
 from localhub.utils import emojis
@@ -13,32 +12,8 @@ register = template.Library()
 
 @register.simple_tag
 def common_emojis():
-    """Returns list of commonly used emojis, for use e.g. in markdown widget.
-    """
+    """Returns list of commonly used emojis, for use e.g. in markdown widget."""
     return emojis.COMMON_EMOJIS
-
-
-@register.simple_tag
-def svg(name, variant="black", size="24", css_class=None, fill=False):
-    """
-    """
-
-    if css_class:
-        css_classes = [css_class]
-    elif variant == "white":
-        css_classes = ["text-white"]
-    else:
-        css_classes = ["text-black"]
-
-    if fill:
-        css_classes.append("fill-current")
-
-    return mark_safe(
-        template.loader.render_to_string(
-            f"includes/svg/{name}.svg.html",
-            {"css_class": " ".join(css_classes), "stroke": variant, "size": size},
-        )
-    )
 
 
 @register.tag(name="collapsable")

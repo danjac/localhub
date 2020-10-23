@@ -12,22 +12,22 @@
       {% include "django/forms/widgets/input.html" %}
     </div>
     <button type="button"
-            class="btn btn-input-addon"
+            class="btn btn-input-addon px-2 p-1"
             title="{% trans 'Fetch content from URL' %}"
             disabled
             data-target="opengraph-preview.fetchButton"
             data-action="opengraph-preview#fetch">
-      {% svg "download" %}
+      <i class="fa fa-download"></i>
     </button>
     <button type="button"
-            class="btn btn-input-addon"
+            class="btn btn-input-addon px-2 p-1"
             title="{% trans 'Remove content from URL' %}"
             {% if not preview.description and not preview.image %}
             disabled
             {% endif %}
             data-target="opengraph-preview.clearButton"
             data-action="opengraph-preview#clear">
-      {% svg "x" %}
+      <i class="fa fa-times"></i>
     </button>
   </div>
 </div>

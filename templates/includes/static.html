@@ -1,6 +1,7 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load static %}
+{% spaceless %}
 <link rel="icon"
       type="image/png"
       href="{% static 'favicon.png' %}">
@@ -9,3 +10,4 @@
 <link rel="stylesheet"
       href="{% static 'dist/app.css' %}">
 <script src="{% static 'dist/app.js' %}"></script>
+{% endspaceless %}
