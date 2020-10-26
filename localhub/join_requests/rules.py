@@ -24,7 +24,8 @@ def is_join_request_allowed(user, community):
 
 
 rules.add_perm(
-    "join_requests.create", is_join_request_allowed & ~is_member & ~is_inactive_member
+    "join_requests.create",
+    is_join_request_allowed & ~is_member & ~is_inactive_member & rules.is_authenticated,
 )
 
 rules.add_perm("join_requests.delete", is_sender | is_community_admin)

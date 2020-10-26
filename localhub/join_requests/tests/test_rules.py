@@ -24,6 +24,10 @@ class TestJoinRequestDelete:
 
 
 class TestJoinRequestCreate:
+    def test_if_anonymous(self, anonymous_user):
+        community = CommunityFactory(allow_join_requests=True)
+        assert not anonymous_user.has_perm("join_requests.create", community)
+
     def test_if_not_member(self):
         community = CommunityFactory(allow_join_requests=True)
         user = UserFactory()

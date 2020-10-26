@@ -112,7 +112,10 @@ join_request_reject_view = JoinRequestRejectView.as_view()
 
 
 class JoinRequestCreateView(
-    PermissionRequiredMixin, CommunityRequiredMixin, SuccessCreateView,
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    CommunityRequiredMixin,
+    SuccessCreateView,
 ):
     model = JoinRequest
     form_class = JoinRequestForm
