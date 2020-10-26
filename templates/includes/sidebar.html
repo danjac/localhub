@@ -9,7 +9,6 @@
 {% test_rule "communities.is_member" user community as is_member %}
 
 
-{% if is_member %}
 <nav class="hidden lg:block text-sm w-full lg:w-1/6"
      data-target="sidebar.nav">
 
@@ -17,6 +16,7 @@
   {% has_perm "communities.moderate_community" user community as can_moderate_community %}
   {% has_perm "communities.manage_community" user community as can_manage_community %}
   {% has_perm "private_messages.create_message" user community as can_create_message %}
+  {% has_perm "join_requests.create" user community as can_create_join_request %}
 
   <ul class="sidebar-menu">
     <li class="mb-1">
@@ -25,6 +25,7 @@
          data-active-link-exact
          class="sidebar-menu-item">{% trans "Activity Stream" %}</a>
     </li>
+    {% if is_member %}
     <li class="mb-1">
       <a href="{% url 'private_messages:inbox' %}"
          data-controller="active-link"
@@ -46,12 +47,14 @@
         {% endif %}
       </a>
     </li>
+    {% endif %}
     <li class="mb-1">
       <a href="{% url 'comments:list' %}"
          data-controller="active-link"
          data-active-link-exact
          class="sidebar-menu-item">{% trans "Comments" %}</a>
     </li>
+    {% if is_member %}
     <li class="mb-1">
       <a href="{% url 'activities:private' %}"
          data-controller="active-link"
@@ -62,6 +65,7 @@
          data-controller="active-link"
          class="sidebar-menu-item">{% trans "Bookmarks" %}</a>
     </li>
+    {% endif %}
     <li class="mb-1">
       <a href="{% url 'photos:gallery' %}"
          data-controller="active-link"
@@ -72,6 +76,14 @@
          data-controller="active-link"
          class="sidebar-menu-item">{% trans "Calendar" %}</a>
     </li>
+    {% if not is_member and can_create_join_request %}
+    <li class="mb-1">
+      <a href="{% url 'join_requests:create' %}"
+         data-controller="active-link"
+         class="sidebar-menu-item">{% trans "Request Invite" %}</a>
+    </li>
+    {% endif %}
+    {% if user.is_authenticated %}
     <li class="mb-1 md:mb-0">
       <a href="{% url 'user_update' %}"
          data-controller="active-link"
@@ -86,6 +98,7 @@
          data-action="ajax#post"
          data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
     </li>
+    {% endif %}
   </ul>
 
   {% if can_create_activity or can_create_message %}
@@ -141,6 +154,7 @@
          href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
       </a>
     </li>
+    {% if is_member %}
     <li class="mb-1">
       <a data-controller="active-link"
          class="sidebar-menu-item"
@@ -160,6 +174,7 @@
          href="{% url 'users:activity_mentions' user.username %}">{% trans "Mentions" %}
       </a>
     </li>
+    {% endif %}
     {% if can_moderate_community and site_counters.flags %}
     <li class="mb-1">
       <a data-controller="active-link"
@@ -172,6 +187,7 @@
     {% endif %}
   </ul>
 
+  {% if is_member %}
   <ul class="sidebar-menu mt-4">
     <li class="sidebar-menu-header mb-3">{% trans "People" %}</li>
     <li class="mb-1">
@@ -195,6 +211,7 @@
          class="sidebar-menu-item">{% trans "Blocked" %}</a>
     </li>
   </ul>
+  {% endif %}
 
   {% if can_manage_community or communities_count > 1 or community.description or community.terms %}
   <ul class="sidebar-menu mt-4">
@@ -268,4 +285,3 @@
   {% endif %}
 
 </nav>
-{% endif %}

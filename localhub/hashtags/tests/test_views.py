@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
-from django.conf import settings
 from django.urls import reverse
 
 # Third Party Libraries
@@ -124,7 +123,8 @@ class TestTagDetailView:
         ).tags.add("movies")
 
         response = client.get(reverse("hashtags:detail", args=["movies"]))
-        assert response.url.startswith(reverse(settings.LOGIN_URL))
+        assert response.context["tag"].name == "movies"
+        assert len(response.context["object_list"]) == 1
 
     def test_get(self, client, member):
         PostFactory(

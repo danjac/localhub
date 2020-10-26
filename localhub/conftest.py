@@ -56,6 +56,11 @@ def community():
 
 
 @pytest.fixture
+def private_community():
+    return CommunityFactory(domain="testserver", public=False)
+
+
+@pytest.fixture
 def login_user(client):
     password = "t3SzTP4sZ"
     user = UserFactory()

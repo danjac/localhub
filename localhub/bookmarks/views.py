@@ -1,6 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Localhub
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
@@ -11,7 +14,7 @@ from localhub.private_messages.views import (
 from localhub.views import SearchMixin
 
 
-class BookmarksStreamView(SearchMixin, BaseActivityStreamView):
+class BookmarksStreamView(LoginRequiredMixin, SearchMixin, BaseActivityStreamView):
     template_name = "bookmarks/activities.html"
     ordering = ("-bookmarked", "-created")
 

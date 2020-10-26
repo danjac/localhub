@@ -140,8 +140,6 @@ class JoinRequestCreateView(
 
 
 join_request_create_view = JoinRequestCreateView.as_view()
-# Copyright (c) 2020 by Dan Jacob
-# SPDX-License-Identifier: AGPL-3.0-or-later
 
 
 class JoinRequestDeleteView(PermissionRequiredMixin, SuccessDeleteView):

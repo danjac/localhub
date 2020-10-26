@@ -6,6 +6,7 @@ import itertools
 
 # Django
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.utils.formats import date_format
 from django.utils.functional import cached_property
@@ -114,6 +115,9 @@ class ActivityStreamView(BaseActivityStreamView):
         )
 
     def get_unread_notifications(self):
+        if self.request.user.is_anonymous:
+            return Notification.objects.none()
+
         return (
             Notification.objects.for_community(self.request.community)
             .for_recipient(self.request.user)
@@ -335,7 +339,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
 timeline_view = TimelineView.as_view()
 
 
-class PrivateView(SearchMixin, BaseActivityStreamView):
+class PrivateView(LoginRequiredMixin, SearchMixin, BaseActivityStreamView):
     """Activities that are only visible to owner (published NULL)."""
 
     template_name = "activities/private.html"

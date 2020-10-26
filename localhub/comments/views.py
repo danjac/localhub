@@ -172,9 +172,10 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
-        self.object.get_notifications().for_recipient(
-            self.request.user
-        ).unread().update(is_read=True)
+        if request.user.is_authenticated:
+            self.object.get_notifications().for_recipient(
+                self.request.user
+            ).unread().update(is_read=True)
         return response
 
     def get_flags(self):

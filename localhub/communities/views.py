@@ -27,7 +27,7 @@ from .forms import CommunityForm, MembershipForm
 from .models import Community, Membership
 
 
-class CommunityRequiredMixin(LoginRequiredMixin):
+class CommunityRequiredMixin:
     """
     Ensures that a community is available on this domain. This requires
     the CurrentCommunityMiddleware is enabled.
@@ -46,14 +46,16 @@ class CommunityRequiredMixin(LoginRequiredMixin):
             return self.handle_community_not_found()
 
         if (
-            request.user.is_authenticated
-            and not request.user.has_perm(
-                "communities.view_community", request.community
-            )
-            and not self.allow_non_members
+            not request.user.has_perm("communities.view_community", request.community)
+            and not self.is_non_members_allowed()
         ):
             return self.handle_community_access_denied()
         return super().dispatch(request, *args, **kwargs)
+
+    def is_non_members_allowed(self):
+        if self.allow_non_members:
+            return True
+        return self.request.community.public
 
     def handle_community_access_denied(self):
         if self.request.is_ajax():
@@ -220,7 +222,7 @@ class CommunityDetailView(BaseCommunityDetailView):
 community_detail_view = CommunityDetailView.as_view()
 
 
-class CommunityWelcomeView(BaseCommunityDetailView):
+class CommunityWelcomeView(LoginRequiredMixin, BaseCommunityDetailView):
     """
     This is shown if the user is not a member (or is not authenticated).
 

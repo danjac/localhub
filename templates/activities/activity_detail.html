@@ -84,10 +84,6 @@
   {% include "includes/forms/ajax_form.html" with action=object|resolve_url:"comment" form=comment_form form_id="comment-form" %}
   {% elif not object.allow_comments %}
   <p class="toast text-center my-2">{% trans "Comments are locked" %}</p>
-  {% elif object.published %}
-  <p class="toast text-center my-2">
-    {% trans "You do not have permission to post comments on this site." %}
-  </p>
   {% endif %}
 
 </div>

@@ -45,8 +45,7 @@ class ActivityQuerySetMixin(CommunityRequiredMixin):
 
 
 class ActivityTemplateMixin:
-    """Includes extra template name option of "activities/activity_{suffix}.html"
-    """
+    """Includes extra template name option of "activities/activity_{suffix}.html" """
 
     def get_template_names(self):
         return super().get_template_names() + [
@@ -238,9 +237,10 @@ class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailVie
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
-        self.object.get_notifications().for_recipient(
-            self.request.user
-        ).unread().update(is_read=True)
+        if request.user.is_authenticated:
+            self.object.get_notifications().for_recipient(
+                self.request.user
+            ).unread().update(is_read=True)
         return response
 
     def get_context_data(self, **kwargs):

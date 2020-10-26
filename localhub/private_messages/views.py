@@ -4,6 +4,7 @@
 # Django
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.db.models import F
 from django.urls import reverse, reverse_lazy
@@ -31,7 +32,7 @@ from .forms import MessageForm, MessageRecipientForm
 from .models import Message
 
 
-class MessageQuerySetMixin(CommunityRequiredMixin):
+class MessageQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
     def get_queryset(self):
         return (
             Message.objects.for_community(community=self.request.community)

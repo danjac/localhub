@@ -109,7 +109,7 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
                 status=404,
             )
         response = super().get(request, *args, **kwargs)
-        if self.user_obj != request.user:
+        if request.user.is_authenticated and self.user_obj != request.user:
             self.user_obj.get_notifications().for_recipient(request.user).mark_read()
         return response
 
@@ -137,6 +137,8 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
 
     @cached_property
     def is_following(self):
+        if self.request.user.is_anonymous:
+            return False
         return (
             not self.is_current_user
             and self.user_obj in self.request.user.following.all()
@@ -144,6 +146,8 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
 
     @cached_property
     def is_follower(self):
+        if self.request.user.is_anonymous:
+            return False
         return (
             not self.is_current_user
             and self.request.user in self.user_obj.following.all()
@@ -151,19 +155,19 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
 
     @cached_property
     def is_blocker(self):
-        if self.is_current_user:
+        if self.is_current_user or self.request.user.is_anonymous:
             return False
         return self.request.user.blockers.filter(pk=self.user_obj.id).exists()
 
     @cached_property
     def is_blocking(self):
-        if self.is_current_user:
+        if self.is_current_user or self.request.user.is_anonymous:
             return False
         return self.request.user.blocked.filter(pk=self.user_obj.id).exists()
 
     @cached_property
     def unread_messages(self):
-        if self.is_current_user:
+        if self.is_current_user or self.request.user.is_anonymous:
             return 0
 
         return (
@@ -283,7 +287,7 @@ class UserCommentListView(BaseUserCommentListView):
 user_comment_list_view = UserCommentListView.as_view()
 
 
-class UserMessageListView(SingleUserMixin, ListView):
+class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
     """
     Renders thread of all private messages between this user
     and the current user.

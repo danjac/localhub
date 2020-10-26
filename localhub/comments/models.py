@@ -76,7 +76,7 @@ class CommentQuerySet(
 
     def exclude_deleted(self, user=None):
         qs = self.filter(deleted__isnull=True)
-        if user:
+        if user and user.is_authenticated:
             qs = qs | self.filter(owner=user)
         return qs
 

@@ -57,7 +57,9 @@ class CommunityForm(forms.ModelForm):
                 "domain by default."
             ),
             "active": _("This community is currently live."),
-            "public": _("Community is visible to non-members in Communities page"),
+            "public": _(
+                "Community activities, comments and profiles are public to all"
+            ),
             "allow_join_requests": _(
                 "Users can send requests to join this community. "
                 "If disabled they will only be able to join if an admin sends "

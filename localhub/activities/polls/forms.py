@@ -18,5 +18,5 @@ class PollForm(ActivityForm):
         fields = ActivityForm.Meta.fields + ("allow_voting",)
         help_texts = {
             **ActivityForm.Meta.help_texts,
-            "allow_voting": _("Voting is only allowed on public polls"),
+            "allow_voting": _("Voting is only allowed on public polls."),
         }

@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
-from django.conf import settings
 from django.urls import reverse
 
 # Third Party Libraries
@@ -191,8 +190,11 @@ class TestUserCommentsView:
 
 class TestUserActivitiesView:
     def test_if_anonymous(self, client, community):
-        response = client.get(reverse("users:activities", args=["testuser"]))
-        assert response.url.startswith(reverse(settings.LOGIN_URL))
+        member = MembershipFactory(community=community)
+        response = client.get(
+            reverse("users:activities", args=[member.member.username])
+        )
+        assert response.status_code == 200
 
     def test_if_not_found(self, client, member):
         response = client.get(reverse("users:activities", args=["testuser"]))

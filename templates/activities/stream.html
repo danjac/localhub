@@ -39,9 +39,9 @@
 {% render_activity request user pinned.object is_pinned=True css_class="mb-3" %}
 {% endif %}
 
-{% include "activities/includes/submit_cta.html" %}
+{% include "activities/includes/submit_cta.html" with css_class="mb-3" %}
 
-{% if not user.show_embedded_content %}
+{% if user.is_authenticated and not user.show_embedded_content %}
 
 {% dismissable user "embedded-content" %}
 {% url 'user_update' as user_settings_url %}

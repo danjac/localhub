@@ -113,7 +113,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         return self.filter(username__iregex=r"^(%s)+" % "|".join(names))
 
     def for_community(self, community):
-        """ Returns only users which are a) active and b) have active
+        """Returns only users which are a) active and b) have active
         membership with given community.
 
         Args:
@@ -180,6 +180,8 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         Returns:
             QuerySet
         """
+        if user.is_anonymous:
+            return self
         return self.exclude(blocked=user)
 
     def exclude_blocked(self, user):
@@ -191,6 +193,8 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         Returns:
             QuerySet
         """
+        if user.is_anonymous:
+            return self
         return self.exclude(blockers=user)
 
     def exclude_blocking(self, user):
@@ -381,7 +385,7 @@ class User(TrackerModelMixin, AbstractUser):
         return self.member_cache.is_inactive(community.id)
 
     def is_blocked(self, user):
-        """ Check if user is blocking this other user, or is blocked by this other
+        """Check if user is blocking this other user, or is blocked by this other
         user.
 
         Args:
