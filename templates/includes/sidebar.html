@@ -85,14 +85,6 @@
     </li>
     {% endif %}
 
-    {% if communities_count > 1 %}
-    <li class="mb-1">
-      <a href="{% url 'community_list' %}"
-         data-controller="active-link"
-         class="sidebar-menu-item">{% trans "Communities" %}</a>
-    </li>
-    {% endif %}
-
     {% if user.is_authenticated %}
     <li class="mb-1 md:mb-0">
       <a href="{% url 'user_update' %}"
@@ -109,6 +101,15 @@
          data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
     </li>
     {% endif %}
+
+    {% if communities_count > 1 %}
+    <li class="mb-1">
+      <a href="{% url 'community_list' %}"
+         data-controller="active-link"
+         class="sidebar-menu-item">{% trans "Communities" %}</a>
+    </li>
+    {% endif %}
+
   </ul>
 
   {% if can_create_activity or can_create_message %}
