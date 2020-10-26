@@ -18,7 +18,7 @@ from localhub.views import SearchMixin
 
 
 class BookmarksPermissionMixin(PermissionRequiredMixin):
-    permission_required = "communities.view_community"
+    permission_required = "bookmarks.view_bookmarks"
 
     def get_permission_object(self):
         return self.request.community
