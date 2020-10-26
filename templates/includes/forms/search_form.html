@@ -6,6 +6,8 @@
 {% load i18n %}
 {% load rules %}
 
+{% test_rule "communities.is_member" user community as is_member %}
+
 <form method="GET"
       action="{{ request.path }}"
       data-controller="search"
@@ -38,14 +40,18 @@
             data-action="search#search">
       <option value="">{% trans "Search in..." %}</option>
       <option value="{% url 'activities:search' %}">{% trans "Activity Stream" %}</option>
+      {% if is_member %}
       <option value="{% url 'private_messages:inbox' %}">{% trans "Messages - Inbox" %}</option>
       <option value="{% url 'private_messages:outbox' %}">{% trans "Messages - Outbox" %}</option>
+      {% endif %}
       <option value="{% url 'comments:list' %}">{% trans "Comments" %}</option>
+      {% if is_member %}
       <option value="{% url 'activities:private' %}">{% trans "Private Stash" %}</option>
       <option value="{% url 'bookmarks:activities' %}">{% trans "Bookmarks - Activities" %}</option>
       <option value="{% url 'bookmarks:messages' %}">{% trans "Bookmarks - Messages" %}</option>
       <option value="{% url 'bookmarks:comments' %}">{% trans "Bookmarks - Comments" %}</option>
       <option value="{% url 'users:member_list' %}">{% trans "Members" %}</option>
+      {% endif %}
       <option value="{% url 'posts:list' %}">{% trans "Posts" %}</option>
       <option value="{% url 'events:list' %}">{% trans "Events" %}</option>
       <option value="{% url 'photos:list' %}">{% trans "Photos" %}</option>
