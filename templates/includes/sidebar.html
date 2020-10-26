@@ -76,6 +76,7 @@
          data-controller="active-link"
          class="sidebar-menu-item">{% trans "Calendar" %}</a>
     </li>
+
     {% if not is_member and can_create_join_request %}
     <li class="mb-1">
       <a href="{% url 'join_requests:create' %}"
@@ -83,6 +84,15 @@
          class="sidebar-menu-item">{% trans "Request Invite" %}</a>
     </li>
     {% endif %}
+
+    {% if communities_count > 1 %}
+    <li class="mb-1">
+      <a href="{% url 'community_list' %}"
+         data-controller="active-link"
+         class="sidebar-menu-item">{% trans "Communities" %}</a>
+    </li>
+    {% endif %}
+
     {% if user.is_authenticated %}
     <li class="mb-1 md:mb-0">
       <a href="{% url 'user_update' %}"
@@ -213,7 +223,7 @@
   </ul>
   {% endif %}
 
-  {% if can_manage_community or communities_count > 1 or community.description or community.terms %}
+  {% if can_manage_community or community.description or community.terms %}
   <ul class="sidebar-menu mt-4">
     <li class="sidebar-menu-header mb-3">{% trans "Community" %}</li>
 
@@ -270,17 +280,6 @@
 
     {% endif %}
 
-    {% if communities_count > 1 %}
-    <li>
-      <a href="{% url 'community_list' %}"
-         class="sidebar-menu-item">
-        <span>{% trans "Communities" %}</span>
-        {% if external_site_counters.total %}
-        <span class="tag tag-primary px-1">{% trans "New" %}</span>
-        {% endif %}
-      </a>
-    </li>
-    {% endif %}
   </ul>
   {% endif %}
 

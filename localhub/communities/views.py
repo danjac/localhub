@@ -88,7 +88,7 @@ class CommunityAdminRequiredMixin(CommunityPermissionRequiredMixin):
     permission_required = "communities.manage_community"
 
 
-class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
+class CommunityListView(SearchMixin, ListView):
     """
     Returns all public communities, or communities the
     current user belongs to.
@@ -106,18 +106,25 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         return qs
 
     def get_member_communities(self):
+        if self.request.user.is_anonymous:
+            return Community.objects.none()
         return Community.objects.filter(
             membership__member=self.request.user, membership__active=True
         ).exclude(pk=self.request.community.id)
 
     def get_available_users(self):
-        return (
-            get_user_model()
-            .objects.filter(is_active=True)
-            .exclude(pk__in=self.request.user.blocked.all())
+        user_model = get_user_model()
+
+        if self.request.user.is_anonymous:
+            return user_model.none()
+        return user_model.objects.filter(is_active=True).exclude(
+            pk__in=self.request.user.blocked.all()
         )
 
     def get_notifications_count(self):
+        if self.request.user.is_anonymous:
+            return {}
+
         return dict(
             self.get_member_communities()
             .annotate(
@@ -137,6 +144,9 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         )
 
     def get_flags_count(self):
+        if self.request.user.is_anonymous:
+            return {}
+
         return dict(
             self.get_member_communities()
             .filter(
@@ -147,6 +157,9 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         )
 
     def get_messages_count(self):
+        if self.request.user.is_anonymous:
+            return {}
+
         return dict(
             self.get_member_communities()
             .annotate(
@@ -166,6 +179,9 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         )
 
     def get_join_requests_count(self):
+        if self.request.user.is_anonymous:
+            return {}
+
         return dict(
             self.get_member_communities()
             .filter(membership__role=Membership.Role.ADMIN)

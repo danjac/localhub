@@ -130,6 +130,11 @@ class TestCommunityListView:
         response = client.get(reverse("community_list"))
         assert len(response.context["object_list"]) == 4
 
+    def test_get_if_anonymous(self, client, community):
+        CommunityFactory.create_batch(3)
+        response = client.get(reverse("community_list"))
+        assert len(response.context["object_list"]) == 4
+
     def test_get_if_not_member(self, client, login_user, community):
         CommunityFactory.create_batch(3)
         response = client.get(reverse("community_list"), HTTP_HOST=community.domain)
