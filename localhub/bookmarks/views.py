@@ -4,6 +4,9 @@
 # Django
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+# Third Party Libraries
+from rules.contrib.views import PermissionRequiredMixin
+
 # Localhub
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
@@ -14,7 +17,16 @@ from localhub.private_messages.views import (
 from localhub.views import SearchMixin
 
 
-class BookmarksStreamView(LoginRequiredMixin, SearchMixin, BaseActivityStreamView):
+class BookmarksPermissionMixin(PermissionRequiredMixin):
+    permission_required = "communities.view_community"
+
+    def get_permission_object(self):
+        return self.request.community
+
+
+class BookmarksStreamView(
+    BookmarksPermissionMixin, LoginRequiredMixin, SearchMixin, BaseActivityStreamView
+):
     template_name = "bookmarks/activities.html"
     ordering = ("-bookmarked", "-created")
 
@@ -34,7 +46,9 @@ class BookmarksStreamView(LoginRequiredMixin, SearchMixin, BaseActivityStreamVie
 bookmarks_stream_view = BookmarksStreamView.as_view()
 
 
-class BookmarksMessageListView(SenderOrRecipientQuerySetMixin, BaseMessageListView):
+class BookmarksMessageListView(
+    BookmarksPermissionMixin, SenderOrRecipientQuerySetMixin, BaseMessageListView
+):
     template_name = "bookmarks/messages.html"
 
     def get_queryset(self):
@@ -53,7 +67,9 @@ class BookmarksMessageListView(SenderOrRecipientQuerySetMixin, BaseMessageListVi
 bookmarks_message_list_view = BookmarksMessageListView.as_view()
 
 
-class BookmarksCommentListView(SearchMixin, BaseCommentListView):
+class BookmarksCommentListView(
+    BookmarksPermissionMixin, LoginRequiredMixin, SearchMixin, BaseCommentListView
+):
     template_name = "bookmarks/comments.html"
 
     def get_queryset(self):

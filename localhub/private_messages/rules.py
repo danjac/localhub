@@ -8,3 +8,4 @@ import rules
 from localhub.communities.rules import is_member
 
 rules.add_perm("private_messages.create_message", is_member)
+rules.add_perm("private_messages.view_messages", is_member)

@@ -32,7 +32,14 @@ from .forms import MessageForm, MessageRecipientForm
 from .models import Message
 
 
-class MessageQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
+class MessageQuerySetMixin(
+    LoginRequiredMixin, PermissionRequiredMixin, CommunityRequiredMixin
+):
+    permission_required = "private_messages.view_messages"
+
+    def get_permission_object(self):
+        return self.request.community
+
     def get_queryset(self):
         return (
             Message.objects.for_community(community=self.request.community)
