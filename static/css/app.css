@@ -108,6 +108,10 @@ a.btn-secondary {
   @apply border border-gray-500 p-2;
 }
 
+.card:hover {
+  @apply bg-gray-100;
+}
+
 .card-footer {
   @apply border-t border-gray-200 pt-2;
 }
