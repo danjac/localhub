@@ -345,8 +345,10 @@ class UserAutocompleteListView(BaseUserListView):
     exclude_blocking_users = True
 
     def get_queryset(self):
+        qs = super().get_queryset()
         # exclude current user by default
-        qs = super().get_queryset().exclude(pk=self.request.user.pk)
+        if self.request.user.is_authenticated:
+            qs = qs.exclude(pk=self.request.user.pk)
         search_term = self.request.GET.get("q", "").strip()
         if search_term:
             return qs.filter(
