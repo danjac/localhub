@@ -91,6 +91,17 @@
          data-controller="active-link"
          class="sidebar-menu-item">{% trans "Settings" %}</a>
     </li>
+    {% endif %}
+
+    {% if communities_count > 1 %}
+    <li class="mb-1">
+      <a href="{% url 'community_list' %}"
+         data-controller="active-link"
+         class="sidebar-menu-item">{% trans "Communities" %}</a>
+    </li>
+    {% endif %}
+
+    {% if user.is_authenticated %}
     <li class="mb-1 md:hidden">
       <a href="{% url 'account_logout' %}"
          role="button"
@@ -99,14 +110,6 @@
          data-controller="ajax"
          data-action="ajax#post"
          data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
-    </li>
-    {% endif %}
-
-    {% if communities_count > 1 %}
-    <li class="mb-1">
-      <a href="{% url 'community_list' %}"
-         data-controller="active-link"
-         class="sidebar-menu-item">{% trans "Communities" %}</a>
     </li>
     {% endif %}
 
