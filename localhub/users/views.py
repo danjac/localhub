@@ -27,13 +27,9 @@ from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.communities.models import Membership
 from localhub.communities.rules import is_member
 from localhub.likes.models import Like
+from localhub.mixins import ParentObjectMixin, SearchMixin
 from localhub.private_messages.models import Message
-from localhub.views import (
-    ParentObjectMixin,
-    SearchMixin,
-    SuccessActionView,
-    SuccessUpdateView,
-)
+from localhub.views import SuccessActionView, SuccessUpdateView
 
 # Local
 from .forms import UserForm

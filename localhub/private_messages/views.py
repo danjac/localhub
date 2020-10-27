@@ -21,9 +21,8 @@ from localhub.communities.mixins import (
     CommunityPermissionRequiredMixin,
     CommunityRequiredMixin,
 )
+from localhub.mixins import ParentObjectMixin, SearchMixin
 from localhub.views import (
-    ParentObjectMixin,
-    SearchMixin,
     SuccessActionView,
     SuccessDeleteView,
     SuccessFormView,

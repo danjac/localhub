@@ -18,9 +18,8 @@ from localhub.bookmarks.models import Bookmark
 from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
+from localhub.mixins import ParentObjectMixin, SearchMixin
 from localhub.views import (
-    ParentObjectMixin,
-    SearchMixin,
     SuccessActionView,
     SuccessCreateView,
     SuccessDeleteView,

@@ -11,7 +11,8 @@ from localhub.communities.mixins import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.views import ParentObjectMixin, SuccessCreateView, SuccessDeleteView
+from localhub.mixins import ParentObjectMixin
+from localhub.views import SuccessCreateView, SuccessDeleteView
 
 # Local
 from .forms import FlagForm

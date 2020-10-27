@@ -23,7 +23,8 @@ from localhub.communities.mixins import (
     CommunityPermissionRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.views import ParentObjectMixin, SearchMixin, SuccessActionView
+from localhub.mixins import ParentObjectMixin, SearchMixin
+from localhub.views import SuccessActionView
 
 
 class TagQuerySetMixin(CommunityRequiredMixin):

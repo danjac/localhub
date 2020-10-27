@@ -21,11 +21,10 @@ from localhub.communities.mixins import (
 )
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
+from localhub.mixins import ParentObjectMixin, SearchMixin
 from localhub.pagination import PresetCountPaginator
 from localhub.template.defaultfilters import resolve_url
 from localhub.views import (
-    ParentObjectMixin,
-    SearchMixin,
     SuccessActionView,
     SuccessCreateView,
     SuccessDeleteView,

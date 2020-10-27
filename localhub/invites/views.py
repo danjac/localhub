@@ -15,12 +15,8 @@ from localhub.communities.mixins import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.views import (
-    SearchMixin,
-    SuccessActionView,
-    SuccessCreateView,
-    SuccessDeleteView,
-)
+from localhub.mixins import SearchMixin
+from localhub.views import SuccessActionView, SuccessCreateView, SuccessDeleteView
 
 # Local
 from .emails import send_invitation_email

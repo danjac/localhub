@@ -8,11 +8,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
 from localhub.communities.mixins import CommunityPermissionRequiredMixin
+from localhub.mixins import SearchMixin
 from localhub.private_messages.views import (
     BaseMessageListView,
     SenderOrRecipientQuerySetMixin,
 )
-from localhub.views import SearchMixin
 
 
 class BookmarksPermissionMixin(CommunityPermissionRequiredMixin):

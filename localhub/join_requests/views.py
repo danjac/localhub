@@ -21,12 +21,8 @@ from localhub.communities.mixins import (
     CommunityRequiredMixin,
 )
 from localhub.communities.models import Membership
-from localhub.views import (
-    SearchMixin,
-    SuccessActionView,
-    SuccessCreateView,
-    SuccessDeleteView,
-)
+from localhub.mixins import SearchMixin
+from localhub.views import SuccessActionView, SuccessCreateView, SuccessDeleteView
 
 # Local
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
