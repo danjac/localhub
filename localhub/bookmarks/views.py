@@ -9,10 +9,8 @@ from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
 from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.mixins import SearchMixin
-from localhub.private_messages.views import (
-    BaseMessageListView,
-    SenderOrRecipientQuerySetMixin,
-)
+from localhub.private_messages.mixins import SenderOrRecipientQuerySetMixin
+from localhub.private_messages.views import BaseMessageListView
 
 
 class BookmarksPermissionMixin(CommunityPermissionRequiredMixin):

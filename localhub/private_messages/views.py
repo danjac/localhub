@@ -4,7 +4,6 @@
 # Django
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.db.models import F
 from django.urls import reverse, reverse_lazy
@@ -17,10 +16,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
-from localhub.communities.mixins import (
-    CommunityPermissionRequiredMixin,
-    CommunityRequiredMixin,
-)
+from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.mixins import ParentObjectMixin, SearchMixin
 from localhub.views import (
     SuccessActionView,
@@ -31,35 +27,12 @@ from localhub.views import (
 
 # Local
 from .forms import MessageForm, MessageRecipientForm
+from .mixins import (
+    RecipientQuerySetMixin,
+    SenderOrRecipientQuerySetMixin,
+    SenderQuerySetMixin,
+)
 from .models import Message
-
-
-class MessageQuerySetMixin(
-    LoginRequiredMixin, CommunityPermissionRequiredMixin, CommunityRequiredMixin
-):
-    permission_required = "private_messages.view_messages"
-
-    def get_queryset(self):
-        return (
-            Message.objects.for_community(community=self.request.community)
-            .exclude_blocked(self.request.user)
-            .common_select_related()
-        )
-
-
-class SenderQuerySetMixin(MessageQuerySetMixin):
-    def get_queryset(self):
-        return super().get_queryset().for_sender(self.request.user)
-
-
-class RecipientQuerySetMixin(MessageQuerySetMixin):
-    def get_queryset(self):
-        return super().get_queryset().for_recipient(self.request.user)
-
-
-class SenderOrRecipientQuerySetMixin(MessageQuerySetMixin):
-    def get_queryset(self):
-        return super().get_queryset().for_sender_or_recipient(self.request.user)
 
 
 class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
