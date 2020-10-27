@@ -14,13 +14,15 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
 # Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 
 # Localhub
 from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import BaseActivityStreamView
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import (
+    CommunityPermissionRequiredMixin,
+    CommunityRequiredMixin,
+)
 from localhub.views import ParentObjectMixin, SearchMixin, SuccessActionView
 
 
@@ -182,7 +184,9 @@ class TagDetailView(ParentObjectMixin, BaseActivityStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class BaseTagActionView(TagQuerySetMixin, PermissionRequiredMixin, SuccessActionView):
+class BaseTagActionView(
+    TagQuerySetMixin, CommunityPermissionRequiredMixin, SuccessActionView
+):
     ...
 
 
@@ -190,9 +194,6 @@ class BaseTagFollowView(BaseTagActionView):
     permission_required = "users.follow_tag"
     is_success_ajax_response = True
     success_template_name = "hashtags/includes/follow.html"
-
-    def get_permission_object(self):
-        return self.request.community
 
 
 class TagFollowView(BaseTagFollowView):
@@ -227,9 +228,6 @@ class BaseTagBlockView(BaseTagActionView):
     permission_required = "users.block_tag"
     is_success_ajax_response = True
     success_template_name = "hashtags/includes/block.html"
-
-    def get_permission_object(self):
-        return self.request.community
 
 
 class TagBlockView(BaseTagBlockView):

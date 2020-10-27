@@ -15,7 +15,10 @@ from rules.contrib.views import PermissionRequiredMixin
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import (
+    CommunityPermissionRequiredMixin,
+    CommunityRequiredMixin,
+)
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
 from localhub.pagination import PresetCountPaginator
@@ -55,7 +58,7 @@ class ActivityTemplateMixin:
 
 class ActivityCreateView(
     CommunityRequiredMixin,
-    PermissionRequiredMixin,
+    CommunityPermissionRequiredMixin,
     ActivityTemplateMixin,
     SuccessCreateView,
 ):
@@ -63,9 +66,6 @@ class ActivityCreateView(
 
     is_private = False
     is_new = True
-
-    def get_permission_object(self):
-        return self.request.community
 
     def get_success_message(self):
         return super().get_success_message(

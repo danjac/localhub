@@ -4,12 +4,10 @@
 # Django
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-# Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
-
 # Localhub
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
+from localhub.communities.views import CommunityPermissionRequiredMixin
 from localhub.private_messages.views import (
     BaseMessageListView,
     SenderOrRecipientQuerySetMixin,
@@ -17,11 +15,8 @@ from localhub.private_messages.views import (
 from localhub.views import SearchMixin
 
 
-class BookmarksPermissionMixin(PermissionRequiredMixin):
+class BookmarksPermissionMixin(CommunityPermissionRequiredMixin):
     permission_required = "bookmarks.view_bookmarks"
-
-    def get_permission_object(self):
-        return self.request.community
 
 
 class BookmarksStreamView(

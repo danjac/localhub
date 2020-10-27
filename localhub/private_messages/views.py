@@ -17,7 +17,10 @@ from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import (
+    CommunityPermissionRequiredMixin,
+    CommunityRequiredMixin,
+)
 from localhub.views import (
     ParentObjectMixin,
     SearchMixin,
@@ -33,12 +36,9 @@ from .models import Message
 
 
 class MessageQuerySetMixin(
-    LoginRequiredMixin, PermissionRequiredMixin, CommunityRequiredMixin
+    LoginRequiredMixin, CommunityPermissionRequiredMixin, CommunityRequiredMixin
 ):
     permission_required = "private_messages.view_messages"
-
-    def get_permission_object(self):
-        return self.request.community
 
     def get_queryset(self):
         return (

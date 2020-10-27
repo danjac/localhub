@@ -39,11 +39,8 @@ class JoinRequestQuerySetMixin(CommunityRequiredMixin):
         return JoinRequest.objects.for_community(self.request.community)
 
 
-class JoinRequestAdminMixin(PermissionRequiredMixin):
+class JoinRequestAdminMixin(CommunityAdminRequiredMixin):
     permission_required = "communities.manage_community"
-
-    def get_permission_object(self):
-        return self.request.community
 
 
 class BaseJoinRequestActionView(
@@ -113,8 +110,8 @@ join_request_reject_view = JoinRequestRejectView.as_view()
 
 class JoinRequestCreateView(
     LoginRequiredMixin,
-    PermissionRequiredMixin,
     CommunityRequiredMixin,
+    CommunityAdminRequiredMixin,
     SuccessCreateView,
 ):
     model = JoinRequest
@@ -123,9 +120,6 @@ class JoinRequestCreateView(
     allow_non_members = True
     permission_required = "join_requests.create"
     success_message = _("Your request has been sent to the community admins")
-
-    def get_permission_object(self):
-        return self.request.community
 
     def get_form_kwargs(self, *args, **kwargs):
         return {
