@@ -1,65 +1,25 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-# Standard Library
-import operator
-from functools import reduce
 
 # Django
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
 # Third Party Libraries
-from taggit.models import Tag, TaggedItem
+from taggit.models import Tag
 
 # Localhub
-from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import BaseActivityStreamView
-from localhub.communities.mixins import (
-    CommunityPermissionRequiredMixin,
-    CommunityRequiredMixin,
-)
+from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.mixins import ParentObjectMixin, SearchMixin
 from localhub.views import SuccessActionView
 
-
-class TagQuerySetMixin(CommunityRequiredMixin):
-
-    model = Tag
-
-    # if True, only those tags used in this community by activities
-    # will be included
-    exclude_unused_tags = False
-
-    def get_tagged_items(self):
-        q = Q(
-            reduce(
-                operator.or_,
-                [
-                    Q(
-                        object_id__in=model.objects.filter(
-                            community=self.request.community
-                        ).values("id"),
-                        content_type=content_type,
-                    )
-                    for model, content_type in ContentType.objects.get_for_models(
-                        *get_activity_models()
-                    ).items()
-                ],
-            )
-        )
-        return TaggedItem.objects.filter(q)
-
-    def get_queryset(self):
-        if self.exclude_unused_tags:
-            return Tag.objects.filter(
-                taggit_taggeditem_items__in=self.get_tagged_items()
-            ).distinct()
-        return super().get_queryset()
+# Local
+from .mixins import TagQuerySetMixin
 
 
 class BaseTagListView(TagQuerySetMixin, ListView):

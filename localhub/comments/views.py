@@ -15,7 +15,6 @@ from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
-from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
 from localhub.mixins import ParentObjectMixin, SearchMixin
@@ -28,14 +27,8 @@ from localhub.views import (
 
 # Local
 from .forms import CommentForm
+from .mixins import CommentQuerySetMixin
 from .models import Comment
-
-
-class CommentQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return Comment.objects.for_community(self.request.community).select_related(
-            "owner", "community", "parent", "parent__owner", "parent__community",
-        )
 
 
 class CommentUpdateView(
