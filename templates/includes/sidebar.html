@@ -198,7 +198,6 @@
     {% endif %}
   </ul>
 
-  {% if is_member %}
   <ul class="sidebar-menu mt-4">
     <li class="sidebar-menu-header mb-3">{% trans "People" %}</li>
     <li class="mb-1">
@@ -206,6 +205,7 @@
          data-controller="active-link"
          class="sidebar-menu-item">{% trans "Members" %}</a>
     </li>
+    {% if user.is_authenticated %}
     <li class="mb-1">
       <a href="{% url 'users:following_list' %}"
          data-controller="active-link"
@@ -221,8 +221,8 @@
          data-controller="active-link"
          class="sidebar-menu-item">{% trans "Blocked" %}</a>
     </li>
+    {% endif %}
   </ul>
-  {% endif %}
 
   {% if can_manage_community or community.description or community.terms %}
   <ul class="sidebar-menu mt-4">
