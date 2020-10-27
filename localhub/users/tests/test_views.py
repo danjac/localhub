@@ -349,6 +349,16 @@ class TestUserUnblockView:
 
 
 class TestUserAutocompleteListView:
+    def test_get_anonymous(self, client, community, anonymous_user):
+
+        user = MembershipFactory(
+            community=community, member=UserFactory(name="tester")
+        ).member
+
+        response = client.get(reverse("users:autocomplete_list"), {"q": "tester"})
+        object_list = response.context["object_list"]
+        assert user in object_list
+
     def test_get(self, client, member, user):
         other = MembershipFactory(
             community=member.community, member=UserFactory(name="tester")
