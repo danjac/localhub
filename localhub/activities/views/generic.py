@@ -15,10 +15,7 @@ from rules.contrib.views import PermissionRequiredMixin
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
-from localhub.communities.mixins import (
-    CommunityPermissionRequiredMixin,
-    CommunityRequiredMixin,
-)
+from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
 from localhub.mixins import ParentObjectMixin, SearchMixin
@@ -39,10 +36,7 @@ from ..utils import get_activity_models
 
 
 class ActivityCreateView(
-    CommunityRequiredMixin,
-    CommunityPermissionRequiredMixin,
-    ActivityTemplateMixin,
-    SuccessCreateView,
+    CommunityPermissionRequiredMixin, ActivityTemplateMixin, SuccessCreateView,
 ):
     permission_required = "activities.create_activity"
 

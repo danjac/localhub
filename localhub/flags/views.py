@@ -7,21 +7,13 @@ from django.conf import settings
 from django.views.generic import ListView
 
 # Localhub
-from localhub.communities.mixins import (
-    CommunityModeratorRequiredMixin,
-    CommunityRequiredMixin,
-)
 from localhub.mixins import ParentObjectMixin
 from localhub.views import SuccessCreateView, SuccessDeleteView
 
 # Local
 from .forms import FlagForm
+from .mixins import FlagQuerySetMixin
 from .models import Flag
-
-
-class FlagQuerySetMixin(CommunityRequiredMixin, CommunityModeratorRequiredMixin):
-    def get_queryset(self):
-        return Flag.objects.filter(community=self.request.community)
 
 
 class BaseFlagCreateView(

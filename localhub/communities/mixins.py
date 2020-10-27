@@ -62,7 +62,7 @@ class CurrentCommunityMixin(CommunityRequiredMixin):
         return self.request.community
 
 
-class CommunityPermissionRequiredMixin(PermissionRequiredMixin):
+class CommunityPermissionRequiredMixin(CommunityRequiredMixin, PermissionRequiredMixin):
     def get_permission_object(self):
         return self.request.community
 

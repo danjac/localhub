@@ -8,7 +8,6 @@ import json
 from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
-from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, View
 
 # Localhub
@@ -16,24 +15,13 @@ from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.views import SuccessActionView, SuccessDeleteView, SuccessView
 
 # Local
+from .mixins import (
+    NotificationQuerySetMixin,
+    NotificationSuccessRedirectMixin,
+    UnreadNotificationQuerySetMixin,
+)
 from .models import Notification, PushSubscription
 from .signals import notification_read
-
-
-class NotificationQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return Notification.objects.for_community(self.request.community).for_recipient(
-            self.request.user
-        )
-
-
-class UnreadNotificationQuerySetMixin(NotificationQuerySetMixin):
-    def get_queryset(self):
-        return super().get_queryset().unread()
-
-
-class NotificationSuccessRedirectMixin:
-    success_url = reverse_lazy("notifications:list")
 
 
 class NotificationListView(NotificationQuerySetMixin, ListView):

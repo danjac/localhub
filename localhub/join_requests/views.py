@@ -16,10 +16,7 @@ from django.views.generic import DetailView, ListView
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
-from localhub.communities.mixins import (
-    CommunityAdminRequiredMixin,
-    CommunityRequiredMixin,
-)
+from localhub.communities.mixins import CommunityAdminRequiredMixin
 from localhub.communities.models import Membership
 from localhub.mixins import SearchMixin
 from localhub.views import SuccessActionView, SuccessCreateView, SuccessDeleteView
@@ -92,15 +89,10 @@ class JoinRequestRejectView(BaseJoinRequestActionView):
 
 
 join_request_reject_view = JoinRequestRejectView.as_view()
-# Copyright (c) 2020 by Dan Jacob
-# SPDX-License-Identifier: AGPL-3.0-or-later
 
 
 class JoinRequestCreateView(
-    LoginRequiredMixin,
-    CommunityRequiredMixin,
-    CommunityAdminRequiredMixin,
-    SuccessCreateView,
+    LoginRequiredMixin, CommunityAdminRequiredMixin, SuccessCreateView,
 ):
     model = JoinRequest
     form_class = JoinRequestForm
@@ -156,8 +148,6 @@ class JoinRequestDeleteView(PermissionRequiredMixin, SuccessDeleteView):
 
 
 join_request_delete_view = JoinRequestDeleteView.as_view()
-# Copyright (c) 2020 by Dan Jacob
-# SPDX-License-Identifier: AGPL-3.0-or-later
 
 
 class JoinRequestDetailView(
@@ -167,8 +157,6 @@ class JoinRequestDetailView(
 
 
 join_request_detail_view = JoinRequestDetailView.as_view()
-# Copyright (c) 2020 by Dan Jacob
-# SPDX-License-Identifier: AGPL-3.0-or-later
 
 
 class JoinRequestListView(
