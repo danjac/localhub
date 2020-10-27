@@ -25,7 +25,7 @@ pytestmark = pytest.mark.django_db
 
 class TestGetCommunityCount:
     def test_anonymous(self, community, anonymous_user):
-        assert get_community_count(anonymous_user) == 0
+        assert get_community_count(anonymous_user) == 1
 
     def test_authenticated(self, member):
         CommunityFactory(public=False)

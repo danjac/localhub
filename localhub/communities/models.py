@@ -71,6 +71,9 @@ class CommunityQuerySet(models.QuerySet):
         Returns:
             QuerySet
         """
+        if user.is_anonymous:
+            return self.filter(public=True)
+
         return (
             self.with_is_member(user)
             .filter(models.Q(models.Q(is_member=True) | models.Q(public=True)))

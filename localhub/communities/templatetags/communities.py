@@ -20,13 +20,14 @@ register = template.Library()
 
 
 @register.simple_tag
-def get_community_count(user):
+def get_community_count(user, community=None):
     """
     Returns number of communities accessible to this user
     """
-    if user.is_anonymous:
-        return 0
-    return Community.objects.accessible(user).count()
+    qs = Community.objects.accessible(user)
+    if community:
+        qs = qs.exclude(pk=community.id)
+    return qs.count()
 
 
 @register.simple_tag

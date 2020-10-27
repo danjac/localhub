@@ -49,6 +49,14 @@ class TestCommunityManager:
         CommunityFactory(public=True)
         assert Community.objects.accessible(user).exists()
 
+    def test_accessible_if_anonymous_public(self, anonymous_user):
+        CommunityFactory(public=True)
+        assert Community.objects.accessible(anonymous_user).exists()
+
+    def test_accessible_if_anonymous_private(self, anonymous_user):
+        CommunityFactory(public=False)
+        assert not Community.objects.accessible(anonymous_user).exists()
+
     def test_accessible_if_not_public_and_member(self):
         community = CommunityFactory(public=False)
         user = MembershipFactory(community=community).member

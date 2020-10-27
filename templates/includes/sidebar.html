@@ -7,7 +7,7 @@
 
 {% test_rule "communities.is_member" user community as is_member %}
 
-{% get_community_count user as communities_count %}
+{% get_community_count user community as communities_count %}
 
 <nav class="hidden lg:block text-sm w-full lg:w-1/6"
      data-target="sidebar.nav">
@@ -93,7 +93,7 @@
     </li>
     {% endif %}
 
-    {% if communities_count > 1 %}
+    {% if communities_count %}
     <li class="mb-1">
       <a href="{% url 'community_list' %}"
          data-controller="active-link"
