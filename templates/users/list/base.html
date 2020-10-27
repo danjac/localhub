@@ -9,11 +9,13 @@
 
 {% block content %}
 
+{% test_rule "communities.is_member" user community as is_member %}
+
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 
 <h1 class="page-header mb-3">{% trans "People" %}</h1>
 
-{% if user.is_authenticated %}
+{% if is_member %}
 <div class="tabs mb-3 text-sm">
   <a class="tab-item"
      data-controller="active-link"
@@ -73,6 +75,7 @@
           {% endif %}
           {% endblock user_item_detail %}
       </td>
+      {% if is_member %}
       <td class="border py-2 px-2">
         <div class="table-nav">
           {% block user_item_actions %}
@@ -100,6 +103,7 @@
         </div>
         {% endblock user_item_actions %}
       </td>
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>

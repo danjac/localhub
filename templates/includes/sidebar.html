@@ -5,9 +5,9 @@
 {% load rules %}
 {% load communities %}
 
-{% get_community_count user as communities_count %}
 {% test_rule "communities.is_member" user community as is_member %}
 
+{% get_community_count user as communities_count %}
 
 <nav class="hidden lg:block text-sm w-full lg:w-1/6"
      data-target="sidebar.nav">
@@ -205,7 +205,7 @@
          data-controller="active-link"
          class="sidebar-menu-item">{% trans "Members" %}</a>
     </li>
-    {% if user.is_authenticated %}
+    {% if is_member %}
     <li class="mb-1">
       <a href="{% url 'users:following_list' %}"
          data-controller="active-link"
