@@ -3,7 +3,6 @@
 
 # Django
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -21,28 +20,8 @@ from localhub.views import SuccessActionView, SuccessCreateView, SuccessDeleteVi
 # Local
 from .emails import send_invitation_email
 from .forms import InviteForm
+from .mixins import InviteQuerySetMixin, InviteRecipientQuerySetMixin
 from .models import Invite
-
-
-class InviteQuerySetMixin(CommunityRequiredMixin):
-    model = Invite
-
-    def get_queryset(self):
-        return Invite.objects.for_community(self.request.community).select_related(
-            "community"
-        )
-
-
-class InviteRecipientQuerySetMixin(LoginRequiredMixin):
-    model = Invite
-
-    def get_queryset(self):
-        return (
-            Invite.objects.get_queryset()
-            .pending()
-            .for_user(self.request.user)
-            .select_related("community")
-        )
 
 
 class BaseInviteAdminActionView(
