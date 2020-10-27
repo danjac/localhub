@@ -18,8 +18,8 @@ rules.add_rule("users.is_self", is_self)
 
 rules.add_perm("users.change_user", is_self)
 rules.add_perm("users.delete_user", is_self)
-rules.add_perm("users.block_user", ~is_self)
-rules.add_perm("users.follow_user", ~is_self)
+rules.add_perm("users.block_user", ~is_self & rules.is_authenticated)
+rules.add_perm("users.follow_user", ~is_self & rules.is_authenticated)
 
 rules.add_perm("users.follow_tag", rules.is_authenticated)
 rules.add_perm("users.block_tag", rules.is_authenticated)

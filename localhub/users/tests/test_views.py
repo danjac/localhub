@@ -61,6 +61,14 @@ class TestMemberListView:
         assert user in object_list
         assert member.member in object_list
 
+    def test_get_if_anonymous(self, client, community):
+        user = MembershipFactory(community=community).member
+        response = client.get(reverse("users:member_list"))
+        assert response.status_code == 200
+
+        object_list = response.context["object_list"]
+        assert user in object_list
+
 
 class TestActivityLikesView:
     def test_get(self, client, member, transactional_db):

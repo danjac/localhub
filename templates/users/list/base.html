@@ -13,6 +13,7 @@
 
 <h1 class="page-header mb-3">{% trans "People" %}</h1>
 
+{% if user.is_authenticated %}
 <div class="tabs mb-3 text-sm">
   <a class="tab-item"
      data-controller="active-link"
@@ -31,6 +32,7 @@
      data-active-link-exact
      href="{% url 'users:blocked_list' %}">{% trans "Blocked" %}</a>
 </div>
+{% endif %}
 
 {% block user_list %}
 

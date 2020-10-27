@@ -57,6 +57,11 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         Returns:
             QuerySet
         """
+        if recipient.is_anonymous:
+            return self.annotate(
+                num_unread_messages=models.Value(0, output_field=models.IntegerField())
+            )
+
         return self.annotate(
             num_unread_messages=models.Count(
                 "sent_messages",
@@ -80,6 +85,11 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         Returns:
             QuerySet
         """
+        if follower.is_anonymous:
+            return self.annotate(
+                is_following=models.Value(False, output_field=models.BooleanField())
+            )
+
         return self.annotate(
             is_following=models.Exists(
                 follower.following.filter(pk=models.OuterRef("id"))

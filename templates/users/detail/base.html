@@ -52,9 +52,8 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
     {% endif %}
   </h1>
 
-  {% if is_member %}
   <div class="flex flex-wrap mt-3 lg:mt-0">
-    {% if not is_current_user %}
+    {% if not is_current_user and is_member %}
     <div class="text-sm mr-3"
          data-controller="dropdown"
          data-action="click@window->dropdown#close keydown@window->dropdown#close">
@@ -133,7 +132,6 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
       {% endif %}
     </div>
   </div>
-  {% endif %}
 </div>
 
 {% if not is_blocked %}

@@ -140,6 +140,14 @@ class TestUserManager:
             else:
                 assert not user.is_blocked
 
+    def test_with_num_unread_messages_if_anonymous(
+        self, user_model, anonymous_user, community
+    ):
+        user = user_model.objects.with_num_unread_messages(
+            anonymous_user, community
+        ).first()
+        assert user is None
+
     def test_with_num_unread_messages_if_recipient_unread(self, user_model, member):
         MessageFactory(recipient=member.member, community=member.community)
         user = (

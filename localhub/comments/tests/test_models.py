@@ -274,11 +274,11 @@ class TestCommentManager:
             anonymous_user, comment.community
         ).get()
 
-        assert not hasattr(comment, "num_likes")
-        assert not hasattr(comment, "has_liked")
-        assert not hasattr(comment, "has_flagged")
+        assert comment.num_likes is None
+        assert not comment.has_liked
+        assert not comment.has_flagged
+        assert not comment.is_new
         assert not hasattr(comment, "is_flagged")
-        assert not hasattr(comment, "is_new")
 
     def test_with_common_annotations_if_authenticated(self, comment, user):
         comment = Comment.objects.with_common_annotations(user, comment.community).get()

@@ -102,22 +102,19 @@ class CommentQuerySet(
         Returns:
             QuerySet
         """
+        qs = (
+            self.with_num_likes()
+            .with_is_new(user)
+            .with_has_bookmarked(user)
+            .with_has_liked(user)
+            .with_has_flagged(user)
+            .with_is_blocked(user)
+            .with_is_parent_owner_member(community)
+        )
 
-        if user.is_authenticated:
-            qs = (
-                self.with_num_likes()
-                .with_is_new(user)
-                .with_has_bookmarked(user)
-                .with_has_liked(user)
-                .with_has_flagged(user)
-                .with_is_blocked(user)
-                .with_is_parent_owner_member(community)
-            )
-
-            if user.has_perm("communities.moderate_community", community):
-                qs = qs.with_is_flagged()
-            return qs
-        return self
+        if user.has_perm("communities.moderate_community", community):
+            qs = qs.with_is_flagged()
+        return qs
 
     def with_common_related(self):
         """Include commonly used select_related and prefetch_related fields.

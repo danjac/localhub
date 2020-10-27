@@ -467,7 +467,7 @@ class MemberListView(SearchMixin, BaseMemberListView):
 member_list_view = MemberListView.as_view()
 
 
-class FollowingUserListView(BaseMemberListView):
+class FollowingUserListView(LoginRequiredMixin, BaseMemberListView):
     template_name = "users/list/following.html"
 
     def get_queryset(self):
@@ -477,7 +477,7 @@ class FollowingUserListView(BaseMemberListView):
 following_user_list_view = FollowingUserListView.as_view()
 
 
-class FollowerUserListView(BaseMemberListView):
+class FollowerUserListView(LoginRequiredMixin, BaseMemberListView):
     template_name = "users/list/followers.html"
 
     def get_queryset(self):
@@ -487,7 +487,7 @@ class FollowerUserListView(BaseMemberListView):
 follower_user_list_view = FollowerUserListView.as_view()
 
 
-class BlockedUserListView(MemberQuerySetMixin, BaseUserListView):
+class BlockedUserListView(LoginRequiredMixin, MemberQuerySetMixin, BaseUserListView):
     template_name = "users/list/blocked.html"
 
     def get_queryset(self):

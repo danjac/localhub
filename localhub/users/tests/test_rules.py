@@ -44,3 +44,21 @@ class TestPermissions:
 
     def test_can_block_tag(self, user):
         assert user.has_perm("users.block_tag")
+
+    def test_anonymous_can_change_user(self, user, anonymous_user):
+        assert not anonymous_user.has_perm("users.change_user", user)
+
+    def test_anonymous_can_delete_user(self, user, anonymous_user):
+        assert not anonymous_user.has_perm("users.delete_user", user)
+
+    def test_anonymous_can_follow_user(self, user, anonymous_user):
+        assert not anonymous_user.has_perm("users.follow_user", user)
+
+    def test_anonymous_can_block_user(self, user, anonymous_user):
+        assert not anonymous_user.has_perm("users.block_user", user)
+
+    def test_anonymous_can_follow_tag(self, user, anonymous_user):
+        assert not anonymous_user.has_perm("users.follow_tag")
+
+    def test_anonymous_can_block_tag(self, user, anonymous_user):
+        assert not anonymous_user.has_perm("users.block_tag")

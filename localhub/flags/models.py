@@ -14,6 +14,7 @@ from model_utils.models import TimeStampedModel
 # Localhub
 from localhub.communities.models import Community
 from localhub.db.generic import get_generic_related_exists
+from localhub.db.utils import boolean_value
 from localhub.notifications.decorators import notify
 from localhub.notifications.models import Notification
 
@@ -37,7 +38,9 @@ class FlagAnnotationsQuerySetMixin:
         """
         return self.annotate(
             **{
-                annotated_name: get_generic_related_exists(
+                annotated_name: boolean_value(False)
+                if user.is_anonymous
+                else get_generic_related_exists(
                     self.model, Flag.objects.filter(user=user)
                 )
             }
