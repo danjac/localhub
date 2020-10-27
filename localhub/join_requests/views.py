@@ -27,16 +27,8 @@ from localhub.views import SuccessActionView, SuccessCreateView, SuccessDeleteVi
 # Local
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
 from .forms import JoinRequestForm
+from .mixins import JoinRequestAdminMixin, JoinRequestQuerySetMixin
 from .models import JoinRequest
-
-
-class JoinRequestQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return JoinRequest.objects.for_community(self.request.community)
-
-
-class JoinRequestAdminMixin(CommunityAdminRequiredMixin):
-    permission_required = "communities.manage_community"
 
 
 class BaseJoinRequestActionView(
