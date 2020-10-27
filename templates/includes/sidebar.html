@@ -85,14 +85,6 @@
     </li>
     {% endif %}
 
-    {% if user.is_authenticated %}
-    <li class="mb-1 md:mb-0">
-      <a href="{% url 'user_update' %}"
-         data-controller="active-link"
-         class="sidebar-menu-item">{% trans "Settings" %}</a>
-    </li>
-    {% endif %}
-
     {% if communities_count %}
     <li class="mb-1">
       <a href="{% url 'community_list' %}"
@@ -102,6 +94,11 @@
     {% endif %}
 
     {% if user.is_authenticated %}
+    <li class="mb-1 md:mb-0">
+      <a href="{% url 'user_update' %}"
+         data-controller="active-link"
+         class="sidebar-menu-item">{% trans "Settings" %}</a>
+    </li>
     <li class="mb-1 md:hidden">
       <a href="{% url 'account_logout' %}"
          role="button"
