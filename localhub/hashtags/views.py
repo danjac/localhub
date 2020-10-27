@@ -19,7 +19,7 @@ from taggit.models import Tag, TaggedItem
 # Localhub
 from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import BaseActivityStreamView
-from localhub.communities.views import (
+from localhub.communities.mixins import (
     CommunityPermissionRequiredMixin,
     CommunityRequiredMixin,
 )

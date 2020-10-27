@@ -5,9 +5,8 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
 from django.db.models import Count, F, Q
-from django.http import Http404, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import DetailView, ListView, TemplateView
@@ -24,68 +23,12 @@ from localhub.views import SearchMixin, SuccessDeleteView, SuccessUpdateView
 # Local
 from .emails import send_membership_deleted_email
 from .forms import CommunityForm, MembershipForm
+from .mixins import (
+    CommunityAdminRequiredMixin,
+    CurrentCommunityMixin,
+    MembershipQuerySetMixin,
+)
 from .models import Community, Membership
-
-
-class CommunityRequiredMixin:
-    """
-    Ensures that a community is available on this domain. This requires
-    the CurrentCommunityMiddleware is enabled.
-
-    If the user is not a member they will be redirected to the Welcome view.
-
-    If the view has the `allow_non_members` property *True* then the above
-    rule is overriden - for example in some cases where we want to allow
-    the user to be able to handle an invitation.
-    """
-
-    allow_non_members = False
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.community.active:
-            return self.handle_community_not_found()
-
-        if (
-            not request.user.has_perm("communities.view_community", request.community)
-            and not self.is_non_members_allowed()
-        ):
-            return self.handle_community_access_denied()
-        return super().dispatch(request, *args, **kwargs)
-
-    def is_non_members_allowed(self):
-        if self.allow_non_members:
-            return True
-        return self.request.community.public
-
-    def handle_community_access_denied(self):
-        if self.request.is_ajax():
-            raise PermissionDenied(_("You must be a member of this community"))
-        return HttpResponseRedirect(reverse("community_welcome"))
-
-    def handle_community_not_found(self):
-        if self.request.is_ajax():
-            raise Http404(_("No community is available for this domain"))
-        return HttpResponseRedirect(reverse("community_not_found"))
-
-
-class CurrentCommunityMixin(CommunityRequiredMixin):
-    model = Community
-
-    def get_object(self):
-        return self.request.community
-
-
-class CommunityPermissionRequiredMixin(PermissionRequiredMixin):
-    def get_permission_object(self):
-        return self.request.community
-
-
-class CommunityModeratorRequiredMixin(CommunityPermissionRequiredMixin):
-    permission_required = "communities.moderate_community"
-
-
-class CommunityAdminRequiredMixin(CommunityPermissionRequiredMixin):
-    permission_required = "communities.manage_community"
 
 
 class CommunityListView(SearchMixin, ListView):
@@ -309,13 +252,6 @@ class CommunityNotFoundView(TemplateView):
 
 
 community_not_found_view = CommunityNotFoundView.as_view()
-
-
-class MembershipQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return Membership.objects.filter(
-            community=self.request.community
-        ).select_related("community", "member")
 
 
 class MembershipListView(

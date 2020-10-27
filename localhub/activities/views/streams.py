@@ -19,7 +19,7 @@ from django.views.generic.dates import (
 )
 
 # Localhub
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.notifications.models import Notification
 from localhub.pagination import PresetCountPaginator
 from localhub.views import SearchMixin

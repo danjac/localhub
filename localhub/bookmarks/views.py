@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Localhub
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
-from localhub.communities.views import CommunityPermissionRequiredMixin
+from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.private_messages.views import (
     BaseMessageListView,
     SenderOrRecipientQuerySetMixin,

@@ -15,7 +15,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
 from localhub.views import (

@@ -11,7 +11,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import DetailView, ListView
 
 # Localhub
-from localhub.communities.views import (
+from localhub.communities.mixins import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )

@@ -7,7 +7,7 @@ from django.conf import settings
 from django.views.generic import ListView
 
 # Localhub
-from localhub.communities.views import (
+from localhub.communities.mixins import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,
 )

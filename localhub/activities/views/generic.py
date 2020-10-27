@@ -15,7 +15,7 @@ from rules.contrib.views import PermissionRequiredMixin
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
-from localhub.communities.views import (
+from localhub.communities.mixins import (
     CommunityPermissionRequiredMixin,
     CommunityRequiredMixin,
 )

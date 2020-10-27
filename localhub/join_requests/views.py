@@ -16,11 +16,11 @@ from django.views.generic import DetailView, ListView
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
-from localhub.communities.models import Membership
-from localhub.communities.views import (
+from localhub.communities.mixins import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
+from localhub.communities.models import Membership
 from localhub.views import (
     SearchMixin,
     SuccessActionView,

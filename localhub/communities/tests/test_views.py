@@ -13,8 +13,8 @@ import pytest
 
 # Local
 from ..factories import CommunityFactory, MembershipFactory
+from ..mixins import CommunityRequiredMixin
 from ..models import Membership, RequestCommunity
-from ..views import CommunityRequiredMixin
 
 pytestmark = pytest.mark.django_db
 

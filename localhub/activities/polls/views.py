@@ -18,7 +18,7 @@ from localhub.activities.views.generic import (
     ActivityListView,
     ActivityUpdateView,
 )
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.views import SuccessActionView
 
 # Local
