@@ -26,9 +26,7 @@
            {% if not view.search_optional %}
            required
            {% endif %}
-           {% if selector %}
            data-target="search.input"
-           {% endif %}
            data-action="keyup->search#toggleSelector"
            placeholder="{% trans "Search..." %}"
            value="{{ view.search_query|default:"" }}">
