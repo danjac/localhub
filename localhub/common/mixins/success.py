@@ -6,13 +6,10 @@ from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.views.generic import CreateView, DeleteView, FormView, UpdateView, View
-from django.views.generic.detail import SingleObjectMixin
 
 
 class SuccessMixin:
-    """Provides defaults for success message and redirect URL.
-    """
+    """Provides defaults for success message and redirect URL."""
 
     success_message_response_header = "X-Success-Message"
     success_template_name = None
@@ -147,54 +144,3 @@ class SuccessMixin:
             return response
 
         return self.success_response_header(response, success_message)
-
-
-class SuccessView(SuccessMixin, View):
-    """Convenient base class for View with SuccessMixin.
-    """
-
-
-class SuccessActionView(SingleObjectMixin, SuccessView):
-    """Base class for simple AJAX action views (usually POST) with
-    standard success response. Automatically loads object at setup.
-    """
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        self.object = self.get_object()
-
-
-class SuccessFormView(SuccessMixin, FormView):
-    """FormView returning success response with valid form.
-    """
-
-    def form_valid(self, form):
-        return self.success_response()
-
-
-class SuccessCreateView(SuccessMixin, CreateView):
-    """CreateView returning success response with valid form.
-    """
-
-    def form_valid(self, form):
-        self.object = form.save()
-        return self.success_response()
-
-
-class SuccessUpdateView(SuccessMixin, UpdateView):
-    """UpdateView returning success response with valid form.
-    """
-
-    def form_valid(self, form):
-        self.object = form.save()
-        return self.success_response()
-
-
-class SuccessDeleteView(SuccessMixin, DeleteView):
-    """DeleteView returning success response on execution.
-    """
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return self.success_response()
