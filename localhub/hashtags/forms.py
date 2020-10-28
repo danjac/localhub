@@ -6,7 +6,7 @@
 from django import forms
 
 # Localhub
-from localhub.forms.widgets import BaseTypeaheadInput
+from localhub.common.forms.widgets import BaseTypeaheadInput
 
 # Local
 from .app_settings import HASHTAGS_TYPEAHEAD_CONFIG

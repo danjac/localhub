@@ -11,7 +11,7 @@ import pytz
 
 # Localhub
 from localhub.activities.forms import ActivityForm
-from localhub.forms import CalendarField, CalendarWidget, FormHelper
+from localhub.common.forms import CalendarField, CalendarWidget, FormHelper
 from localhub.utils.geocode import geocode
 
 # Local

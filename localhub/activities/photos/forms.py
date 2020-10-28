@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 # Localhub
 from localhub.activities.forms import ActivityForm
-from localhub.forms import ClearableImageInput, FormHelper
+from localhub.common.forms import ClearableImageInput, FormHelper
 from localhub.utils.exif import Exif
 
 # Local

@@ -3,7 +3,7 @@
 
 
 # Localhub
-from localhub.forms.widgets import BaseTypeaheadInput
+from localhub.common.forms.widgets import BaseTypeaheadInput
 
 # Local
 from .app_settings import MENTIONS_TYPEAHEAD_CONFIG

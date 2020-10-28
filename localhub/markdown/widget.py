@@ -6,7 +6,7 @@
 from markdownx.widgets import MarkdownxWidget
 
 # Localhub
-from localhub.forms.widgets import TypeaheadMixin
+from localhub.common.forms.widgets import TypeaheadMixin
 from localhub.hashtags.app_settings import HASHTAGS_TYPEAHEAD_CONFIG
 from localhub.users.app_settings import MENTIONS_TYPEAHEAD_CONFIG
 

@@ -9,8 +9,8 @@ from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
-from localhub.forms import FormHelper
-from localhub.forms.widgets import BaseTypeaheadInput, ClearableImageInput
+from localhub.common.forms import FormHelper
+from localhub.common.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 
 # Local
 from .app_settings import MENTIONS_TYPEAHEAD_CONFIG

@@ -6,7 +6,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
-from localhub.forms import TypeaheadInput
+from localhub.common.forms import TypeaheadInput
 
 # Local
 from .models import Activity

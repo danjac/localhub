@@ -6,7 +6,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
-from localhub.forms import ClearableImageInput, FormHelper, TypeaheadInput
+from localhub.common.forms import ClearableImageInput, FormHelper, TypeaheadInput
 
 # Local
 from .models import Community, Membership
