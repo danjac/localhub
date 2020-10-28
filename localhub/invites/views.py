@@ -10,12 +10,16 @@ from django.utils.translation import gettext as _
 from django.views.generic import DetailView, ListView
 
 # Localhub
+from localhub.common.mixins import SearchMixin
+from localhub.common.views import (
+    SuccessActionView,
+    SuccessCreateView,
+    SuccessDeleteView,
+)
 from localhub.communities.mixins import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.mixins import SearchMixin
-from localhub.views import SuccessActionView, SuccessCreateView, SuccessDeleteView
 
 # Local
 from .emails import send_invitation_email

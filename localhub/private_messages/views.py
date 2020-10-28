@@ -16,14 +16,14 @@ from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
-from localhub.communities.mixins import CommunityRequiredMixin
-from localhub.mixins import ParentObjectMixin, SearchMixin
-from localhub.views import (
+from localhub.common.mixins import ParentObjectMixin, SearchMixin
+from localhub.common.views import (
     SuccessActionView,
     SuccessDeleteView,
     SuccessFormView,
     SuccessView,
 )
+from localhub.communities.mixins import CommunityRequiredMixin
 
 # Local
 from .forms import MessageForm, MessageRecipientForm

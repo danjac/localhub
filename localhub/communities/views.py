@@ -16,10 +16,10 @@ import rules
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
+from localhub.common.mixins import SearchMixin
+from localhub.common.views import SuccessDeleteView, SuccessUpdateView
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
-from localhub.mixins import SearchMixin
-from localhub.views import SuccessDeleteView, SuccessUpdateView
 
 # Local
 from .emails import send_membership_deleted_email

@@ -6,7 +6,7 @@ from django.views.generic import CreateView, DeleteView, FormView, UpdateView, V
 from django.views.generic.detail import SingleObjectMixin
 
 # Localhub
-from localhub.mixins import SuccessMixin
+from localhub.common.mixins import SuccessMixin
 
 
 class SuccessView(SuccessMixin, View):

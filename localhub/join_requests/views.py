@@ -16,10 +16,14 @@ from django.views.generic import DetailView, ListView
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
+from localhub.common.mixins import SearchMixin
+from localhub.common.views import (
+    SuccessActionView,
+    SuccessCreateView,
+    SuccessDeleteView,
+)
 from localhub.communities.mixins import CommunityAdminRequiredMixin
 from localhub.communities.models import Membership
-from localhub.mixins import SearchMixin
-from localhub.views import SuccessActionView, SuccessCreateView, SuccessDeleteView
 
 # Local
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email

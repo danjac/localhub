@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Localhub
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
-from localhub.mixins import SearchMixin
+from localhub.common.mixins import SearchMixin
 from localhub.private_messages.mixins import SenderOrRecipientQuerySetMixin
 from localhub.private_messages.views import BaseMessageListView
 

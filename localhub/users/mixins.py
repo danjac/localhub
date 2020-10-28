@@ -9,9 +9,9 @@ from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 
 # Localhub
+from localhub.common.mixins import ParentObjectMixin
 from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.communities.models import Membership
-from localhub.mixins import ParentObjectMixin
 from localhub.private_messages.models import Message
 
 

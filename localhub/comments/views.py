@@ -15,15 +15,15 @@ from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
-from localhub.flags.views import BaseFlagCreateView
-from localhub.likes.models import Like
-from localhub.mixins import ParentObjectMixin, SearchMixin
-from localhub.views import (
+from localhub.common.mixins import ParentObjectMixin, SearchMixin
+from localhub.common.views import (
     SuccessActionView,
     SuccessCreateView,
     SuccessDeleteView,
     SuccessUpdateView,
 )
+from localhub.flags.views import BaseFlagCreateView
+from localhub.likes.models import Like
 
 # Local
 from .forms import CommentForm

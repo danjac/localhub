@@ -7,8 +7,8 @@ from django.conf import settings
 from django.views.generic import ListView
 
 # Localhub
-from localhub.mixins import ParentObjectMixin
-from localhub.views import SuccessCreateView, SuccessDeleteView
+from localhub.common.mixins import ParentObjectMixin
+from localhub.common.views import SuccessCreateView, SuccessDeleteView
 
 # Local
 from .forms import FlagForm

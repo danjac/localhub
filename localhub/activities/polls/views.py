@@ -18,8 +18,8 @@ from localhub.activities.views.generic import (
     ActivityListView,
     ActivityUpdateView,
 )
+from localhub.common.views import SuccessActionView
 from localhub.communities.mixins import CommunityRequiredMixin
-from localhub.views import SuccessActionView
 
 # Local
 from .models import Answer, Poll

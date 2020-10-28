@@ -14,9 +14,9 @@ from taggit.models import Tag
 
 # Localhub
 from localhub.activities.views.streams import BaseActivityStreamView
+from localhub.common.mixins import ParentObjectMixin, SearchMixin
+from localhub.common.views import SuccessActionView
 from localhub.communities.mixins import CommunityPermissionRequiredMixin
-from localhub.mixins import ParentObjectMixin, SearchMixin
-from localhub.views import SuccessActionView
 
 # Local
 from .mixins import TagQuerySetMixin

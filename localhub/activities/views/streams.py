@@ -19,9 +19,9 @@ from django.views.generic.dates import (
 )
 
 # Localhub
+from localhub.common.mixins import SearchMixin
 from localhub.common.pagination import PresetCountPaginator
 from localhub.communities.mixins import CommunityRequiredMixin
-from localhub.mixins import SearchMixin
 from localhub.notifications.models import Notification
 
 # Local

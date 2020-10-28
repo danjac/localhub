@@ -11,8 +11,8 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonRespon
 from django.views.generic import ListView, TemplateView, View
 
 # Localhub
+from localhub.common.views import SuccessActionView, SuccessDeleteView, SuccessView
 from localhub.communities.mixins import CommunityRequiredMixin
-from localhub.views import SuccessActionView, SuccessDeleteView, SuccessView
 
 # Local
 from .mixins import (

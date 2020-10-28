@@ -20,11 +20,11 @@ from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
+from localhub.common.mixins import SearchMixin
+from localhub.common.views import SuccessActionView, SuccessUpdateView
 from localhub.communities.rules import is_member
 from localhub.likes.models import Like
-from localhub.mixins import SearchMixin
 from localhub.private_messages.models import Message
-from localhub.views import SuccessActionView, SuccessUpdateView
 
 # Local
 from .forms import UserForm
