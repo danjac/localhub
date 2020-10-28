@@ -257,8 +257,8 @@ TEMPLATES = [
         "OPTIONS": {
             "debug": False,
             "builtins": [
-                "localhub.template.defaultfilters",
-                "localhub.template.defaulttags",
+                "localhub.common.template.defaultfilters",
+                "localhub.common.template.defaulttags",
             ],
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -270,7 +270,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "localhub.communities.context_processors.community",
-                "localhub.template.context_processors.home_page_url",
+                "localhub.common.template.context_processors.home_page_url",
             ],
             "libraries": {"pagination": "localhub.common.pagination.templatetags"},
         },
