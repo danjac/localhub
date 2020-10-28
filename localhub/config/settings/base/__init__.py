@@ -272,7 +272,7 @@ TEMPLATES = [
                 "localhub.communities.context_processors.community",
                 "localhub.template.context_processors.home_page_url",
             ],
-            "libraries": {"pagination": "localhub.pagination.templatetags"},
+            "libraries": {"pagination": "localhub.common.pagination.templatetags"},
         },
     }
 ]

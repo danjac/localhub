@@ -15,11 +15,11 @@ from rules.contrib.views import PermissionRequiredMixin
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
+from localhub.common.pagination import PresetCountPaginator
 from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
 from localhub.mixins import ParentObjectMixin, SearchMixin
-from localhub.pagination import PresetCountPaginator
 from localhub.template.defaultfilters import resolve_url
 from localhub.views import (
     SuccessActionView,
