@@ -5,20 +5,24 @@
 import pytest
 
 # Localhub
-from localhub.utils.http import URLResolver
-from localhub.utils.scraper import HTMLScraper
+from localhub.common.utils.http import URLResolver
+from localhub.common.utils.scraper import HTMLScraper
 
 
 @pytest.fixture
 def mock_url_resolver(mocker):
     resolver = URLResolver("https://imgur.com")
-    mocker.patch("localhub.utils.http.URLResolver.from_url", return_value=resolver)
+    mocker.patch(
+        "localhub.common.utils.http.URLResolver.from_url", return_value=resolver
+    )
 
 
 @pytest.fixture
 def mock_url_image_resolver(mocker):
     resolver = URLResolver("https://imgur.com/cat.gif")
-    mocker.patch("localhub.utils.http.URLResolver.from_url", return_value=resolver)
+    mocker.patch(
+        "localhub.common.utils.http.URLResolver.from_url", return_value=resolver
+    )
 
 
 @pytest.fixture()
@@ -28,13 +32,16 @@ def mock_html_scraper_from_url(mocker):
     scraper.image = "https://imgur.com/cat.gif"
     scraper.description = "cat"
 
-    mocker.patch("localhub.utils.scraper.HTMLScraper.from_url", return_value=scraper)
+    mocker.patch(
+        "localhub.common.utils.scraper.HTMLScraper.from_url", return_value=scraper
+    )
     yield
 
 
 @pytest.fixture()
 def mock_html_scraper_from_invalid_url(mocker):
     mocker.patch(
-        "localhub.utils.scraper.HTMLScraper.from_url", side_effect=HTMLScraper.Invalid,
+        "localhub.common.utils.scraper.HTMLScraper.from_url",
+        side_effect=HTMLScraper.Invalid,
     )
     yield

@@ -6,7 +6,7 @@
 from django.urls import reverse
 
 # Localhub
-from localhub.utils.text import slugify_unicode
+from localhub.common.utils.text import slugify_unicode
 
 # Local
 from .app_settings import MENTIONS_RE

@@ -10,7 +10,9 @@ from ..exif import Exif
 
 class TestLocate:
     def mock_build_gps_dict(self, mocker, mock_data):
-        mocker.patch("localhub.utils.exif.Exif.build_gps_dict", return_value=mock_data)
+        mocker.patch(
+            "localhub.common.utils.exif.Exif.build_gps_dict", return_value=mock_data
+        )
 
     def test_ok(self, mocker):
         data = {

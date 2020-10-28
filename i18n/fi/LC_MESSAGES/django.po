@@ -924,346 +924,346 @@ msgstr ""
 msgid "HH:MM"
 msgstr ""
 
-#: localhub/utils/emojis.py:15 templates/includes/sidebar.html:182
+#: localhub.common.utils/emojis.py:15 templates/includes/sidebar.html:182
 #: templates/users/list/base.html:8 templates/users/list/base.html:14
 msgid "People"
 msgstr ""
 
-#: localhub/utils/emojis.py:18
+#: localhub.common.utils/emojis.py:18
 msgid "Thumbs Up"
 msgstr ""
 
-#: localhub/utils/emojis.py:23
+#: localhub.common.utils/emojis.py:23
 msgid "Thumbs Down"
 msgstr ""
 
-#: localhub/utils/emojis.py:28
+#: localhub.common.utils/emojis.py:28
 msgid "Heart"
 msgstr ""
 
-#: localhub/utils/emojis.py:33
+#: localhub.common.utils/emojis.py:33
 msgid "Clap"
 msgstr ""
 
-#: localhub/utils/emojis.py:38
+#: localhub.common.utils/emojis.py:38
 msgid "Smile"
 msgstr ""
 
-#: localhub/utils/emojis.py:43
+#: localhub.common.utils/emojis.py:43
 msgid "Wink"
 msgstr ""
 
-#: localhub/utils/emojis.py:47
+#: localhub.common.utils/emojis.py:47
 msgid "Joy"
 msgstr ""
 
-#: localhub/utils/emojis.py:49
+#: localhub.common.utils/emojis.py:49
 msgid "Laughing"
 msgstr ""
 
-#: localhub/utils/emojis.py:54
+#: localhub.common.utils/emojis.py:54
 msgid "Thinking"
 msgstr ""
 
-#: localhub/utils/emojis.py:58
+#: localhub.common.utils/emojis.py:58
 msgid "Sob"
 msgstr ""
 
-#: localhub/utils/emojis.py:60
+#: localhub.common.utils/emojis.py:60
 msgid "Heart Eyes"
 msgstr ""
 
-#: localhub/utils/emojis.py:65
+#: localhub.common.utils/emojis.py:65
 msgid "Smirk"
 msgstr ""
 
-#: localhub/utils/emojis.py:70
+#: localhub.common.utils/emojis.py:70
 msgid "Blush"
 msgstr ""
 
-#: localhub/utils/emojis.py:75
+#: localhub.common.utils/emojis.py:75
 msgid "Confused"
 msgstr ""
 
-#: localhub/utils/emojis.py:80
+#: localhub.common.utils/emojis.py:80
 msgid "Disappointed"
 msgstr ""
 
-#: localhub/utils/emojis.py:85
+#: localhub.common.utils/emojis.py:85
 msgid "No Mouth"
 msgstr ""
 
-#: localhub/utils/emojis.py:90
+#: localhub.common.utils/emojis.py:90
 msgid "Innocent"
 msgstr ""
 
-#: localhub/utils/emojis.py:95
+#: localhub.common.utils/emojis.py:95
 msgid "Neutral Face"
 msgstr ""
 
-#: localhub/utils/emojis.py:100
+#: localhub.common.utils/emojis.py:100
 msgid "Fearful"
 msgstr ""
 
-#: localhub/utils/emojis.py:105
+#: localhub.common.utils/emojis.py:105
 msgid "Sweat"
 msgstr ""
 
-#: localhub/utils/emojis.py:110
+#: localhub.common.utils/emojis.py:110
 msgid "Angry"
 msgstr ""
 
-#: localhub/utils/emojis.py:115
+#: localhub.common.utils/emojis.py:115
 msgid "Rage"
 msgstr ""
 
-#: localhub/utils/emojis.py:120
+#: localhub.common.utils/emojis.py:120
 msgid "Astonished"
 msgstr ""
 
-#: localhub/utils/emojis.py:125
+#: localhub.common.utils/emojis.py:125
 msgid "Stuck Out Tongue"
 msgstr ""
 
-#: localhub/utils/emojis.py:130
+#: localhub.common.utils/emojis.py:130
 msgid "Open Mouth"
 msgstr ""
 
-#: localhub/utils/emojis.py:135
+#: localhub.common.utils/emojis.py:135
 msgid "Satisfied"
 msgstr ""
 
-#: localhub/utils/emojis.py:140
+#: localhub.common.utils/emojis.py:140
 msgid "Scream"
 msgstr ""
 
-#: localhub/utils/emojis.py:145
+#: localhub.common.utils/emojis.py:145
 msgid "Sunglasses"
 msgstr ""
 
-#: localhub/utils/emojis.py:150
+#: localhub.common.utils/emojis.py:150
 msgid "Fire"
 msgstr ""
 
-#: localhub/utils/emojis.py:155
+#: localhub.common.utils/emojis.py:155
 msgid "Tada"
 msgstr ""
 
-#: localhub/utils/emojis.py:160
+#: localhub.common.utils/emojis.py:160
 msgid "See No Evil"
 msgstr ""
 
-#: localhub/utils/emojis.py:165
+#: localhub.common.utils/emojis.py:165
 msgid "Point Up"
 msgstr ""
 
-#: localhub/utils/emojis.py:170
+#: localhub.common.utils/emojis.py:170
 msgid "Wave"
 msgstr ""
 
-#: localhub/utils/emojis.py:175
+#: localhub.common.utils/emojis.py:175
 msgid "Raised Hands"
 msgstr ""
 
-#: localhub/utils/emojis.py:180
+#: localhub.common.utils/emojis.py:180
 msgid "Pray"
 msgstr ""
 
-#: localhub/utils/emojis.py:185
+#: localhub.common.utils/emojis.py:185
 msgid "Metal"
 msgstr ""
 
-#: localhub/utils/emojis.py:190
+#: localhub.common.utils/emojis.py:190
 msgid "Alien"
 msgstr ""
 
-#: localhub/utils/emojis.py:195
+#: localhub.common.utils/emojis.py:195
 msgid "Angel"
 msgstr ""
 
-#: localhub/utils/emojis.py:199
+#: localhub.common.utils/emojis.py:199
 msgid "Man"
 msgstr ""
 
-#: localhub/utils/emojis.py:201
+#: localhub.common.utils/emojis.py:201
 msgid "Woman"
 msgstr ""
 
-#: localhub/utils/emojis.py:206
+#: localhub.common.utils/emojis.py:206
 msgid "Baby"
 msgstr ""
 
-#: localhub/utils/emojis.py:211
+#: localhub.common.utils/emojis.py:211
 msgid "Detective"
 msgstr ""
 
-#: localhub/utils/emojis.py:216
+#: localhub.common.utils/emojis.py:216
 msgid "Mask"
 msgstr ""
 
-#: localhub/utils/emojis.py:221
+#: localhub.common.utils/emojis.py:221
 msgid "Poop"
 msgstr ""
 
-#: localhub/utils/emojis.py:226
+#: localhub.common.utils/emojis.py:226
 msgid "Skull"
 msgstr ""
 
-#: localhub/utils/emojis.py:230
+#: localhub.common.utils/emojis.py:230
 msgid "Zap"
 msgstr ""
 
-#: localhub/utils/emojis.py:231
+#: localhub.common.utils/emojis.py:231
 msgid "ZZZ"
 msgstr ""
 
-#: localhub/utils/emojis.py:235
+#: localhub.common.utils/emojis.py:235
 msgid "Objects"
 msgstr ""
 
-#: localhub/utils/emojis.py:238
+#: localhub.common.utils/emojis.py:238
 msgid "Airplane"
 msgstr ""
 
-#: localhub/utils/emojis.py:243
+#: localhub.common.utils/emojis.py:243
 msgid "Bomb"
 msgstr ""
 
-#: localhub/utils/emojis.py:248
+#: localhub.common.utils/emojis.py:248
 msgid "Bulb"
 msgstr ""
 
-#: localhub/utils/emojis.py:252
+#: localhub.common.utils/emojis.py:252
 msgid "Bus"
 msgstr ""
 
-#: localhub/utils/emojis.py:254
+#: localhub.common.utils/emojis.py:254
 msgid "Car"
 msgstr ""
 
-#: localhub/utils/emojis.py:259
+#: localhub.common.utils/emojis.py:259
 msgid "Rocket"
 msgstr ""
 
-#: localhub/utils/emojis.py:264
+#: localhub.common.utils/emojis.py:264
 msgid "Taxi"
 msgstr ""
 
-#: localhub/utils/emojis.py:269
+#: localhub.common.utils/emojis.py:269
 msgid "Train"
 msgstr ""
 
-#: localhub/utils/emojis.py:274
+#: localhub.common.utils/emojis.py:274
 msgid "Checkered Flag"
 msgstr ""
 
-#: localhub/utils/emojis.py:279
+#: localhub.common.utils/emojis.py:279
 msgid "Banana"
 msgstr ""
 
-#: localhub/utils/emojis.py:284
+#: localhub.common.utils/emojis.py:284
 msgid "Cake"
 msgstr ""
 
-#: localhub/utils/emojis.py:289
+#: localhub.common.utils/emojis.py:289
 msgid "Beer"
 msgstr ""
 
-#: localhub/utils/emojis.py:294
+#: localhub.common.utils/emojis.py:294
 msgid "Wine Glass"
 msgstr ""
 
-#: localhub/utils/emojis.py:299
+#: localhub.common.utils/emojis.py:299
 msgid "Coffee"
 msgstr ""
 
-#: localhub/utils/emojis.py:303
+#: localhub.common.utils/emojis.py:303
 msgid "Tea"
 msgstr ""
 
-#: localhub/utils/emojis.py:305
+#: localhub.common.utils/emojis.py:305
 msgid "Cookie"
 msgstr ""
 
-#: localhub/utils/emojis.py:310
+#: localhub.common.utils/emojis.py:310
 msgid "Eggplant"
 msgstr ""
 
-#: localhub/utils/emojis.py:315 templates/events/calendar.html:9
+#: localhub.common.utils/emojis.py:315 templates/events/calendar.html:9
 #: templates/events/calendar.html:26 templates/events/event_list.html:12
 #: templates/includes/sidebar.html:80
 msgid "Calendar"
 msgstr ""
 
-#: localhub/utils/emojis.py:320
+#: localhub.common.utils/emojis.py:320
 msgid "Watch"
 msgstr ""
 
-#: localhub/utils/emojis.py:325
+#: localhub.common.utils/emojis.py:325
 msgid "Hourglass"
 msgstr ""
 
-#: localhub/utils/emojis.py:330
+#: localhub.common.utils/emojis.py:330
 msgid "Computer"
 msgstr ""
 
-#: localhub/utils/emojis.py:335
+#: localhub.common.utils/emojis.py:335
 msgid "Headphones"
 msgstr ""
 
-#: localhub/utils/emojis.py:340
+#: localhub.common.utils/emojis.py:340
 msgid "Microphone"
 msgstr ""
 
-#: localhub/utils/emojis.py:345
+#: localhub.common.utils/emojis.py:345
 msgid "Violin"
 msgstr ""
 
-#: localhub/utils/emojis.py:350
+#: localhub.common.utils/emojis.py:350
 msgid "Birthday"
 msgstr ""
 
-#: localhub/utils/emojis.py:355
+#: localhub.common.utils/emojis.py:355
 msgid "Gift"
 msgstr ""
 
-#: localhub/utils/emojis.py:360
+#: localhub.common.utils/emojis.py:360
 msgid "Santa"
 msgstr ""
 
-#: localhub/utils/emojis.py:367
+#: localhub.common.utils/emojis.py:367
 msgid "Places"
 msgstr ""
 
-#: localhub/utils/emojis.py:370
+#: localhub.common.utils/emojis.py:370
 msgid "Finland"
 msgstr ""
 
-#: localhub/utils/emojis.py:374
+#: localhub.common.utils/emojis.py:374
 msgid "Japan"
 msgstr ""
 
-#: localhub/utils/emojis.py:375
+#: localhub.common.utils/emojis.py:375
 msgid "UK"
 msgstr ""
 
-#: localhub/utils/emojis.py:376
+#: localhub.common.utils/emojis.py:376
 msgid "USA"
 msgstr ""
 
-#: localhub/utils/emojis.py:380
+#: localhub.common.utils/emojis.py:380
 msgid "Nature"
 msgstr ""
 
-#: localhub/utils/emojis.py:382
+#: localhub.common.utils/emojis.py:382
 msgid "Cat"
 msgstr ""
 
-#: localhub/utils/emojis.py:383
+#: localhub.common.utils/emojis.py:383
 msgid "Dog"
 msgstr ""
 
-#: localhub/utils/emojis.py:385
+#: localhub.common.utils/emojis.py:385
 msgid "Rainbow"
 msgstr ""
 

@@ -6,7 +6,7 @@
 from django import template
 
 # Localhub
-from localhub.utils.http import is_audio_url, is_https
+from localhub.common.utils.http import is_audio_url, is_https
 
 # Local
 from ..oembed import bootstrap_oembed

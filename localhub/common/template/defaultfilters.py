@@ -16,7 +16,7 @@ from django.utils.translation import gettext as _
 from bs4 import BeautifulSoup
 
 # Localhub
-from localhub.utils.http import (
+from localhub.common.utils.http import (
     URLResolver,
     get_media_type,
     get_root_url,

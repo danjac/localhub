@@ -34,8 +34,8 @@ from localhub.activities.models import Activity, ActivityManager, ActivityQueryS
 from localhub.common.db.functions import DateAdd, MonthAdd, YearAdd
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.db.utils import boolean_value
+from localhub.common.utils.http import get_domain
 from localhub.notifications.decorators import notify
-from localhub.utils.http import get_domain
 
 
 class EventQuerySet(ActivityQuerySet):

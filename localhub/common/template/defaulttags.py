@@ -5,7 +5,7 @@
 from django import template
 
 # Localhub
-from localhub.utils import emojis
+from localhub.common.utils import emojis
 
 register = template.Library()
 

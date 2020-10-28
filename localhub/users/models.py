@@ -25,10 +25,10 @@ from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.db.search.mixins import SearchQuerySetMixin
 from localhub.common.db.tracker import TrackerModelMixin
 from localhub.common.markdown.fields import MarkdownField
+from localhub.common.utils.itertools import takefirst
 from localhub.communities.models import Membership
 from localhub.notifications.decorators import notify
 from localhub.notifications.models import Notification
-from localhub.utils.itertools import takefirst
 
 
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):

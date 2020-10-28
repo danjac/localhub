@@ -25,6 +25,8 @@ from localhub.common.db.search.mixins import SearchQuerySetMixin
 from localhub.common.db.tracker import TrackerModelMixin
 from localhub.common.db.utils import boolean_value
 from localhub.common.markdown.fields import MarkdownField
+from localhub.common.utils.itertools import takefirst
+from localhub.common.utils.text import slugify_unicode
 from localhub.communities.models import Community
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.hashtags.fields import HashtagsField
@@ -37,8 +39,6 @@ from localhub.notifications.models import (
 )
 from localhub.users.fields import MentionsField
 from localhub.users.utils import extract_mentions
-from localhub.utils.itertools import takefirst
-from localhub.utils.text import slugify_unicode
 
 # Local
 from . import signals
