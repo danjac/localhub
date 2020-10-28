@@ -15,7 +15,7 @@ import timezone_field.fields
 
 # Localhub
 import localhub.common.db.fields
-import localhub.markdown.fields
+import localhub.common.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
                         blank=True, max_length=255, verbose_name="Full name"
                     ),
                 ),
-                ("bio", localhub.markdown.fields.MarkdownField(blank=True)),
+                ("bio", localhub.common.markdown.fields.MarkdownField(blank=True)),
                 (
                     "avatar",
                     sorl.thumbnail.fields.ImageField(

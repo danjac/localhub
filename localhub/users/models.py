@@ -24,8 +24,8 @@ from localhub.common.db.generic import get_generic_related_queryset
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.db.search.mixins import SearchQuerySetMixin
 from localhub.common.db.tracker import TrackerModelMixin
+from localhub.common.markdown.fields import MarkdownField
 from localhub.communities.models import Membership
-from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import notify
 from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst

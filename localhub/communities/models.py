@@ -20,8 +20,8 @@ from sorl.thumbnail import ImageField
 
 # Localhub
 from localhub.common.db.search.mixins import SearchQuerySetMixin
+from localhub.common.markdown.fields import MarkdownField
 from localhub.hashtags.utils import extract_hashtags
-from localhub.markdown.fields import MarkdownField
 
 DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")

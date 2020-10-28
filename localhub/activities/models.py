@@ -24,12 +24,12 @@ from localhub.common.db.generic import (
 from localhub.common.db.search.mixins import SearchQuerySetMixin
 from localhub.common.db.tracker import TrackerModelMixin
 from localhub.common.db.utils import boolean_value
+from localhub.common.markdown.fields import MarkdownField
 from localhub.communities.models import Community
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.hashtags.fields import HashtagsField
 from localhub.hashtags.utils import extract_hashtags
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
-from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import notify
 from localhub.notifications.models import (
     Notification,

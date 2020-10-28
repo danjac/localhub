@@ -6,7 +6,7 @@
 from django.contrib import admin
 
 # Localhub
-from localhub.markdown.admin import MarkdownFieldMixin
+from localhub.common.markdown.admin import MarkdownFieldMixin
 
 
 class ActivityAdmin(MarkdownFieldMixin, admin.ModelAdmin):

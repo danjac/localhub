@@ -204,14 +204,14 @@ MESSAGE_TAGS = {
 
 # https://neutronx.github.io/django-markdownx/customization/
 
-MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.markdown.utils.markdownify"
+MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.common.markdown.utils.markdownify"
 
 MARKDOWNX_MARKDOWN_EXTENSIONS = [
     "pymdownx.extra",
     "pymdownx.emoji",
     "codehilite",
-    "localhub.markdown.extensions:NewTabExtension",
-    "localhub.markdown.extensions:SafeImageExtension",
+    "localhub.common.markdown.extensions:NewTabExtension",
+    "localhub.common.markdown.extensions:SafeImageExtension",
 ]
 
 MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {

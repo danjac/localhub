@@ -18,8 +18,8 @@ from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.common.db.generic import get_generic_related_queryset
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.db.search.mixins import SearchQuerySetMixin
+from localhub.common.markdown.fields import MarkdownField
 from localhub.communities.models import Community
-from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import notify
 from localhub.notifications.models import Notification
 
