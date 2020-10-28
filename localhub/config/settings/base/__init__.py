@@ -27,11 +27,11 @@ DATABASES = {
     "default": env.db(),
 }
 
-REDIS_URL = env.str("REDIS_URL")
+REDIS_URL = env("REDIS_URL")
 
 CACHES = {"default": env.cache("REDIS_URL")}
 
-EMAIL_HOST = env.str("EMAIL_HOST", default="localhost")
+EMAIL_HOST = env("EMAIL_HOST", default="localhost")
 EMAIL_PORT = env.int("EMAIL_PORT", default=25)
 EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
 
@@ -47,8 +47,8 @@ INTERNAL_IPS = [
 
 ADMINS = getaddresses(env.list("ADMINS", default=[]))
 
-SESSION_COOKIE_DOMAIN = env.str("SESSION_COOKIE_DOMAIN", default=None)
-CSRF_COOKIE_DOMAIN = env.str("CSRF_COOKIE_DOMAIN", default=None)
+SESSION_COOKIE_DOMAIN = env("SESSION_COOKIE_DOMAIN", default=None)
+CSRF_COOKIE_DOMAIN = env("CSRF_COOKIE_DOMAIN", default=None)
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
 ROOT_URLCONF = "localhub.config.urls"
@@ -122,7 +122,7 @@ HOME_PAGE_URL = reverse_lazy("activity_stream")
 
 # base Django admin URL (should be something obscure in production)
 
-ADMIN_URL = env.str("ADMIN_URL", default="admin/")
+ADMIN_URL = env("ADMIN_URL", default="admin/")
 
 # sorl
 
@@ -176,7 +176,7 @@ LANGUAGES = [
     ("en-gb", "English (GB)"),
     ("fi", "Suomi"),
 ]
-LANGUAGE_COOKIE_DOMAIN = env.str("LANGUAGE_COOKIE_DOMAIN", default=None)
+LANGUAGE_COOKIE_DOMAIN = env("LANGUAGE_COOKIE_DOMAIN", default=None)
 
 LOCALE_PATHS = [BASE_DIR / "i18n"]
 
@@ -235,16 +235,16 @@ TAGGIT_CASE_INSENSITIVE = True
 
 # https://web-push-codelab.glitch.me/
 
-VAPID_PUBLIC_KEY = env.str("VAPID_PUBLIC_KEY", default=None)
-VAPID_PRIVATE_KEY = env.str("VAPID_PRIVATE_KEY", default=None)
-VAPID_ADMIN_EMAIL = env.str("VAPID_ADMIN_EMAIL", default=None)
+VAPID_PUBLIC_KEY = env("VAPID_PUBLIC_KEY", default=None)
+VAPID_PRIVATE_KEY = env("VAPID_PRIVATE_KEY", default=None)
+VAPID_ADMIN_EMAIL = env("VAPID_ADMIN_EMAIL", default=None)
 
 WEBPUSH_ENABLED = env.bool("WEBPUSH_ENABLED", default=True)
 
-GEOLOCATOR_USER_AGENT = env.str("GEOLOCATOR_USER_AGENT", default="localhub.locator")
+GEOLOCATOR_USER_AGENT = env("GEOLOCATOR_USER_AGENT", default="localhub.locator")
 
-MEDIA_URL = env.str("MEDIA_URL", default="/media/")
-STATIC_URL = env.str("STATIC_URL", default="/static/")
+MEDIA_URL = env("MEDIA_URL", default="/media/")
+STATIC_URL = env("STATIC_URL", default="/static/")
 
 MEDIA_ROOT = BASE_DIR / "media"
 STATICFILES_DIRS = [BASE_DIR / "static"]
