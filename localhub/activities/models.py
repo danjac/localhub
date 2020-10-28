@@ -17,11 +17,14 @@ from taggit.models import Tag
 # Localhub
 from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
+from localhub.common.db.generic import (
+    AbstractGenericRelation,
+    get_generic_related_queryset,
+)
+from localhub.common.db.search.mixins import SearchQuerySetMixin
+from localhub.common.db.tracker import TrackerModelMixin
+from localhub.common.db.utils import boolean_value
 from localhub.communities.models import Community
-from localhub.db.generic import AbstractGenericRelation, get_generic_related_queryset
-from localhub.db.search.mixins import SearchQuerySetMixin
-from localhub.db.tracker import TrackerModelMixin
-from localhub.db.utils import boolean_value
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.hashtags.fields import HashtagsField
 from localhub.hashtags.utils import extract_hashtags

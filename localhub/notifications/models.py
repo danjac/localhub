@@ -15,9 +15,9 @@ from model_utils.models import TimeStampedModel
 from pywebpush import WebPushException, webpush
 
 # Localhub
+from localhub.common.db.generic import get_generic_related_exists
+from localhub.common.db.utils import boolean_value
 from localhub.communities.models import Community
-from localhub.db.generic import get_generic_related_exists
-from localhub.db.utils import boolean_value
 
 
 class NotificationAnnotationsQuerySetMixin:

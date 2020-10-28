@@ -17,14 +17,14 @@ from model_utils.models import TimeStampedModel
 
 # Localhub
 from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
-from localhub.communities.models import Community, Membership
-from localhub.db.generic import (
+from localhub.common.db.generic import (
     get_generic_related_count_subquery,
     get_generic_related_queryset,
 )
-from localhub.db.search.indexer import SearchIndexer
-from localhub.db.search.mixins import SearchQuerySetMixin
-from localhub.db.tracker import TrackerModelMixin
+from localhub.common.db.search.indexer import SearchIndexer
+from localhub.common.db.search.mixins import SearchQuerySetMixin
+from localhub.common.db.tracker import TrackerModelMixin
+from localhub.communities.models import Community, Membership
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField

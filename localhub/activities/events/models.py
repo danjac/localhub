@@ -31,9 +31,9 @@ from timezone_field import TimeZoneField
 
 # Localhub
 from localhub.activities.models import Activity, ActivityManager, ActivityQuerySet
-from localhub.db.functions import DateAdd, MonthAdd, YearAdd
-from localhub.db.search.indexer import SearchIndexer
-from localhub.db.utils import boolean_value
+from localhub.common.db.functions import DateAdd, MonthAdd, YearAdd
+from localhub.common.db.search.indexer import SearchIndexer
+from localhub.common.db.utils import boolean_value
 from localhub.notifications.decorators import notify
 from localhub.utils.http import get_domain
 

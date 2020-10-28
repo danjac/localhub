@@ -12,9 +12,9 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
 # Localhub
+from localhub.common.db.generic import get_generic_related_exists
+from localhub.common.db.utils import boolean_value
 from localhub.communities.models import Community
-from localhub.db.generic import get_generic_related_exists
-from localhub.db.utils import boolean_value
 from localhub.notifications.decorators import notify
 from localhub.notifications.models import Notification
 

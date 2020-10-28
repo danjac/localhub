@@ -14,7 +14,7 @@ import sorl.thumbnail.fields
 import timezone_field.fields
 
 # Localhub
-import localhub.db.fields
+import localhub.common.db.fields
 import localhub.markdown.fields
 
 
@@ -137,7 +137,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "activity_stream_filters",
-                    localhub.db.fields.ChoiceArrayField(
+                    localhub.common.db.fields.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 (

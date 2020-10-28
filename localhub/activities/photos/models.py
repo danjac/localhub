@@ -10,7 +10,7 @@ from sorl.thumbnail import ImageField
 
 # Localhub
 from localhub.activities.models import Activity
-from localhub.db.search.indexer import SearchIndexer
+from localhub.common.db.search.indexer import SearchIndexer
 
 
 class Photo(Activity):

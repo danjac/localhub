@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 
 # Localhub
 from localhub.activities.models import Activity, ActivityManager, ActivityQuerySet
-from localhub.db.search.indexer import SearchIndexer
+from localhub.common.db.search.indexer import SearchIndexer
 from localhub.notifications.decorators import notify
 
 

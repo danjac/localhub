@@ -11,12 +11,12 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 
 # Localhub
-from localhub.communities.models import Community
-from localhub.db.generic import (
+from localhub.common.db.generic import (
     get_generic_related_exists,
     get_generic_related_value_subquery,
 )
-from localhub.db.utils import boolean_value
+from localhub.common.db.utils import boolean_value
+from localhub.communities.models import Community
 
 
 class BookmarkAnnotationsQuerySetMixin:
