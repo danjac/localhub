@@ -76,7 +76,6 @@ class ParentObjectMixin:
 
         return kwargs
 
-    # TBD : add "parent" cached property
     def get_parent_object(self, queryset=None):
         """Fetches the parent object. If parent_required is True and object is not
         None, then raises Http 404. Otherwise returns None.
