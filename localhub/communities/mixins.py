@@ -19,11 +19,8 @@ class CommunityRequiredMixin:
     Ensures that a community is available on this domain. This requires
     the CurrentCommunityMiddleware is enabled.
 
-    If the user is not a member they will be redirected to the Welcome view.
-
-    If the view has the `allow_non_members` property *True* then the above
-    rule is overriden - for example in some cases where we want to allow
-    the user to be able to handle an invitation.
+    If the community is not public, the user will be redirected to the Welcome view
+    if they are not a member, unless the `allow_non_members` attribute is True.
     """
 
     allow_non_members = False
