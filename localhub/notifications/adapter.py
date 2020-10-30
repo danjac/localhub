@@ -77,9 +77,7 @@ class TemplateRenderer:
         Returns:
             dict: template context
         """
-        context = self.adapter.as_dict()
-        context.update(extra_context or {})
-        return context
+        return self.adapter.as_dict() | (extra_context or {})
 
     def render(self, extra_context=None, template_engine=loader, suffix=".html"):
         """Renders a list of templates to a str. Use with TemplateResolver
