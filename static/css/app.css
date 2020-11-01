@@ -109,7 +109,7 @@ a.btn-secondary {
 }
 
 .card:hover {
-  @apply bg-gray-100;
+  @apply shadow-xl;
 }
 
 .card-footer {

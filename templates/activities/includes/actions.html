@@ -4,6 +4,10 @@
 {% load i18n %}
 {% load rules %}
 
+{% test_rule "communities.is_member" user community as is_member %}
+
+{% if is_member %}
+
 <div class="text-sm mr-2"
      data-controller="dropdown"
      data-action="click@window->dropdown#close keydown@window->dropdown#close">
@@ -48,7 +52,8 @@
 
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
-    <div data-controller="ajax" data-ajax-replace>
+    <div data-controller="ajax"
+         data-ajax-replace>
       {% include "activities/includes/like.html" with has_liked=object.has_liked %}
     </div>
     {% endif %}
@@ -133,3 +138,13 @@
     {% block extra_actions %}{% endblock %}
   </div>
 </div>
+{% elif object.description %}
+<a href="#"
+   class="text-sm mr-2"
+   role="button"
+   data-turbolinks="false"
+   data-target="clipboard.button"
+   data-action="clipboard#copy">
+  {% trans "Copy Markdown" %}
+</a>
+{% endif %}
