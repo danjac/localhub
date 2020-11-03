@@ -11,126 +11,125 @@
 
 {% block header %}
 {{ block.super }}
+{% if object.canceled %}
 <p class="font-bold mb-3">{% trans "This event has been canceled." %}</p>
+{% endif %}
 {% endblock header %}
 
 {% block content %}
 {% with starts=object.get_next_start_date ends=object.get_next_end_date %}
-{% if object.canceled %}
-<div class="text-gray-600">
-  {% endif %}
 
-  <dl class="text-sm">
+<dl class="text-sm">
 
-    {% timezone object.timezone %}
-    {% if ends %}
+  {% timezone object.timezone %}
+  {% if ends %}
 
-    {% with start_date=starts|date:"SHORT_DATE_FORMAT" end_date=ends|date:"SHORT_DATE_FORMAT" start_time=starts|date:"TIME_FORMAT" end_time=ends|date:"TIME_FORMAT" %}
+  {% with start_date=starts|date:"SHORT_DATE_FORMAT" end_date=ends|date:"SHORT_DATE_FORMAT" start_time=starts|date:"TIME_FORMAT" end_time=ends|date:"TIME_FORMAT" %}
 
-    {% if start_date == end_date %}
+  {% if start_date == end_date %}
 
-    <dt>
-      {% trans "Date" %} <span class="tag">{{ object.timezone }}</span>
-    </dt>
+  <dt>
+    {% trans "Date" %} <span class="tag">{{ object.timezone }}</span>
+  </dt>
+
+  <dd{% if not object.is_attendable %} class="line-through"
+                                       {% endif %}>
+    {{ starts|date:"D" }} {{ start_date }} @ {{ start_time }} - {{ end_time }}
+    </dd>
+
+    {% else %}
+    <dt>{% trans "Dates" %} <span class="tag">{{ object.timezone }}</span></dt>
 
     <dd{% if not object.is_attendable %} class="line-through"
                                          {% endif %}>
-      {{ starts|date:"D" }} {{ start_date }} @ {{ start_time }} - {{ end_time }}
-      </dd>
-
-      {% else %}
-      <dt>{% trans "Dates" %} <span class="tag">{{ object.timezone }}</span></dt>
-
-      <dd{% if not object.is_attendable %} class="line-through"
-                                           {% endif %}>
-        {{ starts|date:"D" }} {{ start_date }} @ {{ start_time }} - {{ ends|date:"D" }} {{ end_date }} @ {{ end_time }}</dd{%>
+      {{ starts|date:"D" }} {{ start_date }} @ {{ start_time }} - {{ ends|date:"D" }} {{ end_date }} @ {{ end_time }}</dd{%>
     {% endif %} {% endwith %}
-                              {% else %}
-                              <dt>{% trans "Date" %} <span class="tag">{{ object.timezone }}</span></dt>
-      <dd{% if not object.is_attendable %} class="line-through"
-                                           {% endif %}>
-        {{ starts|date:"D" }} {{ starts|date:"SHORT_DATE_FORMAT" }} @ {{ starts|date:"TIME_FORMAT" }}
-      </dd{%>
+                            {% else %}
+                            <dt>{% trans "Date" %} <span class="tag">{{ object.timezone }}</span></dt>
+    <dd{% if not object.is_attendable %} class="line-through"
+                                         {% endif %}>
+      {{ starts|date:"D" }} {{ starts|date:"SHORT_DATE_FORMAT" }} @ {{ starts|date:"TIME_FORMAT" }}
+    </dd{%>
 
    {% endif %} {% if object.repeats %}
-                              <dt>{% trans "Repeats" %}</dt>
-      <dd>
-        {% if object.repeats_weekly %}
-        {% blocktrans with weekday=object.starts|date:"l" %}
-        Same time every {{ weekday }}
-        {% endblocktrans %}
-        {% else %}
-        {{ object.get_repeats_display }}
-        {% endif %}
-        {% if object.repeats_until %}
-        {% blocktrans with until=object.repeats_until|date:"SHORT_DATE_FORMAT" %}
-        until {{ until }}
-        {% endblocktrans %}
-        {% endif %}
-      </dd>
+                            <dt>{% trans "Repeats" %}</dt>
+    <dd>
+      {% if object.repeats_weekly %}
+      {% blocktrans with weekday=object.starts|date:"l" %}
+      Same time every {{ weekday }}
+      {% endblocktrans %}
+      {% else %}
+      {{ object.get_repeats_display }}
       {% endif %}
-
-      {% endtimezone %}
-      {% with location=object.get_full_location %}
-      {% if location %}
-      <dt>{% trans "Location" %}</dt>
-      <dd>
-        {% if not is_detail and object.has_map %}
-        <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">{{ location }}</a>
-        {% else %}
-        {{ location }}
-        {% endif %}
-      </dd>
+      {% if object.repeats_until %}
+      {% blocktrans with until=object.repeats_until|date:"SHORT_DATE_FORMAT" %}
+      until {{ until }}
+      {% endblocktrans %}
       {% endif %}
-      {% endwith %}
+    </dd>
+    {% endif %}
 
-      {% if object.url %}
-      <dt>{% trans "URL" %}</dt>
-      <dd class="truncate">{{ object.url|urlize }}</dd>
+    {% endtimezone %}
+    {% with location=object.get_full_location %}
+    {% if location %}
+    <dt>{% trans "Location" %}</dt>
+    <dd>
+      {% if not is_detail and object.has_map %}
+      <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">{{ location }}</a>
+      {% else %}
+      {{ location }}
       {% endif %}
+    </dd>
+    {% endif %}
+    {% endwith %}
+
+    {% if object.url %}
+    <dt>{% trans "URL" %}</dt>
+    <dd class="truncate">{{ object.url|urlize }}</dd>
+    {% endif %}
 
 
-      {% if object.is_detail %}
+    {% if object.is_detail %}
 
-      {% if object.contact_name %}
-      <dt>{% trans "Contact" %}</dt>
-      <dd>{{ object.contact_name }}</dd>
-      {% endif %}
+    {% if object.contact_name %}
+    <dt>{% trans "Contact" %}</dt>
+    <dd>{{ object.contact_name }}</dd>
+    {% endif %}
 
-      {% if object.contact_email %}
-      <dt>{% trans "Email" %}</dt>
-      <dd>{{ object.contact_email|urlize }}</dd>
-      {% endif %}
+    {% if object.contact_email %}
+    <dt>{% trans "Email" %}</dt>
+    <dd>{{ object.contact_email|urlize }}</dd>
+    {% endif %}
 
-      {% if object.contact_phone %}
-      <dt>{% trans "Phone" %}</dt>
-      <dd>{{ object.contact_phone|phone2numeric }}</dd>
-      {% endif %}
+    {% if object.contact_phone %}
+    <dt>{% trans "Phone" %}</dt>
+    <dd>{{ object.contact_phone|phone2numeric }}</dd>
+    {% endif %}
 
-      {% if object.ticket_price %}
-      <dt>{% trans "Admission" %}</dt>
-      <dd>{{ object.ticket_price }}</dd>
-      {% endif %}
+    {% if object.ticket_price %}
+    <dt>{% trans "Admission" %}</dt>
+    <dd>{{ object.ticket_price }}</dd>
+    {% endif %}
 
-      {% if object.ticket_vendor %}
-      <dt>{% trans "Tickets available from" %}</dt>
-      <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
-      {% endif %}
+    {% if object.ticket_vendor %}
+    <dt>{% trans "Tickets available from" %}</dt>
+    <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
+    {% endif %}
 
-      {% endif %}
+    {% endif %}
 
-  </dl>
+</dl>
 
-  {% if is_detail %}
-  {% include "activities/includes/map.html" with css_class="pb-1" %}
-  {% endif %}
+{% if is_detail %}
+{% include "activities/includes/map.html" with css_class="pb-1" %}
+{% endif %}
 
-  {% with user|is_oembed_url:object.url as is_oembed %}
-  {% include "activities/includes/oembed.html" %}
-  {% endwith %}
-  {% include "activities/includes/description.html" %}
+{% with user|is_oembed_url:object.url as is_oembed %}
+{% include "activities/includes/oembed.html" %}
+{% endwith %}
+{% include "activities/includes/description.html" %}
 
-  {% if object.is_canceled %}
+{% if object.is_canceled %}
 </div>
 {% endif %}
 
