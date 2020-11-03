@@ -11,20 +11,10 @@
 
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 
-<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
-  <h1 class="page-header mb-3">{% trans "Messages" %}</h1>
-
-
-  {% if can_create_message %}
-  <div class="page-nav mt-3 lg:mt-0">
-    <a class="page-nav-item"
-       href="{% url 'private_messages:message_create' %}">{% trans "Send Message "%} </a>
-  </div>
-  {% endif %}
-
-</div>
+<h1 class="page-header mb-3">{% trans "Messages" %}</h1>
 {% with search=view.search_query %}
-<div class="tabs text-sm">
+<div class="tabs text-sm mb-3">
+
   <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
@@ -33,7 +23,15 @@
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'private_messages:outbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Outbox" %}</a>
+
+  {% if can_create_message %}
+  <a class="action text-sm"
+     href="{% url 'private_messages:message_create' %}">{% trans "Send Message "%}</a>
+  {% endif %}
+
 </div>
+
+
 {% endwith %}
 
 {% block message_list %}{% endblock %}
