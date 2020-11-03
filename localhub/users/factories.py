@@ -13,15 +13,7 @@ class UserFactory(DjangoModelFactory):
 
     @post_generation
     def password(self, *args, **kwargs):
-        password = Faker(
-            "password",
-            length=42,
-            special_chars=True,
-            digits=True,
-            upper_case=True,
-            lower_case=True,
-        ).generate(extra_kwargs={})
-        self.set_password(password)
+        self.set_password("testpass1")
 
     class Meta:
         model = get_user_model()
