@@ -20,7 +20,6 @@ django-taggit
 django-timezone-field
 django-widget-tweaks
 factory-boy
-# factory-boy==3.0.1
 future
 geopy
 gunicorn
