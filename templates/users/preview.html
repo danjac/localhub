@@ -9,7 +9,7 @@
   <div class="flex flex-wrap items-center">
     {% if user_obj.avatar %}
     <a class="inline-block mr-3" href="{{ user_obj.get_absolute_url }}">
-      {% avatar user_obj "64" css_class="mr-1" show_placeholder=False %}
+      {% avatar user_obj "64x64" css_class="mr-1" show_placeholder=False %}
     </a>
     {% endif %}
     {% user_display user_obj as display_name %}
