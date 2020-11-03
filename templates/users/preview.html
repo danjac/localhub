@@ -5,12 +5,12 @@
 {% load account %}
 {% load users %}
 
-<div class="absolute bg-white shadow-lg rounded border px-3 py-1">
-  <div class="flex flex-wrap items-center mb-2">
+<div class="absolute bg-white shadow-lg rounded border px-3 py-2">
+  <div class="flex flex-wrap items-center">
     {% if user_obj.avatar %}
-    <div class="inline-block mr-3">
+    <a class="inline-block mr-3" href="{{ user_obj.get_absolute_url }}">
       {% avatar user_obj "64" css_class="mr-1" show_placeholder=False %}
-    </div>
+    </a>
     {% endif %}
     {% user_display user_obj as display_name %}
     <div>
