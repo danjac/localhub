@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% for tag in object_list %}
-<li class="cursor-pointer p-1 hover:bg-blue-900 hover:text-white hover:font-bold {% if forloop.first %} bg-blue-900 text-white selected{% endif %}"
+<li class="cursor-pointer p-1 hover:bg-blue-900 hover:text-white {% if forloop.first %} bg-gray-500 text-white selected{% endif %}"
     data-action="click->typeahead#select"
     data-typeahead-value="{{ tag.name }}"
     data-typeahead-key="#">
