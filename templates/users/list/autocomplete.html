@@ -4,7 +4,7 @@
 {% load users %}
 
 {% for user_obj in object_list %}
-<li class="cursor-pointer p-1 hover:bg-gray-500 hover:text-white {% if forloop.first %} bg-gray-500 text-white selected{% endif %}"
+<li class="cursor-pointer p-1 hover:bg-blue-900 hover:text-white {% if forloop.first %} bg-gray-500 text-white selected{% endif %}"
     data-action="click->typeahead#select"
     data-typeahead-value="{{ user_obj.username }}"
     data-typeahead-key="@">
