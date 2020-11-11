@@ -39,6 +39,6 @@
 {% render_comment request user parent is_detail=True css_class="mb-3" %}
 {% endif %}
 
-{% include "includes/forms/ajax_form.html" with form_id="comment-form" %}
+{% include "includes/forms/ajax_form.html" with form_id="comment-form" css_class="p-1 md:p-3 border border-gray-500 bg-gray-100 w-full" %}
 
 {% endblock content %}

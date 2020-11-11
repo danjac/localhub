@@ -8,9 +8,7 @@
   </div>
 
   <div class="flex items-center">
-    <div class="flex-grow">
-      {% include "django/forms/widgets/input.html" %}
-    </div>
+    {% include "django/forms/widgets/input.html" %}
     <button type="button"
             class="btn btn-input-addon px-2 p-1"
             title="{% trans 'Fetch content from URL' %}"
