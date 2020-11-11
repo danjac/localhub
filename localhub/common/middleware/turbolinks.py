@@ -43,11 +43,13 @@ class TurbolinksMiddleware:
 
     def redirect_with_turbolinks(self, request, response):
         js = []
+        location = response["Location"]
         if request.method not in ("GET", "HEAD", "OPTIONS", "TRACE"):
             js.append("Turbolinks.clearCache();")
-        js.append("Turbolinks.visit('{}');".format(response["Location"]))
+        js.append(f"Turbolinks.visit('{location}');")
         js_response = HttpResponse("\n".join(js), content_type="text/javascript")
         # make sure we pass down any cookies e.g. for handling messages
         for k, v in response.cookies.items():
             js_response.set_cookie(k, v)
+        js_response["X-Xhr-Redirect"] = location
         return js_response
