@@ -29,8 +29,7 @@
        data-turbolinks="false"
        data-controller="ajax"
        data-action="ajax#post"
-       data-ajax-confirm-header="{% trans 'Delete All' %}"
-       data-ajax-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
+       data-ajax-confirm="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
     {% endif %}
     {% if webpush_settings.enabled %}
     <span class="page-nav-item hidden"

@@ -33,8 +33,7 @@
    {% if not is_detail %}
    data-ajax-redirect="{{ request.get_full_path }}"
    {% endif %}
-   data-ajax-confirm-header="{% trans 'Cancel' %}"
-   data-ajax-confirm-body="{% trans 'Are you sure you want to cancel this event?' %}">
+   data-ajax-confirm="{% trans 'Are you sure you want to cancel this event?' %}">
   {% trans "Cancel Event" %}</a>
 {% endif %}
 

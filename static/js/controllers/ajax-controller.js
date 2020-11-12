@@ -4,44 +4,30 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { Events } from '~/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   get(event) {
-    this.confirm('GET', event);
+    this.dispatch('GET', event);
   }
 
   post(event) {
-    this.confirm('POST', event);
+    this.dispatch('POST', event);
   }
 
-  confirm(method, event) {
+  async dispatch(method, event) {
     event.preventDefault();
+
+    if (this.data.has('confirm') && !window.confirm(this.data.get('confirm'))) {
+      return;
+    }
 
     const { currentTarget } = event;
 
-    const header = this.data.get('confirm-header');
-    const body = this.data.get('confirm-body');
-
-    const handleDispatch = () => this.dispatch(method, currentTarget);
-
-    if (header && body) {
-      this.bus.pub(Events.CONFIRM_OPEN, {
-        body,
-        header,
-        onConfirm: handleDispatch,
-      });
-    } else {
-      handleDispatch();
-    }
-  }
-
-  async dispatch(method, target) {
     const url =
       this.data.get('url') ||
-      target.getAttribute(`data-${this.identifier}-url`) ||
-      target.getAttribute('href');
+      currentTarget.getAttribute(`data-${this.identifier}-url`) ||
+      currentTarget.getAttribute('href');
 
     try {
       const response = await axios({
