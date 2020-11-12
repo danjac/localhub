@@ -312,7 +312,7 @@ class TestPostBookmarkView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("posts:bookmark", args=[post.id]),)
-        assert response.status_code == 200
+        assert response.status_code == 204
         bookmark = Bookmark.objects.get()
         assert bookmark.user == member.member
 
@@ -327,7 +327,7 @@ class TestPostRemoveBookmarkView:
             user=member.member, content_object=post, community=post.community,
         )
         response = client.post(reverse("posts:remove_bookmark", args=[post.id]),)
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert Bookmark.objects.count() == 0
 
 
@@ -338,7 +338,7 @@ class TestPostLikeView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("posts:like", args=[post.id]),)
-        assert response.status_code == 200
+        assert response.status_code == 204
         like = Like.objects.get()
         assert like.user == member.member
 
@@ -356,7 +356,7 @@ class TestPostDislikeView:
             recipient=post.owner,
         )
         response = client.post(reverse("posts:dislike", args=[post.id]),)
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert Like.objects.count() == 0
 
 

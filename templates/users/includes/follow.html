@@ -2,21 +2,23 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-{% if is_following %}
-<a href="{% url 'users:unfollow' object.username %}"
-   role="button"
-   data-turbolinks="false"
-   class="line-through"
-   data-target="ajax.button"
-   data-action="ajax#post">
-  {% trans "Follow" %}
-</a>
-{% else %}
-<a href="{% url 'users:follow' object.username %}"
-   role="button"
-   data-turbolinks="false"
-   data-target="ajax.button"
-   data-action="ajax#post">
-  {% trans "Follow" %}
-</a>
-{% endif %}
+<div data-controller="toggle" class="{{ css_class }}">
+  <a href="{% url 'users:unfollow' object.username %}"
+     role="button"
+     data-turbolinks="false"
+     class="line-through{% if not is_following %} hidden{% endif %} {{ css_class }}"
+     data-controller="ajax"
+     data-target="toggle.togglable"
+     data-action="ajax#post toggle#toggle">
+    {% trans "Follow" %}
+  </a>
+  <a href="{% url 'users:follow' object.username %}"
+     role="button"
+     class="{% if is_following %}hidden{% endif %} {{ css_class }}"
+     data-turbolinks="false"
+     data-controller="ajax"
+     data-target="toggle.togglable"
+     data-action="ajax#post toggle#toggle">
+    {% trans "Follow" %}
+  </a>
+</div>

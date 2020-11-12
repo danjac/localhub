@@ -114,7 +114,7 @@ class TestEventLikeView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("events:like", args=[event.id]))
-        assert response.status_code == 200
+        assert response.status_code == 204
         like = Like.objects.get()
         assert like.user == member.member
 
@@ -132,7 +132,7 @@ class TestEventDislikeView:
             recipient=event.owner,
         )
         response = client.post(reverse("events:dislike", args=[event.id]))
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert Like.objects.count() == 0
 
 
@@ -157,7 +157,7 @@ class TestEventCancelView:
 class TestEventAttendView:
     def test_post(self, client, event, member, send_webpush_mock):
         response = client.post(reverse("events:attend", args=[event.id]))
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert member.member in event.attendees.all()
 
 
@@ -165,7 +165,7 @@ class TestEventUnattendView:
     def test_post(self, client, event, member, send_webpush_mock):
         event.attendees.add(member.member)
         response = client.post(reverse("events:unattend", args=[event.id]))
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert member.member not in event.attendees.all()
 
 

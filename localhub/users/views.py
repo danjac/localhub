@@ -418,7 +418,6 @@ class BaseFollowUserView(
     permission_required = "users.follow_user"
     is_success_ajax_response = True
     exclude_blocking_users = True
-    success_template_name = "users/includes/follow.html"
 
 
 class UserFollowView(BaseFollowUserView):
@@ -430,12 +429,6 @@ class UserFollowView(BaseFollowUserView):
 
         return self.success_response()
 
-    def get_success_context_data(self):
-        return {
-            **super().get_success_context_data(),
-            "is_following": True,
-        }
-
 
 user_follow_view = UserFollowView.as_view()
 
@@ -446,12 +439,6 @@ class UserUnfollowView(BaseFollowUserView):
     def post(self, request, *args, **kwargs):
         self.request.user.following.remove(self.object)
         return self.success_response()
-
-    def get_success_context_data(self):
-        return {
-            **super().get_success_context_data(),
-            "is_following": False,
-        }
 
 
 user_unfollow_view = UserUnfollowView.as_view()

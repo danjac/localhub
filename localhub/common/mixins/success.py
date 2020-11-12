@@ -5,14 +5,12 @@
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template.response import TemplateResponse
 
 
 class SuccessMixin:
     """Provides defaults for success message and redirect URL."""
 
     success_message_response_header = "X-Success-Message"
-    success_template_name = None
     is_success_ajax_response = False
 
     def get_success_message(self, success_message=None, object=None, model=None):
@@ -54,7 +52,6 @@ class SuccessMixin:
         Default behaviour:
             - if is_success_ajax_response attribute is True,
                 returns an empty (204) response.
-            - if success_template_name is defined returns instead a TemplateResponse.
             - otherwise resolves success URL and returns a redirect.
 
         Returns:
@@ -67,20 +64,7 @@ class SuccessMixin:
         )
 
     def get_success_ajax_response(self):
-        if self.success_template_name:
-            return TemplateResponse(
-                self.request,
-                self.success_template_name,
-                self.get_success_context_data(),
-            )
         return HttpResponse(status=204)
-
-    def get_success_context_data(self):
-        data = {}
-        object = getattr(self, "object", None)
-        if object:
-            data["object"] = object
-        return data
 
     def get_success_url(self, object=None):
         """Returns redirect URL.

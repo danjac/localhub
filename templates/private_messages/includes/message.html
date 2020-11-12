@@ -58,11 +58,7 @@
              data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark As Read" %}</a>
           {% endif %}
 
-          <div class="menu-item"
-               data-controller="ajax"
-               data-ajax-replace>
-            {% include "private_messages/includes/bookmark.html" with object=message has_bookmarked=message.has_bookmarked %}
-          </div>
+          {% include "private_messages/includes/bookmark.html" with object=message has_bookmarked=message.has_bookmarked %}
 
           {% if can_reply %}
           <a href="{% url 'private_messages:message_reply' message.id %}"

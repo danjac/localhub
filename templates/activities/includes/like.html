@@ -1,18 +1,19 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
-{% if has_liked %}
-<a class="dropdown-menu-item line-through"
-   href="{{ object|resolve_url:"dislike" }}"
-   role="button"
-   data-turbolinks="false"
-   data-target="ajax.button"
-   data-action="ajax#post">{% trans "Like" %}</a>
-{% else %}
-<a class="dropdown-menu-item"
-   href="{{ object|resolve_url:"like" }}"
-   role="button"
-   data-turbolinks="false"
-   data-target="ajax.button"
-   data-action="ajax#post">{% trans "Like" %}</a>
-{% endif %}
+<div data-controller="toggle">
+  <a class="dropdown-menu-item line-through{% if not has_liked %} hidden{% endif %}"
+     href="{{ object|resolve_url:"dislike" }}"
+     role="button"
+     data-controller="ajax"
+     data-turbolinks="false"
+     data-target="toggle.togglable"
+     data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
+  <a class="dropdown-menu-item{% if has_liked %} hidden{% endif %}"
+     href="{{ object|resolve_url:"like" }}"
+     role="button"
+     data-controller="ajax"
+     data-turbolinks="false"
+     data-target="toggle.togglable"
+     data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
+</div>

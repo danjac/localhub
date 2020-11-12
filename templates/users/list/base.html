@@ -85,12 +85,9 @@
           {% else %}
           {% has_perm "users.follow_user" user object as can_follow_user %}
           {% if can_follow_user %}
-
-          <span data-controller="ajax"
-                data-ajax-replace
-                class="table-nav-item">
+          <div class="table-nav-item">
             {% include "users/includes/follow.html" with is_following=object.is_following %}
-          </span>
+          </div>
           {% endif %}
 
           {% if can_create_message %}

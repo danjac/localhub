@@ -315,7 +315,7 @@ class TestMessageBookmarkView:
         response = client.post(
             reverse("private_messages:message_bookmark", args=[message.id])
         )
-        assert response.status_code == 200
+        assert response.status_code == 204
         bookmark = Bookmark.objects.get()
         assert bookmark.user == member.member
 
@@ -332,5 +332,5 @@ class TestMessageRemoveBookmarkView:
         response = client.post(
             reverse("private_messages:message_remove_bookmark", args=[message.id]),
         )
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert Bookmark.objects.count() == 0

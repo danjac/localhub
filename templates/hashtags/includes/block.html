@@ -3,21 +3,25 @@
 
 {% load i18n %}
 
-{% if is_blocked %}
-<a href="{% url 'hashtags:unblock' object.id %}"
-   role="button"
-   data-turbolinks="false"
-   class="line-through"
-   data-target="ajax.button"
-   data-action="ajax#post">
-  {% trans "Block" %}
-</a>
-{% else %}
-<a href="{% url 'hashtags:block' object.id %}"
-   role="button"
-   data-turbolinks="false"
-   data-target="ajax.button"
-   data-action="ajax#post">
-  {% trans "Block" %}
-</a>
-{% endif %}
+<div data-controller="toggle">
+  <a href="{% url 'hashtags:unblock' object.id %}"
+     role="button"
+     class="line-through{% if not is_blocked %} hidden{% endif %}"
+     data-turbolinks="false"
+     data-controller="ajax"
+     data-target="toggle.togglable"
+     data-action="ajax#post toggle#toggle">
+    {% trans "Block" %}
+  </a>
+  <a href="{% url 'hashtags:block' object.id %}"
+     role="button"
+     {% if is_blocked %}
+     class="hidden"
+     {% endif %}
+     data-controller="ajax"
+     data-turbolinks="false"
+     data-target="toggle.togglable"
+     data-action="ajax#post toggle#toggle">
+    {% trans "Block" %}
+  </a>
+</div>

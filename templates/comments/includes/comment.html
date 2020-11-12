@@ -118,18 +118,12 @@
              data-target="dropdown.menu">
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
-          <div data-controller="ajax"
-               data-ajax-replace>
-            {% include "comments/includes/like.html" with object=comment has_liked=comment.has_liked %}
-          </div>
+          {% include "comments/includes/like.html" with object=comment has_liked=comment.has_liked %}
           {% endif %}
 
           {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
           {% if can_bookmark_comment %}
-          <div data-controller="ajax"
-               data-ajax-replace>
-            {% include "comments/includes/bookmark.html" with object=comment has_bookmarked=comment.has_bookmarked %}
-          </div>
+          {% include "comments/includes/bookmark.html" with object=comment has_bookmarked=comment.has_bookmarked %}
           {% endif %}
 
           {% has_perm "comments.reply_to_comment" user comment as can_reply %}

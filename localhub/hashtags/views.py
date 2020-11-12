@@ -154,7 +154,6 @@ class BaseTagActionView(
 class BaseTagFollowView(BaseTagActionView):
     permission_required = "users.follow_tag"
     is_success_ajax_response = True
-    success_template_name = "hashtags/includes/follow.html"
 
 
 class TagFollowView(BaseTagFollowView):
@@ -163,9 +162,6 @@ class TagFollowView(BaseTagFollowView):
     def post(self, request, *args, **kwargs):
         self.request.user.following_tags.add(self.object)
         return self.success_response()
-
-    def get_success_context_data(self):
-        return {**super().get_success_context_data(), "is_following": True}
 
 
 tag_follow_view = TagFollowView.as_view()
@@ -178,9 +174,6 @@ class TagUnfollowView(BaseTagFollowView):
         self.request.user.following_tags.remove(self.object)
         return self.success_response()
 
-    def get_success_context_data(self):
-        return {**super().get_success_context_data(), "is_following": False}
-
 
 tag_unfollow_view = TagUnfollowView.as_view()
 
@@ -188,7 +181,6 @@ tag_unfollow_view = TagUnfollowView.as_view()
 class BaseTagBlockView(BaseTagActionView):
     permission_required = "users.block_tag"
     is_success_ajax_response = True
-    success_template_name = "hashtags/includes/block.html"
 
 
 class TagBlockView(BaseTagBlockView):
@@ -197,9 +189,6 @@ class TagBlockView(BaseTagBlockView):
     def post(self, request, *args, **kwargs):
         self.request.user.blocked_tags.add(self.object)
         return self.success_response()
-
-    def get_success_context_data(self):
-        return {**super().get_success_context_data(), "is_blocked": True}
 
 
 tag_block_view = TagBlockView.as_view()
@@ -211,9 +200,6 @@ class TagUnblockView(BaseTagBlockView):
     def post(self, request, *args, **kwargs):
         self.request.user.blocked_tags.remove(self.object)
         return self.success_response()
-
-    def get_success_context_data(self):
-        return {**super().get_success_context_data(), "is_blocked": False}
 
 
 tag_unblock_view = TagUnblockView.as_view()

@@ -21,23 +21,19 @@
   {% if can_follow_tag or can_block_tag %}
   <div class="page-nav mt-3 lg:mt-0">
     {% if can_follow_tag %}
-    <span data-controller="ajax"
-          data-ajax-replace
-          class="page-nav-item">
+    <div class="page-nav-item">
       {% with user.following_tags.all|contains:tag as is_following %}
       {% include "hashtags/includes/follow.html" with object=tag %}
       {% endwith %}
-    </span>
+    </div>
     {% endif %}
 
     {% if can_block_tag %}
-    <span data-controller="ajax"
-          data-ajax-replace
-          class="page-nav-item">
+    <div class="page-nav-item">
       {% with user.blocked_tags.all|contains:tag as is_blocked %}
       {% include "hashtags/includes/block.html" with object=tag %}
       {% endwith %}
-    </span>
+    </div>
     {% endif %}
   </div>
   {% endif %}
