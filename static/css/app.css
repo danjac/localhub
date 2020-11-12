@@ -105,7 +105,7 @@ a.btn-secondary {
 }
 
 .card {
-  @apply border border-gray-500 p-2;
+  @apply border border-gray-500 bg-white p-2;
 }
 
 .card-footer {
@@ -264,7 +264,7 @@ a.btn-secondary {
 }
 
 .sidebar-menu {
-  @apply border border-gray-500 p-1 bg-gray-100;
+  @apply border border-gray-500 p-1 bg-white;
 }
 
 .sidebar-menu-header {
@@ -294,7 +294,7 @@ a.btn-secondary {
 }
 
 .tab-item {
-  @apply block p-1 text-center border-t border-r border-l rounded-t border-gray-500 text-indigo-900 px-4;
+  @apply block p-1 text-center bg-white border-t border-r border-l rounded-t border-gray-500 text-indigo-900 px-4;
 }
 
 .tab-item:md {
