@@ -12,7 +12,7 @@
      data-controller="linkify"
      data-action="click->linkify#fetch"
      data-linkify-url="{% if submit_url %}{{ submit_url }}{% elif is_private %}{% url 'posts:create_private' %}{% else %}{% url 'posts:create' %}{% endif %}">
-  <div>
+  <div class="mr-2">
     {% avatar user "32x32" %}
   </div>
   <div class="w-full">
