@@ -8,14 +8,14 @@
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 {% if can_create_activity %}
 
-<div class="flex items-center border border-gray-500 bg-white cursor-pointer {{ css_class }}"
+<div class="flex items-center border border-gray-500 bg-white cursor-pointer p-1 {{ css_class }}"
      data-controller="linkify"
      data-action="click->linkify#fetch"
      data-linkify-url="{% if submit_url %}{{ submit_url }}{% elif is_private %}{% url 'posts:create_private' %}{% else %}{% url 'posts:create' %}{% endif %}">
-  <div class="px-2 py-2 border-r bg-gray-100 border-gray-500">
+  <div>
     {% avatar user "32x32" %}
   </div>
-  <div class="p-1 w-full">
+  <div class="w-full">
     <input class="appearance-none flex-grow p-1 inline-block w-100 pointer-events-none w-full focus:outline-none"
            data-action="focus->linkify#fetch keydown->linkify#fetch"
            placeholder="What's on your mind?">
