@@ -12,7 +12,7 @@
      data-controller="linkify"
      data-action="click->linkify#fetch"
      data-linkify-url="{% if submit_url %}{{ submit_url }}{% elif is_private %}{% url 'posts:create_private' %}{% else %}{% url 'posts:create' %}{% endif %}">
-  {% avatar user "32x32" css_class="mr-1" show_placeholder=False %}
+  {% avatar user "32x32" css_class="mr-1" %}
   <input class="appearance-none flex-grow p-1 inline-block w-100 pointer-events-none w-full focus:outline-none"
          data-action="focus->linkify#fetch keydown->linkify#fetch"
          placeholder="{% trans "What's on your mind?" %}">

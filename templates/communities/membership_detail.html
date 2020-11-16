@@ -29,7 +29,7 @@
 {% user_display member as display_name %}
 
 <h1 class="page-header flex flex-wrap items-center mb-3">
-  {% avatar member "32" show_placeholder=False css_class="mr-2" %}
+  {% avatar member "32" css_class="mr-2" %}
   {% if member.username == display_name %}
   @{{ display_name }}
   {% else %}

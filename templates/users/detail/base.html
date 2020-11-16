@@ -34,7 +34,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
   <h1 class="page-header flex flex-wrap items-center">
     {% if user_obj.avatar %}
     <div class="inline-block mr-3">
-      {% avatar user_obj "64x64" css_class="mr-1" show_placeholder=False %}
+      {% avatar user_obj "64x64" css_class="mr-1" %}
     </div>
     {% endif %}
     <div class="inline-block mr-3">

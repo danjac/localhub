@@ -17,16 +17,12 @@ register = template.Library()
 
 
 @register.inclusion_tag("users/includes/avatar.html")
-def avatar(user, size=16, css_class="", show_placeholder=True):
-    """
-    Displays the avatar if any for a given user. If no image available
-    will optionally show placeholder image.
-    """
+def avatar(user, size=16, css_class=""):
+    """Displays the avatar if any for a given user."""
     return {
         "user": user,
         "size": str(size),
         "css_class": css_class,
-        "show_placeholder": show_placeholder,
     }
 
 
