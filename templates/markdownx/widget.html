@@ -114,9 +114,8 @@
     <ul class="hidden typeahead-menu text-sm"
         data-target="typeahead.selector"></ul>
 
-    <textarea data-controller="autoresize"
-              data-target="markdown.textarea typeahead.input"
-              data-action="keyup->autoresize#resize keyup->typeahead#keyup keydown->typeahead#keydown keyup->markdown#togglePreviewTab"
+    <textarea data-target="markdown.textarea typeahead.input"
+              data-action="keyup->typeahead#keyup keydown->typeahead#keydown keyup->markdown#togglePreviewTab"
               name="{{ widget.name }}"
               {% include "django/forms/widgets/attrs.html" %}>{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
     <p class="text-sm text-gray-700">
