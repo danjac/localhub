@@ -222,10 +222,10 @@ a.btn-secondary {
   @apply bg-green-600;
 }
 .message-warning {
-  @apply bg-orange-600;
+  @apply bg-red-600;
 }
 .message-error {
-  @apply bg-orange-600;
+  @apply bg-red-600;
 }
 
 .notification {
@@ -312,12 +312,12 @@ a.btn-secondary {
 }
 
 .table-auto-scroll {
-  @apply table-auto block whitespace-no-wrap overflow-x-scroll;
+  @apply table-auto block whitespace-nowrap overflow-x-scroll;
 }
 
 @screen md {
   .table-auto-scroll {
-    @apply w-full whitespace-normal overflow-x-auto scrolling-touch table;
+    @apply w-full whitespace-normal overflow-x-auto table;
   }
 }
 
