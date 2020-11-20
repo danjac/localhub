@@ -70,7 +70,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
         {% endif %}
 
         {% if not is_blocked and can_follow_user %}
-        {% include "users/includes/follow.html" with object=user_obj is_following=user_obj.is_following css_class="dropdown-menu-item" %}
+        {% include "users/includes/follow.html" with object=user_obj is_following=user_obj.is_following css_class="dropdown-menu-item-container" %}
         {% endif %}
 
         {% if can_block_user %}

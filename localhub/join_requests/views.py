@@ -117,7 +117,11 @@ class JoinRequestCreateView(
         return self.success_response()
 
     def get_success_url(self):
-        return reverse("community_welcome")
+        return (
+            settings.HOME_PAGE_URL
+            if self.request.community.public
+            else reverse("community_welcome")
+        )
 
 
 join_request_create_view = JoinRequestCreateView.as_view()

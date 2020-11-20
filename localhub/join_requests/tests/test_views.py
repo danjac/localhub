@@ -70,7 +70,7 @@ class TestJoinRequestCreateView:
             community=community, member=admin, role=Membership.Role.ADMIN
         )
         response = client.post(reverse("join_requests:create"))
-        assert response.url == reverse("community_welcome")
+        assert response.url == settings.HOME_PAGE_URL
         join_request = JoinRequest.objects.get()
         assert join_request.sender == login_user
         assert join_request.community == community

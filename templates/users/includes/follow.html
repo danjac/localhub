@@ -2,11 +2,12 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div data-controller="toggle" class="{{ css_class }}">
+<div data-controller="toggle"
+     class="{{ css_class }}">
   <a href="{% url 'users:unfollow' object.username %}"
      role="button"
      data-turbolinks="false"
-     class="line-through{% if not is_following %} hidden{% endif %} {{ css_class }}"
+     class="line-through {{ is_following|yesno:"block,hidden" }}"
      data-controller="ajax"
      data-target="toggle.togglable"
      data-action="ajax#post toggle#toggle">
@@ -14,7 +15,7 @@
   </a>
   <a href="{% url 'users:follow' object.username %}"
      role="button"
-     class="{% if is_following %}hidden{% endif %} {{ css_class }}"
+     class="{{ is_following|yesno:"hidden,block" }}"
      data-turbolinks="false"
      data-controller="ajax"
      data-target="toggle.togglable"

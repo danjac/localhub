@@ -18,10 +18,14 @@ from django.views.generic.dates import (
     _date_from_string,
 )
 
+# Third Party Libraries
+import rules
+
 # Localhub
 from localhub.common.mixins import SearchMixin
 from localhub.common.pagination import PresetCountPaginator
 from localhub.communities.mixins import CommunityRequiredMixin
+from localhub.join_requests.models import JoinRequest
 from localhub.notifications.models import Notification
 
 # Local
@@ -127,10 +131,26 @@ class ActivityStreamView(BaseActivityStreamView):
             .order_by("-created")
         )
 
+    def has_join_request(self):
+        if self.request.user.is_anonymous or rules.test_rule(
+            "communities.is_member", self.request.user, self.request.community
+        ):
+            return False
+
+        return JoinRequest.objects.filter(
+            sender=self.request.user,
+            community=self.request.community,
+            status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED),
+        ).exists()
+
     def get_context_data(self, **kwargs):
+
         return {
             **super().get_context_data(**kwargs),
-            **{"notifications": self.get_unread_notifications()},
+            **{
+                "notifications": self.get_unread_notifications(),
+                "has_join_request": self.has_join_request(),
+            },
         }
 
 

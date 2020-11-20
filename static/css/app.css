@@ -132,7 +132,16 @@ a.btn-secondary {
   @apply block p-1 text-gray-800;
 }
 
-.dropdown-menu-item:hover {
+.dropdown-menu-item-container a {
+  @apply p-1 text-gray-800;
+}
+
+.dropdown-menu-item-container a:not(.hidden) {
+  @apply block;
+}
+
+.dropdown-menu-item:hover,
+.dropdown-menu-item-container a:hover {
   @apply bg-indigo-700 text-white;
 }
 

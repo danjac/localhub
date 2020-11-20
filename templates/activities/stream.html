@@ -6,6 +6,7 @@
 {% load i18n %}
 {% load rules %}
 {% load activities %}
+{% load join_requests %}
 {% load notifications %}
 {% load users %}
 
@@ -42,7 +43,7 @@
 
 {% test_rule "communities.is_member" user community as is_member %}
 
-{% if not is_member %}
+{% if not is_member and not has_join_request %}
 {% has_perm "join_requests.create" user community as can_create_join_request %}
 {% if can_create_join_request %}
 {% url 'join_requests:create' as request_invite_url %}
@@ -52,6 +53,22 @@
   {% endblocktrans %}
 </p>
 {% endif %}
+{% endif %}
+
+{% get_pending_join_request_count user community as pending_join_requests %}
+
+{% if pending_join_requests %}
+<div class="notification flex mb-3">
+  <div class="mx-auto text-center">
+    <a href="{% url 'join_requests:list' %}">
+      {% blocktrans count counter=pending_join_requests %}
+      You have a join request pending.
+      {% plural %}
+      You have {{ counter }} join requests pending.
+      {% endblocktrans %}
+    </a>
+  </div>
+</div>
 {% endif %}
 
 {% include "activities/includes/submit_cta.html" with css_class="mb-3" %}
