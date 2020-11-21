@@ -39,7 +39,7 @@ class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
     """
 
     allow_empty = True
-    ordering = ("-created", "-published")
+    ordering = ("-published", "-created")
 
     paginate_by = settings.DEFAULT_PAGE_SIZE
     paginator_class = PresetCountPaginator
