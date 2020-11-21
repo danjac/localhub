@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<div class="flex-wrap lg:flex items-center lg:justify-between mb-3 w-full lg:w-3/4">
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3 w-full">
 
   {% with list_url=view.model|resolve_url:"list" model_name_plural=view.model|verbose_name_plural|title model_name=view.model|verbose_name|title %}
   <ul class="breadcrumbs">

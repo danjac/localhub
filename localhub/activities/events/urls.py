@@ -20,6 +20,8 @@ urlpatterns = create_activity_urls(
     Event,
     EventForm,
     create_view_class=views.EventCreateView,
+    update_view_class=views.EventUpdateView,
+    detail_view_class=views.EventDetailView,
     list_view_class=views.EventListView,
 )
 

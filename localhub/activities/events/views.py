@@ -20,8 +20,10 @@ import pytz
 # Localhub
 from localhub.activities.views.generic import (
     ActivityCreateView,
+    ActivityDetailView,
     ActivityListView,
     ActivityQuerySetMixin,
+    ActivityUpdateView,
     BaseActivityActionView,
     BaseActivityListView,
 )
@@ -116,6 +118,14 @@ class EventCreateView(TimezoneOverrideMixin, ActivityCreateView):
             return datetime.datetime(day=day, month=month, year=year, hour=9)
         except (KeyError, ValueError):
             return None
+
+
+class EventUpdateView(TimezoneOverrideMixin, ActivityUpdateView):
+    ...
+
+
+class EventDetailView(TimezoneOverrideMixin, ActivityDetailView):
+    ...
 
 
 class EventListView(TimezoneOverrideMixin, ActivityListView):
