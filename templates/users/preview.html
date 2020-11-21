@@ -8,8 +8,13 @@
 <div class="absolute bg-white shadow-lg rounded border px-3 py-2">
   <div class="flex flex-wrap items-center">
     {% if user_obj.avatar %}
-    <a class="inline-block mr-3" href="{{ user_obj.get_absolute_url }}">
+    <a class="inline-block mr-3"
+       href="{{ user_obj.get_absolute_url }}">
       {% avatar user_obj "64x64" css_class="mr-1" %}
+    </a>
+    {% else %}
+    <a class="flex inline-block mr-3 items-center justify-center bg-blue-800 text-white font-semibold leading-none tracking-none h-14 w-14 text-5xl hover:text-white" href="{{ user_obj.get_absolute_url }}">
+      {{ user_obj.get_display_name.0|capfirst }}
     </a>
     {% endif %}
     {% user_display user_obj as display_name %}
