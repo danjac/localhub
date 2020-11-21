@@ -27,15 +27,8 @@ from localhub.activities.views.generic import (
 )
 
 # Local
+from .mixins import TimezoneOverrideMixin
 from .models import Event
-
-
-class TimezoneOverrideMixin:
-    def dispatch(self, request, *args, **kwargs):
-        with timezone.override(
-            request.user.default_timezone if request.user.is_authenticated else None
-        ):
-            return super().dispatch(request, *args, **kwargs)
 
 
 class BaseEventActionView(BaseActivityActionView):
