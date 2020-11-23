@@ -41,6 +41,7 @@ pytz
 pywebpush
 redis
 rules
+sentry_sdk
 sorl-thumbnail
 unidecode
 werkzeug
