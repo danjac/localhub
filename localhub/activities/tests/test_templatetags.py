@@ -75,18 +75,39 @@ class TestGetPinnedActivity:
         assert pinned["object"] == post
 
 
+class MockOembed:
+    def __init__(self, is_valid):
+        self.is_valid = is_valid
+
+    def provider_for_url(self, url):
+        return {} if self.is_valid else None
+
+
 class TestIsOembedUrl:
-    def test_is_oembed_if_oembed_url_and_user_permitted(self, user_model):
+    def test_is_oembed_if_oembed_url_and_user_permitted(self, user_model, mocker):
+
+        mocker.patch(
+            "localhub.activities.templatetags.activities._oembed_registry",
+            MockOembed(True),
+        )
         url = "https://www.youtube.com/watch?v=eLeIJtLebZk"
         user = user_model(show_embedded_content=True)
         assert is_oembed_url(user, url)
 
-    def test_is_oembed_if_oembed_url_and_user_not_permitted(self, user_model):
+    def test_is_oembed_if_oembed_url_and_user_not_permitted(self, user_model, mocker):
+        mocker.patch(
+            "localhub.activities.templatetags.activities._oembed_registry",
+            MockOembed(True),
+        )
         url = "https://www.youtube.com/watch?v=eLeIJtLebZk"
         user = user_model(show_embedded_content=False)
         assert not is_oembed_url(user, url)
 
-    def test_is_oembed_if_not_oembed_url(self, user_model):
+    def test_is_oembed_if_not_oembed_url(self, user_model, mocker):
+        mocker.patch(
+            "localhub.activities.templatetags.activities._oembed_registry",
+            MockOembed(False),
+        )
         url = "https://reddit.com"
         user = user_model(show_embedded_content=True)
         assert not is_oembed_url(user, url)

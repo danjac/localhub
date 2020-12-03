@@ -27,9 +27,11 @@ class Exif:
             Exif.Invalid: if image does not contain EXIF tags
         """
         img = Image.open(fp)
-
-        if (exif := img._getexif()) is None:
-            raise cls.Invalid("Image does not contain EXIF tags")
+        try:
+            if (exif := img._getexif()) is None:
+                raise ValueError("Image does not contain EXIF tags")
+        except Exception as e:
+            raise cls.Invalid from e
 
         return cls(img, exif)
 

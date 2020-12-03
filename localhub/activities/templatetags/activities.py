@@ -20,8 +20,7 @@ _oembed_registry = bootstrap_oembed()
 
 @register.simple_tag(name="get_activity_models")
 def _get_activity_models():
-    """Just dumps the activity model class list into the template.
-    """
+    """Just dumps the activity model class list into the template."""
     return get_activity_models()
 
 
@@ -80,6 +79,8 @@ def is_oembed_url(user, url):
         return False
     if is_audio_url(url):
         return True
+    if _oembed_registry is None:
+        return False
     return _oembed_registry.provider_for_url(url) is not None
 
 
