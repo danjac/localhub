@@ -25,11 +25,13 @@
 <div class="tabs text-sm mb-3">
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-active-class="active"
+     data-active-link-exact-value
      href="{% url 'users:activity_likes' user_obj.username %}">{% trans "Activities" %}</a>
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-active-class="active"
+     data-active-link-exact-value
      href="{% url 'users:comment_likes' user_obj.username %}">{% trans "Comments" %}</a>
 </div>
 {% block likes_content %}{% endblock %}

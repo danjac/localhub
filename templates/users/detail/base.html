@@ -183,19 +183,22 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 <div class="tabs mb-3 text-sm">
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-exact-value
+     data-active-link-active-class="active"
      href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
   {% if can_create_message %}
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-exact-value
+     data-active-link-active-class="active"
      href="{% url 'users:messages' user_obj.username %}">
     {% trans "Messages" %}
   </a>
   {% endif %}
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-exact-value
+     data-active-link-active-class="active"
      href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
 </div>
 {% block user_content %}{% endblock %}

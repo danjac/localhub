@@ -17,11 +17,13 @@
 
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-exact-value
+     data-active-link-active-class="active"
      href="{% url 'private_messages:inbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Inbox" %}</a>
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-exact-value
+     data-active-link-active-class="active"
      href="{% url 'private_messages:outbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Outbox" %}</a>
 
   {% if can_create_message %}

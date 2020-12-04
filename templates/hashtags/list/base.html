@@ -17,18 +17,21 @@
 <div class="tabs text-sm mb-3">
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-exact-value
+     data-active-link-active-class="active"
      href="{% url 'hashtags:list' %}">{% trans "All" %}</a>
   {% if can_follow_tag %}
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-exact-value
+     data-active-link-active-class="active"
      href="{% url 'hashtags:following_list' %}">{% trans "Following" %}</a>
   {% endif %}
   {% if can_block_tag %}
   <a class="tab-item"
      data-controller="active-link"
-     data-active-link-exact
+     data-active-link-exact-value
+     data-active-link-active-class="active"
      href="{% url 'hashtags:blocked_list' %}">{% trans "Blocked" %}</a>
   {% endif %}
 </div>
