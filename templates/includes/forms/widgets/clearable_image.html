@@ -1,10 +1,10 @@
 <div data-controller="image-preview"
      data-action="drop->image-preview#drop">
   <img src="{{ widget.value.url }}"
-       data-target="image-preview.image"
+       data-image-preview-target="image"
        loading="lazy"
        class="h-64 bg-gray-300 mb-3{% if not widget.value.url %} hidden{% endif%}">
-  <div data-target="image-preview.fileSize"
+  <div data-image-preview-target="fileSize"
        class="hidden"></div>
   {% if widget.is_initial %}
   {% if not widget.required %}
@@ -24,6 +24,6 @@
   <input type="{{ widget.type }}"
          name="{{ widget.name }}"
          data-action="image-preview#change"
-         data-target="image-preview.input"
+         data-image-preview-target="input"
          {% include "django/forms/widgets/attrs.html" %}>
 </div>

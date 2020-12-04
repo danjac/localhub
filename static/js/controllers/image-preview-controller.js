@@ -63,7 +63,6 @@ export default class extends ApplicationController {
     }
     for (let i = -1; i < units.length; ++i) {
       if (under(bytes)) {
-        console.log(i, bytes);
         return bytes.toFixed(1) + ' ' + units[i];
       }
       bytes /= thresh;
