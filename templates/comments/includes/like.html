@@ -8,13 +8,13 @@
      role="button"
      data-controller="ajax"
      data-turbolinks="false"
-     data-target="toggle.togglable"
+     data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
   <a href="{% url 'comments:like' object.id %}"
      class="dropdown-menu-item{% if has_liked %} hidden{% endif %}"
      role="button"
      data-controller="ajax"
      data-turbolinks="false"
-     data-target="toggle.togglable"
+     data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
 </div>

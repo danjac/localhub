@@ -54,12 +54,12 @@
        data-action="click->toggle#toggle">
 
     <p class="font-semibold p-5 text-center"
-       data-target="toggle.togglable">
+       data-toggle-target="togglable">
       {% trans "This comment is hidden because you have blocked this user." %}
     </p>
 
     <div class="markdown-content hidden"
-         data-target="toggle.togglable">
+         data-toggle-target="togglable">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
 

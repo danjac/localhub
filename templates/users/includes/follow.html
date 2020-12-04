@@ -9,7 +9,7 @@
      data-turbolinks="false"
      class="line-through {{ is_following|yesno:"block,hidden" }}"
      data-controller="ajax"
-     data-target="toggle.togglable"
+     data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">
     {% trans "Follow" %}
   </a>
@@ -18,7 +18,7 @@
      class="{{ is_following|yesno:"hidden,block" }}"
      data-turbolinks="false"
      data-controller="ajax"
-     data-target="toggle.togglable"
+     data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">
     {% trans "Follow" %}
   </a>

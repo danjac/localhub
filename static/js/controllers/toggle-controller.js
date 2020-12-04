@@ -5,19 +5,12 @@ import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   /*
-  Toggles one or more elements using hidden class or another class.
-
-  actions:
-    toggle: toggles hidden on all togglable targets.
-
-  targets:
-    togglable: elements to be toggled.
+  Toggles one or more elements using hidden class.
   */
   static targets = ['togglable'];
 
   toggle(event) {
     event.preventDefault();
-    const toggleClass = this.data.get('class') || 'hidden';
-    this.togglableTargets.forEach((el) => el.classList.toggle(toggleClass));
+    this.togglableTargets.forEach((el) => el.classList.toggle('hidden'));
   }
 }

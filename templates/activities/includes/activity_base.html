@@ -17,13 +17,13 @@
   {% block header %}
   {% if is_content_sensitive %}
   <div class=""
-       data-target="toggle.togglable">
+       data-toggle-target="togglable">
     <div class="">
       {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
     </div>
   </div>
   <div class="hidden"
-       data-target="toggle.togglable">
+       data-toggle-target="togglable">
     {% else %}
     <div class="mb-3">
       {% endif %}
@@ -136,7 +136,7 @@
       {% else %}
       {% if is_content_sensitive %}
       <div class="bg-gray-800 align-middle text-center text-white my-4 p-5"
-           data-target="toggle.togglable">
+           data-toggle-target="togglable">
         <p class="mb-3 text-lg font-semibold">{% trans "Sensitive Content" %}</p>
         <p class="mb-3">
           {% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}
@@ -152,7 +152,7 @@
         </div>
       </div>
       <div class="hidden"
-           data-target="toggle.togglable">
+           data-toggle-target="togglable">
         {% endif %}
         {% with ignore_collapsable=is_detail|default:is_content_sensitive %}
         {% collapsable ignore_collapsable %}
