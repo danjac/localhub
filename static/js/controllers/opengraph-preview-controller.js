@@ -9,10 +9,11 @@ import ApplicationController from './application-controller';
 export default class extends ApplicationController {
   // fetches preview HTML and fields from server, updates fields and inserts HTML.
   static targets = ['clearButton', 'fetchButton', 'container', 'field', 'input'];
+  static values = { disabled: Boolean, previewUrl: String, errorMessage: String };
 
   connect() {
-    this.bus.sub(Events.FORM_FETCHING, () => this.data.set('disabled', true));
-    this.bus.sub(Events.FORM_COMPLETE, () => this.data.delete('disabled'));
+    this.bus.sub(Events.FORM_FETCHING, () => (this.disabledValue = true));
+    this.bus.sub(Events.FORM_COMPLETE, () => (this.disabledValue = false));
     this.validate();
   }
 
@@ -28,7 +29,7 @@ export default class extends ApplicationController {
     } else {
       value = this.inputTarget.value;
     }
-    if (value && this.inputTarget.checkValidity() && !this.data.has('disabled')) {
+    if (value && this.inputTarget.checkValidity() && !this.disabledValue) {
       this.fetchButtonTarget.removeAttribute('disabled');
       return true;
     } else {
@@ -56,7 +57,7 @@ export default class extends ApplicationController {
 
     if (
       !this.validate() ||
-      this.data.has('disabled') ||
+      this.disabledValue ||
       currentTarget.getAttribute('disabled')
     ) {
       return false;
@@ -71,7 +72,7 @@ export default class extends ApplicationController {
     this.bus.pub(Events.FORM_FETCHING);
 
     try {
-      const response = await axios.get(this.data.get('preview-url'), {
+      const response = await axios.get(this.previewUrlValue, {
         params: { url },
       });
       const { html, fields } = response.data;
@@ -80,7 +81,9 @@ export default class extends ApplicationController {
       this.clearButtonTarget.removeAttribute('disabled');
     } catch (err) {
       this.resetForm();
-      this.toaster.error(this.data.get('errorMessage'));
+      if (this.hasErrorMessageValue) {
+        this.toaster.error(this.errorMessageValue);
+      }
     } finally {
       this.bus.pub(Events.FORM_COMPLETE);
     }

@@ -23,7 +23,7 @@ class OpengraphPreviewInput(forms.URLInput):
 
         self.attrs.update(
             {
-                "data-target": "opengraph-preview.input",
+                "data-opengraph-preview-target": "input",
                 "data-action": " ".join(
                     [
                         f"{event}->opengraph-preview#validate"
@@ -81,8 +81,4 @@ class PostForm(ActivityForm):
         self.fields["opengraph_description"].widget = forms.HiddenInput()
 
         for field in ("title", "opengraph_image", "opengraph_description", "url"):
-            data_targets = (
-                self.fields[field].widget.attrs.get("data-target", "").split(" ")
-            )
-            data_targets.append("opengraph-preview.field")
-            self.fields[field].widget.attrs["data-target"] = " ".join(data_targets)
+            self.fields[field].widget.attrs["opengraph-preview-target"] = "field"

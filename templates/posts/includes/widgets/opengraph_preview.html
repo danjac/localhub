@@ -3,7 +3,7 @@
 
 {% load i18n %}
 <div>
-  <div data-target="opengraph-preview.container">
+  <div data-opengraph-preview-target="container">
     {% include "posts/includes/opengraph_preview.html" %}
   </div>
 
@@ -13,7 +13,7 @@
             class="btn btn-input-addon px-2 p-1"
             title="{% trans 'Fetch content from URL' %}"
             disabled
-            data-target="opengraph-preview.fetchButton"
+            data-opengraph-preview-target="fetchButton"
             data-action="opengraph-preview#fetch">
       <i class="fa fa-download"></i>
     </button>
@@ -23,7 +23,7 @@
             {% if not preview.description and not preview.image %}
             disabled
             {% endif %}
-            data-target="opengraph-preview.clearButton"
+            data-opengraph-preview-target="clearButton"
             data-action="opengraph-preview#clear">
       <i class="fa fa-times"></i>
     </button>
