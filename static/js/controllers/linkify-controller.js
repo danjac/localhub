@@ -7,9 +7,10 @@ import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   // Makes any non-anchor element linkable with Turbolinks.
+  values = { url: String };
 
   fetch(event) {
     event.preventDefault();
-    Turbolinks.visit(this.data.get('url'));
+    Turbolinks.visit(this.urlValue);
   }
 }
