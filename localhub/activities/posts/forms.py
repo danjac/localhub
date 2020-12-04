@@ -80,5 +80,10 @@ class PostForm(ActivityForm):
         self.fields["opengraph_image"].widget = forms.HiddenInput()
         self.fields["opengraph_description"].widget = forms.HiddenInput()
 
+        target_attr = "data-opengraph-preview-target"
+
         for field in ("title", "opengraph_image", "opengraph_description", "url"):
-            self.fields[field].widget.attrs["opengraph-preview-target"] = "field"
+            targets = self.fields[field].widget.attrs.get(target_attr, "").split() + [
+                "field"
+            ]
+            self.fields[field].widget.attrs[target_attr] = " ".join(targets)

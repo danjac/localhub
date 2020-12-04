@@ -9,8 +9,8 @@
 
 {% block form_extra_attrs %}
 {{ block.super }}
-data-opengraph-preview-error-message="{% trans "This URL is unavailable, or we are unable to fetch any meaningful data from this page." %}"
-data-opengraph-preview-preview-url="{% url 'posts:opengraph_preview' %}"
+data-opengraph-preview-error-message-value="{% trans "This URL is unavailable, or we are unable to fetch any meaningful data from this page." %}"
+data-opengraph-preview-url-value="{% url 'posts:opengraph_preview' %}"
 {% endblock %}
 
 

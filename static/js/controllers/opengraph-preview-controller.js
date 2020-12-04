@@ -9,7 +9,7 @@ import ApplicationController from './application-controller';
 export default class extends ApplicationController {
   // fetches preview HTML and fields from server, updates fields and inserts HTML.
   static targets = ['clearButton', 'fetchButton', 'container', 'field', 'input'];
-  static values = { disabled: Boolean, previewUrl: String, errorMessage: String };
+  static values = { disabled: Boolean, url: String, errorMessage: String };
 
   connect() {
     this.bus.sub(Events.FORM_FETCHING, () => (this.disabledValue = true));
@@ -72,7 +72,7 @@ export default class extends ApplicationController {
     this.bus.pub(Events.FORM_FETCHING);
 
     try {
-      const response = await axios.get(this.previewUrlValue, {
+      const response = await axios.get(this.urlValue, {
         params: { url },
       });
       const { html, fields } = response.data;
