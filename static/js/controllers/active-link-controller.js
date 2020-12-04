@@ -14,6 +14,8 @@ export default class extends ApplicationController {
       (default: false)
   */
   static targets = ['match'];
+  static classes = ['active'];
+  static values = { regex: String, exact: Boolean };
 
   connect() {
     const { pathname } = window.location;
@@ -22,15 +24,13 @@ export default class extends ApplicationController {
       this.element.getAttribute('href') || this.matchTarget.getAttribute('href')
     ).split(/[?#]/)[0];
 
-    const regex = this.data.get('regex');
-
-    const matches = this.data.has('exact')
+    const matches = this.hasExactValue
       ? pathname === href
-      : regex
-      ? pathname.match(regex)
+      : this.hasRegexValue
+      ? pathname.match(this.regexValue)
       : pathname.startsWith(href);
     if (matches) {
-      this.classList.add(this.data.get('active-class') || 'active');
+      this.classList.add(this.activeClass);
     }
   }
 }
