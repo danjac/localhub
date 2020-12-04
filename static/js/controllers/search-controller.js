@@ -21,6 +21,7 @@ export default class extends ApplicationController {
       selector: <select> element showing all search options
   */
   static targets = ['input', 'selector'];
+  static values = { param: String };
 
   connect() {
     if (this.hasSelectorTarget) {
