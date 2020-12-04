@@ -5,7 +5,7 @@
 
 <div class="card{% if activity_css_class %} {{ activity_css_class }}{% endif %}"
      data-controller="clipboard"
-     data-clipboard-message="{% trans 'Markdown content has been copied' %}">
+     data-clipboard-message-value="{% trans 'Markdown content has been copied' %}">
   <div class="mb-3">
     <div class="text-blue-800 hover:text-blue-700 font-semibold flex flex-wrap items-center mb-3">
       {% block title %}
@@ -35,7 +35,7 @@
       {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
     </div>
     {% if object.description %}
-    <textarea data-target="clipboard.textarea"
+    <textarea data-clipboard-target="textarea"
               readonly
               class="hidden">{{ object.description }}</textarea>
     {% endif %}

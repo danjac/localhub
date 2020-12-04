@@ -15,6 +15,7 @@ export default class extends ApplicationController {
     textarea: readonly textarea to copy
   */
   static targets = ['textarea', 'button'];
+  static values = { message: String };
 
   connect() {
     // if clipboard API not supported e.g. on Safari or disabled for security,
@@ -33,8 +34,8 @@ export default class extends ApplicationController {
   }
 
   confirm() {
-    if (this.data.has('message')) {
-      this.toaster.info(this.data.get('message'));
+    if (this.hasMessageValue) {
+      this.toaster.info(this.messageValue);
     }
   }
 }

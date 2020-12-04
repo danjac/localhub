@@ -8,7 +8,7 @@
 <div class="card {{ css_class|default:"mb-3" }}"
      id="message-{{ message.id }}"
      data-controller="clipboard"
-     data-clipboard-message="{% trans 'Markdown content has been copied' %}">
+     data-clipboard-message-value="{% trans 'Markdown content has been copied' %}">
 
   <div class="flex flex-wrap items-center text-sm mb-3">
     {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url css_class="mr-2" %}
@@ -31,7 +31,7 @@
     {{ message.message.markdown|strip_external_images:user|lazify }}
   </div>
   {% endcollapsable %}
-  <textarea data-target="clipboard.textarea"
+  <textarea data-clipboard-target="textarea"
             readonly
             class="hidden">{{ message.message }}</textarea>
 
@@ -84,7 +84,7 @@
              class="dropdown-menu-item"
              role="button"
              data-turbolinks="false"
-             data-target="clipboard.button"
+             data-clipboard-target="button"
              data-action="clipboard#copy">
             {% trans "Copy Markdown" %}
           </a>

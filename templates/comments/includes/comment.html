@@ -11,7 +11,7 @@
 <article class="card {% if css_class %} {{ css_class }}{% endif %} {% if comment.is_blocked %} bg-gray-100{% endif %}"
          role="comment"
          data-controller="clipboard"
-         data-clipboard-message="{% trans 'Markdown content has been copied' %}"
+         data-clipboard-message-value="{% trans 'Markdown content has been copied' %}"
          id="comment-{{ comment.id }}">
   <div class="mb-3">
     {% if include_content_object %}
@@ -63,7 +63,7 @@
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
 
-    <div data-target="toggle.togglable text-center align-middle py-3">
+    <div data-toggle-target="togglable">
       <div class="flex justify-center items-center">
         <button class="btn btn-link w-full text-sm"
                 data-action="toggle#toggle">{% trans "Show Comment" %}</button>
@@ -73,7 +73,7 @@
 
   {% else %}
   <div class="mb-3">
-    <textarea data-target="clipboard.textarea"
+    <textarea data-clipboard-target="textarea"
               readonly
               class="hidden">{{ comment.content }}</textarea>
     {% if comment.deleted %}
@@ -167,7 +167,7 @@
              class="dropdown-menu-item"
              role="button"
              data-turbolinks="false"
-             data-target="clipboard.button"
+             data-clipboard-target="button"
              data-action="clipboard#copy">
             {% trans "Copy Markdown" %}
           </a>
