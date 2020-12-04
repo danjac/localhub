@@ -55,6 +55,6 @@ export default class extends ApplicationController {
   }
 
   get searchParam() {
-    return this.data.get('param') || 'q';
+    return this.paramValue || 'q';
   }
 }
