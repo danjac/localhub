@@ -16,7 +16,7 @@
 {% get_community_count user community as communities_count %}
 
 <nav class="hidden lg:block text-sm w-full lg:w-1/5"
-     data-target="sidebar.nav">
+     data-sidebar-target="nav">
 
   <ul class="sidebar-menu">
     <li class="mb-1">
@@ -117,7 +117,7 @@
          data-turbolinks="false"
          data-controller="ajax"
          data-action="ajax#post"
-         data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
+         data-ajax-redirect-value="{{ home_page_url }}">{% trans "Logout" %}</a>
     </li>
     {% endif %}
 

@@ -25,7 +25,7 @@
   <div class="w-full bg-gray-200 {% if answer.num_votes %} p-0{% else %} p-3{% endif %}{% if can_vote %} cursor-pointer{% endif %}"
        {% if can_vote %}
        data-action="click->ajax#post"
-       data-ajax-url="{{ vote_url }}"
+       data-ajax-url-value="{{ vote_url }}"
        data-target="ajax.button"
        {% endif %}>
     {% if answer.num_votes %}

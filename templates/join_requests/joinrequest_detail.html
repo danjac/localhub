@@ -39,8 +39,8 @@
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
-     data-ajax-confirm="{% trans 'Are you sure you want to accept this request?' %}"
-     data-ajax-redirect="{{ request.get_full_path }}"
+     data-ajax-confirm-value="{% trans 'Are you sure you want to accept this request?' %}"
+     data-ajax-redirect-value="{{ request.get_full_path }}"
      href="{% url 'join_requests:accept' object.id %}">{% trans "Accept" %}
   </a>
   {% endif %}
@@ -50,8 +50,8 @@
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
-     data-ajax-redirect="{{ request.get_full_path }}"
-     data-ajax-confirm="{% trans 'Are you sure you want to reject this request?' %}"
+     data-ajax-redirect-value="{{ request.get_full_path }}"
+     data-ajax-confirm-value="{% trans 'Are you sure you want to reject this request?' %}"
      href="{% url 'join_requests:reject' object.id %}">{% trans "Reject" %}</a>
   {% endif %}
   <a class="page-nav-item"
@@ -59,7 +59,7 @@
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
-     data-ajax-confirm="{% trans 'Are you sure you want to delete this request?' %}"
+     data-ajax-confirm-value="{% trans 'Are you sure you want to delete this request?' %}"
      href="{% url 'join_requests:delete' object.id %}">{% trans "Delete" %}</a>
 </div>
 {% endwith %}

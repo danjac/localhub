@@ -57,14 +57,14 @@
         {% block mobile_menu_button %}
         <button class="lg:hidden mr-3 focus:outline-none"
                 data-action="sidebar#toggle"
-                data-target="sidebar.nav"
+                data-sidebar-target="nav"
                 type="button">
           <i class="fa fa-lg fa-bars"></i>
         </button>
 
         <button class="hidden lg:hidden mr-3 focus:outline-none"
                 data-action="sidebar#toggle"
-                data-target="sidebar.nav"
+                data-sidebar-target="nav"
                 type="button">
           <i class="fa fa-lg fa-times"></i>
         </button>
@@ -88,7 +88,7 @@
               data-action="search#search">
           <input type="search"
                  placeholder="{% trans "Search..." %}"
-                 data-target="search.input"
+                 data-search-target="input"
                  name="q"
                  class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
         </form>
@@ -108,7 +108,7 @@
            data-turbolinks="false"
            data-controller="ajax"
            data-action="ajax#post"
-           data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
+           data-ajax-redirect-value="{{ home_page_url }}">{% trans "Logout" %}</a>
       </div>
       {% else %}
       <div>
@@ -129,7 +129,7 @@
             data-action="search#search">
         <input type="search"
                placeholder="{% trans "Search..." %}"
-               data-target="search.input"
+               data-search-target="input"
                name="q"
                class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
       </form>
@@ -153,7 +153,7 @@
     {% endblock sidebar %}
 
     <div class="lg:ml-6 w-full lg:w-4/5 lg:block"
-         data-target="sidebar.main">
+         data-sidebar-target="main">
 
       {% else %}
       <div class="container mx-auto flex justify-center min-h-full">

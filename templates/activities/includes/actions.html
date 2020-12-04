@@ -89,7 +89,7 @@
        data-controller="ajax"
        data-turbolinks="false"
        data-action="ajax#post"
-       data-ajax-confirm="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_type }}? You cannot reverse this action.{% endblocktrans %}"
+       data-ajax-confirm-value="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_type }}? You cannot reverse this action.{% endblocktrans %}"
        href="{{ object|resolve_url:"publish" }}">{% trans "Publish" %}</a>
     {% endif %}
     <a class="dropdown-menu-item"
@@ -111,9 +111,9 @@
        data-controller="ajax"
        data-action="ajax#post"
        {% if not is_detail %}
-       data-ajax-redirect="{{ request.get_full_path }}"
+       data-ajax-redirect-value="{{ request.get_full_path }}"
        {% endif %}
-       data-ajax-confirm="{% blocktrans %}Are you sure you want to delete this {{ object_type }}?{% endblocktrans %}">
+       data-ajax-confirm-value="{% blocktrans %}Are you sure you want to delete this {{ object_type }}?{% endblocktrans %}">
       {% trans "Delete" %}</a>
     {% endif %}
 

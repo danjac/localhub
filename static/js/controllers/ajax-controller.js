@@ -7,6 +7,14 @@ import Turbolinks from 'turbolinks';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
+  static values = {
+    url: String,
+    redirect: String,
+    confirm: Boolean,
+    replace: Boolean,
+    remove: Boolean,
+  };
+
   get(event) {
     this.dispatch('GET', event);
   }
@@ -18,16 +26,21 @@ export default class extends ApplicationController {
   async dispatch(method, event) {
     event.preventDefault();
 
-    if (this.data.has('confirm') && !window.confirm(this.data.get('confirm'))) {
+    if (this.hasConfirmValue && !window.confirm(this.confirmValue)) {
       return;
     }
 
     const { currentTarget } = event;
 
-    const url =
-      this.data.get('url') ||
-      currentTarget.getAttribute(`data-${this.identifier}-url`) ||
-      currentTarget.getAttribute('href');
+    let url;
+
+    if (this.hasUrlValue) {
+      url = this.urlValue;
+    } else {
+      url =
+        currentTarget.getAttribute(`data-${this.identifier}-url`) ||
+        currentTarget.getAttribute('href');
+    }
 
     try {
       const response = await axios({
@@ -54,29 +67,28 @@ export default class extends ApplicationController {
       this.toaster.success(successMessage);
     }
 
-    // data-ajax-redirect: override the default
+    // data-ajax-redirect-value: override the default
     // redirect passed from the server. If set to "none" it
     // means "do not redirect at all".
-    const redirect = this.data.get('redirect');
-    if (redirect) {
-      if (redirect !== 'none') Turbolinks.visit(redirect);
+    if (this.hasRedirectValue) {
+      if (this.redirectValue !== 'none') Turbolinks.visit(this.redirectValue);
       return;
     }
 
-    // data-ajax-replace: replace HTML in element with server HTML
-    if (this.data.has('replace')) {
+    // data-ajax-replace-value: replace HTML in element with server HTML
+    if (this.hasReplaceValue) {
       this.element.innerHTML = response.data;
       return;
     }
 
-    // data-ajax-remove: remove element from DOM
-    if (this.data.has('remove')) {
+    // data-ajax-remove-value: remove element from DOM
+    if (this.hasRemoveValue) {
       this.element.remove();
       return;
     }
 
     // default behaviour: redirect passed down in header
-    if (!redirect && response.headers['content-type'].match(/javascript/)) {
+    if (response.headers['content-type'].match(/javascript/)) {
       /* eslint-disable-next-line no-eval */
       eval(response.data);
     }

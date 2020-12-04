@@ -81,9 +81,8 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
            role="button"
            data-turbolinks="false"
            data-controller="ajax"
-           data-target="ajax.button"
            data-action="ajax#post toggle#toggle"
-           data-ajax-redirect="{{ redirect_url }}">
+           data-ajax-redirect-value="{{ redirect_url }}">
           {% trans "Block" %}
         </a>
         {% else %}
@@ -92,9 +91,8 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
            role="button"
            data-turbolinks="false"
            data-controller="ajax"
-           data-target="ajax.button"
            data-action="ajax#post toggle#toggle"
-           data-ajax-redirect="{{ redirect_url }}">
+           data-ajax-redirect-value="{{ redirect_url }}">
           {% trans "Block" %}
         </a>
         {% endif %}

@@ -22,7 +22,7 @@ You have blocked {{ counter }} people.
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post toggle#toggle"
-     data-ajax-redirect="{{ request.get_full_path }}">
+     data-ajax-redirect-value="{{ request.get_full_path }}">
     {% trans "Block" %}
   </a>
 </div>

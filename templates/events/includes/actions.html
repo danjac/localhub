@@ -31,9 +31,9 @@
    data-controller="ajax"
    data-action="ajax#post"
    {% if not is_detail %}
-   data-ajax-redirect="{{ request.get_full_path }}"
+   data-ajax-redirect-value="{{ request.get_full_path }}"
    {% endif %}
-   data-ajax-confirm="{% trans 'Are you sure you want to cancel this event?' %}">
+   data-ajax-confirm-value="{% trans 'Are you sure you want to cancel this event?' %}">
   {% trans "Cancel Event" %}</a>
 {% endif %}
 

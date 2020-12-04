@@ -6,7 +6,7 @@
      href="{{ object|resolve_url:"remove_bookmark" }}"
      role="button"
      data-controller="ajax"
-     data-ajax-redirect="none"
+     data-ajax-redirect-value="none"
      data-turbolinks="false"
      data-target="toggle.togglable"
      data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
@@ -14,7 +14,7 @@
      href="{{ object|resolve_url:"bookmark" }}"
      role="button"
      data-controller="ajax"
-     data-ajax-redirect="none"
+     data-ajax-redirect-value="none"
      data-turbolinks="false"
      data-target="toggle.togglable"
      data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>

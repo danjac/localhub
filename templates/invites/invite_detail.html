@@ -19,13 +19,13 @@
   <button type="submit"
           data-controller="ajax"
           data-action="ajax#post"
-          data-ajax-url="{% url 'invites:accept' invite.id %}"
+          data-ajax-url-value="{% url 'invites:accept' invite.id %}"
           class="btn btn-primary">{% trans "Accept" %}</button>
 
   <button type="submit"
           data-controller="ajax"
           data-action="ajax#post"
-          data-ajax-url="{% url 'invites:reject' invite.id %}"
+          data-ajax-url-value="{% url 'invites:reject' invite.id %}"
           class="btn btn-secondary">{% trans "Reject" %}</button>
 </form>
 
