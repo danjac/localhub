@@ -19,6 +19,8 @@ export default class extends ApplicationController {
     toggle: elements to show/hide depending on collapsable state
   */
   static targets = ['container', 'toggle'];
+  static classes = ['collapsed'];
+  static values = { collapsed: Boolean };
 
   connect() {
     this.check();
@@ -42,7 +44,7 @@ export default class extends ApplicationController {
   }
 
   toggle(event) {
-    if (this.isCollapsable) {
+    if (this.collapsedValue) {
       event.preventDefault();
       event.stopPropagation();
       this.removeCollapsable();
@@ -50,24 +52,18 @@ export default class extends ApplicationController {
   }
 
   removeCollapsable() {
-    classList.remove(this.containerTarget, this.collapsableClass);
+    classList.remove(this.containerTarget, this.collapsedClass);
     this.toggleTargets.forEach((el) => el.classList.add('hidden'));
     this.observer.disconnect(this.containerTarget);
+    this.collapsedValue = false;
   }
 
   makeCollapsable(height) {
     if (height > MAX_HEIGHT && !this.isCollapsable) {
-      classList.add(this.containerTarget, this.collapsableClass);
+      classList.add(this.containerTarget, this.collapsedClass);
       this.containerTarget.style.maxHeight = MAX_HEIGHT;
       this.toggleTargets.forEach((target) => target.classList.remove('hidden'));
+      this.collapsedValue = true;
     }
-  }
-
-  get isCollapsable() {
-    return this.containerTarget.classList.contains('collapsable');
-  }
-
-  get collapsableClass() {
-    return this.data.get('class') + ' collapsable';
   }
 }
