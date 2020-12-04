@@ -21,10 +21,10 @@
 {# client-side #}
 <div class="flex justify-center hidden"
      data-controller="toast">
-  <div data-target="toast.container"
+  <div data-toast-target="container"
        class="fixed z-50 w-4/5 lg:w-1/3 flex items-center p-3 rounded shadow-xl message">
     <div class="mx-auto text-center"
-         data-target="toast.message"></div>
+         data-toast-target="message"></div>
     <button data-action="toast#dismiss"
             class="float-right">
       <i class="fa fa-times-circle"></i>
