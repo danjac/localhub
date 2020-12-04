@@ -8,11 +8,11 @@
      class="{{ css_class }}"
      {% endif %}
      data-controller="hovercard"
-     data-hovercard-url="{% url 'users:preview' profile.username %}"
-     data-hovercard-object-url="{{ object_url }}"
+     data-hovercard-url-value="{% url 'users:preview' profile.username %}"
+     data-hovercard-object-url-value="{{ object_url }}"
      data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
   <div class="inline-block hidden"
-       data-target="hovercard.container"></div>
+       data-hovercard-target="container"></div>
   <a class="truncate text-sm"
      href="{{ object_url }}">@{{ profile.username }}</a>
 </div>

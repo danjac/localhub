@@ -12,6 +12,7 @@ const cache = {};
 
 export default class extends ApplicationController {
   static targets = ['container'];
+  static values = { url: String, objectUrl: String };
 
   connect() {
     this.source = null;
@@ -19,9 +20,9 @@ export default class extends ApplicationController {
   }
 
   async show(event) {
-    const url = this.data.get('url');
-    const objectUrl = this.data.get('object-url');
-    const cacheKey = objectUrl ? url + '|' + objectUrl : url;
+    const cacheKey = this.hasObjectUrlValue
+      ? this.urlValue + '|' + this.objectUrlValue
+      : this.urlValue;
 
     let html = cache[cacheKey];
 
@@ -39,12 +40,15 @@ export default class extends ApplicationController {
 
     const params = {};
 
-    if (objectUrl) {
-      params['object_url'] = objectUrl;
+    if (this.hasObjectUrl) {
+      params['object_url'] = this.objectUrlValue;
     }
 
     try {
-      const response = await axios.get(url, { cancelToken: this.source.token, params });
+      const response = await axios.get(this.urlValue, {
+        cancelToken: this.source.token,
+        params,
+      });
       event.preventDefault();
       cache[cacheKey] = html = response.data;
       this.render(html);
