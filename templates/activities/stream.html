@@ -21,7 +21,7 @@
   {% for item in notifications %}
   {% notification item %}
   <div class="notification flex mb-3{% if not forloop.first %} hidden{% endif %}"
-       data-target="notifications.notification">
+       data-notifications-target="notification">
     <div class="mx-auto text-center">
       {{ notification_content }}
     </div>

@@ -10,6 +10,14 @@ let registration = null;
 
 export default class extends ApplicationController {
   static targets = ['subscribe', 'unsubscribe'];
+  static values = {
+    publicKey: String,
+    serviceWorkerUrl: String,
+    subscribeUrl: String,
+    subscribeMessage: String,
+    unsubscribeUrl: String,
+    unsubscribeMessage: String,
+  };
 
   connect() {
     // check browser can do notifications, and permission OK.
@@ -24,8 +32,6 @@ export default class extends ApplicationController {
   }
 
   registerServiceWorker() {
-    const url = this.data.get('service-worker-url');
-
     const onRegister = (swRegistration) => {
       registration = swRegistration;
       return registration.pushManager.getSubscription().then((subscription) => {
@@ -37,28 +43,30 @@ export default class extends ApplicationController {
       });
     };
 
-    return navigator.serviceWorker.getRegistration(url).then((swRegistration) => {
-      if (swRegistration) {
-        console.log('found existing service worker');
-        return onRegister(swRegistration);
-      }
-      console.log('registering new service worker');
-      return navigator.serviceWorker.register(url).then(onRegister);
-    });
+    return navigator.serviceWorker
+      .getRegistration(this.serviceWorkerValue)
+      .then((swRegistration) => {
+        if (swRegistration) {
+          console.log('found existing service worker');
+          return onRegister(swRegistration);
+        }
+        console.log('registering new service worker');
+        return navigator.serviceWorker.register(url).then(onRegister);
+      });
   }
 
   subscribe(event) {
     event.preventDefault();
     const options = {
-      applicationServerKey: urlB64ToUint8Array(this.data.get('public-key')),
+      applicationServerKey: urlB64ToUint8Array(this.publicKeyValue),
       userVisibleOnly: true,
     };
     registration.pushManager.subscribe(options).then((subscription) => {
       this.showUnsubscribe();
       return this.syncWithServer(
         subscription,
-        this.data.get('subscribe-url'),
-        'subscribe-message'
+        this.subscribeUrlValue,
+        this.subscribeMessageValue
       );
     });
   }
@@ -74,8 +82,8 @@ export default class extends ApplicationController {
           .then(
             this.syncWithServer(
               subscription,
-              this.data.get('unsubscribe-url'),
-              'unsubscribe-message'
+              this.unsubscribeUrlValue,
+              this.unsubscribeMessageValue
             )
           )
       );
@@ -89,8 +97,8 @@ export default class extends ApplicationController {
         },
       })
       .then(() => {
-        if (message && this.data.has(message)) {
-          this.toaster.info(this.data.get(message));
+        if (message) {
+          this.toaster.info(message);
         }
       });
   }
