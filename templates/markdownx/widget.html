@@ -11,24 +11,25 @@
   <div class="tabs mb-3 text-sm">
     <button class="tab-item"
             type="button"
-            data-target="tabs.tab"
+            data-tabs-target="tab"
             data-action="tabs#select"
             data-tab="editor">{% trans "Edit" %}</button>
     <button class="tab-item"
             type="button"
             disabled
-            data-target="tabs.tab markdown.previewTab"
+            data-tabs-target="tab"
+            data-markdown-target="previewTab"
             data-action="tabs#select"
             data-tab="preview">{% trans "Preview" %}</button>
     <button class="tab-item"
             type="button"
-            data-target="tabs.tab"
+            data-tabs-target="tab"
             data-action="tabs#select"
             data-tab="guide">
       {% trans "Help" %}</button>
   </div>
   <div class="-mb-px mb-3"
-       data-target="tabs.pane"
+       data-tabs-target="pane"
        data-tab="editor">
     <div class="text-xs flex flex-wrap items-center mb-3">
 
@@ -84,7 +85,7 @@
           {% trans "Emoji..." %}
         </button>
         <ul class="hidden dropdown-menu mt-1 overflow-y-scroll h-32"
-            data-target="dropdown.menu">
+            data-dropdown-target="menu">
           {% common_emojis as emoji_categories %}
           {% for category in emoji_categories %}
           <li class="border-b border-gray-800 pb-1 {% if not forloop.first %} mt-3{% endif %} font-semibold">{{ category.name }}</li>
@@ -112,9 +113,10 @@
     </div>
 
     <ul class="hidden typeahead-menu text-sm"
-        data-target="typeahead.selector"></ul>
+        data-typeahead-target="selector"></ul>
 
-    <textarea data-target="markdown.textarea typeahead.input"
+    <textarea data-markdown-target="textarea"
+              data-typeahead-target="input"
               data-action="keyup->typeahead#keyup keydown->typeahead#keydown keyup->markdown#togglePreviewTab"
               name="{{ widget.name }}"
               {% include "django/forms/widgets/attrs.html" %}>{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
@@ -125,10 +127,10 @@
     </p>
   </div>
   <div class="hidden markdownx-preview"
-       data-target="tabs.pane"
+       data-tabs-target="pane"
        data-tab="preview"></div>
   <div class="hidden"
-       data-target="tabs.pane"
+       data-tabs-target="pane"
        data-tab="guide">
     <table class="table-fixed text-sm block whitespace-nowrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
       <thead>

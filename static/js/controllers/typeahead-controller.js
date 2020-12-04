@@ -13,22 +13,10 @@ import ApplicationController from './application-controller';
 export default class extends ApplicationController {
   /*
   Adds typeahead functionality to form input for handling tag and user mentions.
-
-  actions:
-    select: when a specific selection is clicked
-    keydown: key trigger to check if a selection character has been entered (# or @)
-
-  data:
-    tag-search-url: AJAX endpoint to fetch tag selections. If not included then
-      tag selections will not be enabled.
-     mention-search-url: AJAX endpoint to fetch mention selections. If not included then
-      mention selections will not be enabled.
-
-  targets:
-    selector: menu element used to contain HTML returned from endpoints.
-    input: <input> or <textarea>
     */
   static targets = ['selector', 'input'];
+  static classes = ['selected'];
+  static values = { config: Object };
 
   connect() {
     document.addEventListener('keydown', (event) => {
@@ -39,8 +27,7 @@ export default class extends ApplicationController {
     document.addEventListener('click', () => {
       this.closeSelector();
     });
-
-    this.config = JSON.parse(this.data.get('config'));
+    this.urls = this.configValue.urls;
   }
 
   select(event) {
@@ -66,8 +53,8 @@ export default class extends ApplicationController {
 
     let matched = false;
 
-    for (let i = 0; i < this.config.length; ++i) {
-      const { url, key } = this.config[i];
+    for (let i = 0; i < this.urls.length; ++i) {
+      const { url, key } = this.urls[i];
       if (this.handleTypeahead(url, key)) {
         matched = true;
         break;
@@ -227,9 +214,5 @@ export default class extends ApplicationController {
 
   get selectorOpen() {
     return !this.selectorTarget.classList.contains('hidden');
-  }
-
-  get selectedClass() {
-    return this.data.get('selectedClass') + ' selected';
   }
 }

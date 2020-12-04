@@ -30,7 +30,7 @@ class TypeaheadMixin:
         self.typeahead_configs = typeahead_configs or self.typeahead_configs
         self.attrs.update(
             {
-                "data-target": "typeahead.input",
+                "data-typeahead-target": "input",
                 "data-action": "keyup->typeahead#keyup keydown->typeahead#keydown",
                 "autocomplete": "off",
             }
@@ -40,7 +40,12 @@ class TypeaheadMixin:
         data = super().get_context(name, value, attrs)
         # convert to JSON for the JS to handle
         data["typeahead_config"] = json.dumps(
-            [{"key": key, "url": str(url)} for (key, url) in self.typeahead_configs]
+            {
+                "urls": [
+                    {"key": key, "url": str(url)}
+                    for (key, url) in self.typeahead_configs
+                ]
+            }
         )
         return data
 

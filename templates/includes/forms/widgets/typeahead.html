@@ -4,8 +4,8 @@
 {% load i18n %}
 <div data-controller="typeahead"
      data-typeahead-selected-class="bg-gray-500 text-white"
-     data-typeahead-config="{{ typeahead_config }}">
+     data-typeahead-config-value="{{ typeahead_config }}">
   <ul class="hidden typeahead-menu mt-1 text-sm"
-      data-target="typeahead.selector"></ul>
+      data-typeahead-target="selector"></ul>
   {% include "django/forms/widgets/input.html" %}
 </div>
