@@ -27,7 +27,7 @@ export default class extends ApplicationController {
     document.addEventListener('click', () => {
       this.closeSelector();
     });
-    this.urls = this.configValue.urls;
+    this.urls = this.configValue.urls || [];
   }
 
   select(event) {

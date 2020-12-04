@@ -8,9 +8,14 @@ import { Events } from '~/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
+  static values = {
+    changed: Boolean,
+    unload: String,
+  };
+
   connect() {
     this.formElements.forEach((element) =>
-      element.addEventListener('change', () => this.data.set('changed', true))
+      element.addEventListener('change', () => (this.changedValue = true))
     );
 
     this.bus.sub(Events.FORM_FETCHING, () => this.disableFormControls());
@@ -18,24 +23,23 @@ export default class extends ApplicationController {
   }
 
   unload(event) {
-    const unloadMsg = this.data.get('unload');
-    if (this.data.has('changed') && unloadMsg) {
-      if (event.type === 'turbolinks:before-visit') {
-        if (!window.confirm(unloadMsg)) {
-          event.preventDefault();
-          return false;
-        }
-        return true;
-      }
-      event.returnValue = unloadMsg;
-      return event.returnValue;
+    if (!this.changedValue || !this.hasUnloadValue) {
+      return true;
     }
-    return true;
+    if (event.type === 'turbolinks:before-visit') {
+      if (!window.confirm(this.unloadValue)) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+    event.returnValue = unloadMsg;
+    return event.returnValue;
   }
 
   submit(event) {
     event.preventDefault();
-    this.data.delete('changed');
+    this.changedValue = false;
 
     const method = this.element.getAttribute('method');
     const url = this.element.getAttribute('action');
@@ -55,7 +59,7 @@ export default class extends ApplicationController {
   }
 
   async handleSubmit(method, url, data) {
-    if (this.data.has('disabled')) {
+    if (this.hasDisabledValue) {
       return;
     }
 
@@ -104,12 +108,12 @@ export default class extends ApplicationController {
 
   disableFormControls() {
     window.scrollTo(0, 0);
-    this.data.set('disabled', true);
+    this.disabledValue = true;
     this.formElements.forEach((el) => el.setAttribute('disabled', true));
   }
 
   enableFormControls() {
-    this.data.delete('disabled');
+    this.disabledValue = false;
     this.formElements.forEach((el) => el.removeAttribute('disabled'));
   }
 

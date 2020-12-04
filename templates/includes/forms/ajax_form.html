@@ -9,7 +9,7 @@
 data-controller="form{% block form_extra_controllers %}{% endblock %}"
 {% endblock %}
 {% block form_unload %}
-data-form-unload="{% trans 'Are you sure you want to leave this page? All your changes will be lost.' %}"
+data-form-unload-value="{% trans 'Are you sure you want to leave this page? All your changes will be lost.' %}"
 {% endblock %}
 {% block form_action %}
 data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload{% block form_extra_actions %}{% endblock %}"
