@@ -115,7 +115,7 @@
           {% trans "Actions..." %}<i class="icon icon-caret"></i>
         </button>
         <div class="dropdown-menu mt-1 hidden"
-             data-target="dropdown.menu">
+             data-dropdown-target="menu">
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
           {% include "comments/includes/like.html" with object=comment has_liked=comment.has_liked %}

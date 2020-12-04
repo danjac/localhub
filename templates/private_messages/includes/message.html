@@ -46,7 +46,7 @@
         </button>
 
         <div class="dropdown-menu hidden mt-1"
-             data-target="dropdown.menu">
+             data-dropdown-target="menu">
 
           {% if is_recipient and not message.read %}
           <a href="{% url 'private_messages:message_mark_read' message.id %}"

@@ -62,7 +62,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
         {% trans "Actions..." %}<i class="icon icon-caret"></i>
       </button>
       <div class="dropdown-menu mt-1 hidden"
-           data-target="dropdown.menu">
+           data-dropdown-target="menu">
 
         {% if can_create_message and not is_blocked %}
         <a class="dropdown-menu-item"

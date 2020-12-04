@@ -16,7 +16,7 @@
     {% trans "Actions..." %}
   </button>
   <div class="dropdown-menu mt-1 hidden"
-       data-target="dropdown.menu">
+       data-dropdown-target="menu">
 
     {% has_perm "activities.pin_activity" user object as can_pin %}
 

@@ -24,7 +24,7 @@
       {% trans "More Settings..." %}
     </button>
     <div class="dropdown-menu mt-1 hidden"
-         data-target="dropdown.menu">
+         data-dropdown-target="menu">
       {% has_perm "communities.manage_community" user community as can_manage_community %}
 
       {% if can_manage_community %}
