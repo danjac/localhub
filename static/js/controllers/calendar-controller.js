@@ -32,11 +32,18 @@ export default class extends ApplicationController {
     'timeInput',
   ];
 
+  static values = {
+    listen: String,
+    notify: String,
+    defaultTime: String,
+    startDate: String,
+  };
+
   connect() {
-    if (this.data.has('listen')) {
+    if (this.hasListenValue) {
       this.bus.sub(EVENT_NOTIFY_ON_UPDATE, ({ detail: { startDate, notify } }) => {
-        if (notify === this.data.get('listen')) {
-          this.data.set('startDate', startDate);
+        if (notify === this.listenValue) {
+          this.startDateValue = startDate;
         }
       });
     }
@@ -52,8 +59,8 @@ export default class extends ApplicationController {
       let date;
       if (this.selectedDate) {
         date = this.selectedDate;
-      } else if (this.data.has('startDate')) {
-        date = parse(this.data.get('startDate'), DATE_FORMAT, new Date());
+      } else if (this.hasStartDateValue) {
+        date = parse(this.startDateValue, DATE_FORMAT, new Date());
       } else {
         date = new Date();
       }
@@ -82,15 +89,15 @@ export default class extends ApplicationController {
     );
     this.dateInputTarget.value = selectedDate;
     this.calendarTarget.classList.add('hidden');
-    if (this.data.has('notify')) {
+    if (this.hasNotifyValue) {
       this.bus.pub(EVENT_NOTIFY_ON_UPDATE, {
         startDate: selectedDate,
-        notify: this.data.get('notify'),
+        notify: this.notifyValue,
       });
     }
     if (this.timeInputTarget.value === '') {
-      if (this.data.has('defaultTime')) {
-        this.timeInputTarget.value = this.data.get('defaultTime');
+      if (this.hasDefaultTimeValue) {
+        this.timeInputTarget.value = this.defaultTimeValue;
       }
       this.timeInputTarget.focus();
     }

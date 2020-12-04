@@ -99,7 +99,7 @@ class CalendarWidget(forms.SplitDateTimeWidget):
         date_attrs.update(
             {
                 "data-action": "click->calendar#toggle",
-                "data-target": "calendar.dateInput",
+                "data-calendar-target": "dateInput",
                 "autocomplete": "off",
                 "placeholder": _("DD/MM/YYYY"),
             }
@@ -115,7 +115,7 @@ class CalendarWidget(forms.SplitDateTimeWidget):
             {
                 "autocomplete": "off",
                 "placeholder": _("HH:MM"),
-                "data-target": "calendar.timeInput",
+                "data-calendar-target": "timeInput",
                 "type": "time",
             }
         )

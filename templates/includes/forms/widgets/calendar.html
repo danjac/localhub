@@ -3,13 +3,13 @@
 {% load i18n %}
 <div {% spaceless %}data-controller="calendar"
      {% if default_time %}
-     data-calendar-default-time="{{ default_time }}"
+     data-calendar-default-time-value="{{ default_time }}"
      {% endif %}
      {% if listen %}
-     data-calendar-listen="{{ listen }}"
+     data-calendar-listen-value="{{ listen }}"
      {% endif %}
      {% if notify %}
-     data-calendar-notify="{{ notify }}"
+     data-calendar-notify-value="{{ notify }}"
      {% endif %}{% endspaceless %}>
 
   <div class="flex flex-wrap">
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <template data-target="calendar.activeTemplate">
+  <template data-calendar-target="activeTemplate">
     <div class="calendar-item text-xs cursor-pointer"
          data-action="click->calendar#select">
       <div class="h-12 md:h-24 p-2 tracking-tight border-r border-b border-gray-500 justify-center align-middle">
@@ -31,13 +31,14 @@
     </div>
   </template>
 
-  <template data-target="calendar.inactiveTemplate">
+  <template data-calendar-target="inactiveTemplate">
     <div class="calendar-item text-xs">
       <div class="h-12 md:h-24 p-2 border-b border-r border-gray-500"></div>
     </div>
   </template>
 
-  <div class="border-l border-t border-gray-500 min-w-100 hidden mt-2" data-target="calendar.calendar">
+  <div class="border-l border-t border-gray-500 min-w-100 hidden mt-2"
+       data-calendar-target="calendar">
 
     <div class="flex items-center justify-between bg-gray-200 px-4 py-2 border-r border-b border-gray-500">
       <a class="text-sm text-black"
@@ -45,7 +46,8 @@
          href="#">
         {% trans "Previous" %}
       </a>
-      <div class="font-semibold" data-target="calendar.currentMonth">{{ current_month|date:"F Y" }}</div>
+      <div class="font-semibold"
+           data-calendar-target="currentMonth">{{ current_month|date:"F Y" }}</div>
       <a class="text-sm text-black"
          data-action="calendar#nextMonth"
          href="#">
@@ -63,7 +65,7 @@
     </div>
 
     <div class="flex flex-wrap"
-         data-target="calendar.days">
+         data-calendar-target="days">
     </div>
 
   </div>
