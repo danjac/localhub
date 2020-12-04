@@ -6,21 +6,17 @@ import ApplicationController from './application-controller';
 const DEFAULT_ZOOM = 13;
 
 export default class extends ApplicationController {
-  /*
-  Inserts an OpenStreetMap into the element on page load.
-
-  data:
-    latitude
-    longitude
-    zoom: zoom level (default: 13)
-
-  */
+  static values = {
+    latitude: Number,
+    longitude: Number,
+    zoomLevel: Number,
+  };
   connect() {
     // Leaflet library loaded in CDN
     const L = window.L;
 
-    const coords = [this.latitude, this.longitude];
-    const map = L.map(this.element.id).setView(coords, this.defaultZoom);
+    const coords = [this.latitudeValue, this.longitudeValue];
+    const map = L.map(this.element.id).setView(coords, this.defaultZoomValue || 13);
 
     L.tileLayer(this.tileLayer, {
       attribution:
@@ -39,17 +35,5 @@ export default class extends ApplicationController {
 
   get tileLayer() {
     return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  }
-
-  get defaultZoom() {
-    return parseInt(this.data.get('zoom') || DEFAULT_ZOOM, 10);
-  }
-
-  get latitude() {
-    return parseFloat(this.data.get('latitude'));
-  }
-
-  get longitude() {
-    return parseFloat(this.data.get('longitude'));
   }
 }
