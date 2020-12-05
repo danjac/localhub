@@ -74,7 +74,7 @@ export default class extends ApplicationController {
     if (!this.hasContainerTarget) {
       const div = document.createElement('div');
       div.classList.add('inline-block');
-      div.setAttribute('data-target', `${this.identifier}.container`);
+      div.setAttribute('data-hover-card-target', 'container');
       this.element.appendChild(div);
     }
     this.containerTarget.innerHTML = html;

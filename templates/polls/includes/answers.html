@@ -26,7 +26,6 @@
        {% if can_vote %}
        data-action="click->ajax#post"
        data-ajax-url-value="{{ vote_url }}"
-       data-target="ajax.button"
        {% endif %}>
     {% if answer.num_votes %}
     <div class="{% cycle 'bg-indigo-800' 'bg-green-800' 'bg-teal-800' 'bg-blue-800' %} p-1 font-semibold leading-none text-white text-center rounded"
