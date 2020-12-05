@@ -12,18 +12,10 @@ export default class extends ApplicationController {
   /*
   Used with a client rendered alert element that "fades out" after a few seconds
   after activation. Should be a single element on the page.
-
-  data:
-    remove-after: number of milliseconds (default: 5000)
-
-  targets:
-    message: container element for message
-
-  actions:
-    dismiss
   */
 
   static targets = ['message', 'container'];
+  static values = { removeAfter: Number, type: String };
 
   connect() {
     this.bus.sub(Events.TOAST_MESSAGE, ({ detail: { type, message } }) => {
@@ -33,7 +25,12 @@ export default class extends ApplicationController {
 
   showMessage(type, message) {
     this.messageTarget.innerText = message;
+    // ensure any previous class is removed
+    if (this.hasTypeValue) {
+      this.element.classList.remove(this.typeValue);
+    }
     this.containerTarget.classList.add(type);
+    this.typeValue = type;
 
     this.element.classList.remove('hidden');
     maximizeZIndex(this.element);
@@ -41,7 +38,7 @@ export default class extends ApplicationController {
     this.timeout = setTimeout(() => {
       this.dismiss();
       clearTimeout(this.timeout);
-    }, this.removeAfter);
+    }, this.removeAfterValue || TIMEOUT);
   }
 
   dismiss() {
@@ -50,9 +47,5 @@ export default class extends ApplicationController {
       // reset opacity for next message
       this.element.style.opacity = 1;
     });
-  }
-
-  get removeAfter() {
-    return parseInt(this.data.get('remove-after') || TIMEOUT, 10);
   }
 }
