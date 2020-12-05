@@ -77,7 +77,7 @@ class UserStreamView(BaseUserActivityStreamView):
 
     def get_ordering(self):
         if self.is_current_user:
-            return ("-published", "-created")
+            return ("-created", "-published")
         return "-published"
 
     def filter_queryset(self, queryset):
