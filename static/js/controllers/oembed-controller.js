@@ -13,18 +13,18 @@ export default class extends ApplicationController {
   element is removed.
 
   */
+  static classes = ['video', 'image'];
+
   connect() {
-    const videoClass = this.data.get('video-class');
     const embedded = this.element.querySelector('iframe, video, audio');
 
-    if (videoClass && embedded && !this.element.querySelector('script')) {
-      classList.add(embedded, videoClass);
+    if (this.hasVideoClass && embedded && !this.element.querySelector('script')) {
+      classList.add(embedded, this.videoClass);
     } else {
       const images = this.element.querySelectorAll('img');
-      const imageClass = this.data.get('image-class');
-      if (imageClass && images.length > 0) {
+      if (this.hasImageClass && images.length > 0) {
         images.forEach((el) => {
-          classList.add(el, imageClass);
+          classList.add(el, this.imageClass);
         });
       } else {
         this.element.remove();
