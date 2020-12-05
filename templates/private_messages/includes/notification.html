@@ -6,7 +6,7 @@
 {% blocktrans %}
 <a href="{{ actor_url }}"
    data-controller="hovercard"
-   data-hovercard-url="{{ actor_preview_url }}"
+   data-hovercard-url-value="{{ actor_preview_url }}"
    data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
   {{ actor_display }}</a> has replied to your <a href="{{ object_url }}">message</a>.
 {% endblocktrans %}
@@ -14,7 +14,7 @@
 {% blocktrans %}
 <a href="{{ actor_url }}"
    data-controller="hovercard"
-   data-hovercard-url="{{ actor_preview_url }}"
+   data-hovercard-url-value="{{ actor_preview_url }}"
    data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
   {{ actor_display }}</a> has sent you a <a href="{{ object_url }}">follow-up</a> to one of
 their messages.
@@ -23,7 +23,7 @@ their messages.
 {% blocktrans %}
 <a href="{{ actor_url }}"
    data-controller="hovercard"
-   data-hovercard-url="{{ actor_preview_url }}"
+   data-hovercard-url-value="{{ actor_preview_url }}"
    data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
   {{ actor_display }}</a> has sent you a <a href="{{ object_url }}">message</a>.
 {% endblocktrans %}

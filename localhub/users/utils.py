@@ -65,7 +65,7 @@ def get_preview_attrs(username):
         ("data-action", "mouseenter->hovercard#show mouseleave->hovercard#hide"),
         ("data-controller", "hovercard"),
         (
-            "data-hovercard-url",
+            "data-hovercard-url-value",
             reverse("users:preview", args=[slugify_unicode(username)]),
         ),
     ]
