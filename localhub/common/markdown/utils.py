@@ -48,7 +48,11 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
 
 ALLOWED_ATTRIBUTES = bleach.ALLOWED_ATTRIBUTES.copy()
 ALLOWED_ATTRIBUTES.update(
-    {"img": ["alt", "src"], "a": ["rel", "target", "href",], "span": ["data-target"]}
+    {
+        "img": ["alt", "src"],
+        "a": ["rel", "target", "href",],
+        "span": ["data-typeahead-target", "data-hovercard-target"],
+    }
 )
 
 ADDITIONAL_TLDS = """app audio auto bar bargains best bid bike blog bot
