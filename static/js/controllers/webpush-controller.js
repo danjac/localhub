@@ -51,7 +51,9 @@ export default class extends ApplicationController {
           return onRegister(swRegistration);
         }
         console.log('registering new service worker');
-        return navigator.serviceWorker.register(url).then(onRegister);
+        return navigator.serviceWorker
+          .register(this.serviceWorkerUrlValue)
+          .then(onRegister);
       });
   }
 
@@ -116,7 +118,7 @@ export default class extends ApplicationController {
   }
 
   checkConfiguration() {
-    if (!this.data.has('public-key')) {
+    if (!this.hasPublicKeyValue) {
       throw new Error('pubKey not available');
     }
   }
