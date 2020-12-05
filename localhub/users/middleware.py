@@ -18,6 +18,8 @@ class UserLocaleMiddleware:
         response = self.get_response(request)
         if request.user.is_authenticated:
             response.set_cookie(
-                settings.LANGUAGE_COOKIE_NAME, request.user.language, samesite="Lax"
+                settings.LANGUAGE_COOKIE_NAME,
+                request.user.language,
+                samesite=settings.LANGUAGE_COOKIE_SAMESITE,
             )
         return response
