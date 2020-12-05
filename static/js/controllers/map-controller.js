@@ -9,14 +9,16 @@ export default class extends ApplicationController {
   static values = {
     latitude: Number,
     longitude: Number,
-    zoomLevel: Number,
+    zoom: Number,
   };
+
   connect() {
     // Leaflet library loaded in CDN
     const L = window.L;
 
     const coords = [this.latitudeValue, this.longitudeValue];
-    const map = L.map(this.element.id).setView(coords, this.defaultZoomValue || 13);
+
+    const map = L.map(this.element.id).setView(coords, this.zoomValue || DEFAULT_ZOOM);
 
     L.tileLayer(this.tileLayer, {
       attribution:
@@ -29,7 +31,7 @@ export default class extends ApplicationController {
     const group = new L.featureGroup([marker]);
     L.marker(coords).addTo(map);
     map.fitBounds(group.getBounds());
-    map.setZoom(this.defaultZoom);
+    map.setZoom(this.zoomValue);
     map.scrollWheelZoom.disable();
   }
 
