@@ -10,20 +10,20 @@ export default class extends ApplicationController {
   static values = {
     url: String,
     redirect: String,
-    confirm: Boolean,
+    confirm: String,
     replace: Boolean,
     remove: Boolean,
   };
 
   get(event) {
-    this.dispatch('GET', event);
+    this.sendAjax('GET', event);
   }
 
   post(event) {
-    this.dispatch('POST', event);
+    this.sendAjax('POST', event);
   }
 
-  async dispatch(method, event) {
+  async sendAjax(method, event) {
     event.preventDefault();
 
     if (this.hasConfirmValue && !window.confirm(this.confirmValue)) {
