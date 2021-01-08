@@ -1,5 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
+# Standard Library
+import http
 
 # Django
 from django.urls import reverse
@@ -101,7 +103,7 @@ class TestMessageDeleteView:
         response = client.get(
             reverse("private_messages:message_delete", args=[message.id])
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
 
 class TestMessageMarkReadView:
@@ -113,7 +115,7 @@ class TestMessageMarkReadView:
         response = client.post(
             reverse("private_messages:message_mark_read", args=[message.id])
         )
-        assert response.url == message.get_absolute_url()
+        assert response.status_code == http.HTTPStatus.OK
         message.refresh_from_db()
         assert message.read is not None
 
@@ -137,7 +139,7 @@ class TestMessageDetailView:
             community=member.community, sender=member.member, recipient=recipient,
         )
         response = client.get(message.get_absolute_url())
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         message.refresh_from_db()
         assert message.read is None
 
@@ -147,7 +149,7 @@ class TestMessageDetailView:
             community=member.community, recipient=member.member, sender=sender
         )
         response = client.get(message.get_absolute_url())
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         message.refresh_from_db()
         assert message.read is not None
 
@@ -200,7 +202,7 @@ class TestMessageFollowUpView:
         response = client.get(
             reverse("private_messages:message_follow_up", args=[parent.id])
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
 
 class TestMessageReplyView:
@@ -242,7 +244,7 @@ class TestMessageReplyView:
         response = client.get(
             reverse("private_messages:message_reply", args=[parent.id])
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
 
 class TestMessageCreateView:
@@ -303,7 +305,7 @@ class TestMessageRecipientCreateView:
                 "private_messages:message_create_recipient", args=[recipient.username]
             )
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
 
 class TestMessageBookmarkView:
@@ -315,7 +317,7 @@ class TestMessageBookmarkView:
         response = client.post(
             reverse("private_messages:message_bookmark", args=[message.id])
         )
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         bookmark = Bookmark.objects.get()
         assert bookmark.user == member.member
 
@@ -332,5 +334,5 @@ class TestMessageRemoveBookmarkView:
         response = client.post(
             reverse("private_messages:message_remove_bookmark", args=[message.id]),
         )
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert Bookmark.objects.count() == 0
