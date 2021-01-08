@@ -39,9 +39,6 @@ class BaseJoinRequestActionView(
     def object(self):
         return self.get_object()
 
-    def get_permission_object(self):
-        return self.object
-
 
 class JoinRequestAcceptView(BaseJoinRequestActionView):
     def get_queryset(self):
