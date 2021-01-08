@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<div class="mt-4 text-sm">
+
+  <div class="font-semibold mb-3">{{ answer }}</div>
+  {% if can_vote %}
+  <form method="post"
+        action="{% url 'polls:vote' answer.id %}">
+
+    {% csrf_token %}
+    {% endif %}
+    <button class="w-full bg-gray-200 {% if answer.num_votes %} p-0{% else %} p-3{% endif %}{% if can_vote %} cursor-pointer{% endif %}">
+      {% if answer.num_votes %}
+      <div class="{% cycle 'bg-indigo-800' 'bg-green-800' 'bg-teal-800' 'bg-blue-800' %} p-1 font-semibold leading-none text-white text-center rounded"
+           style="width: {% widthratio answer.num_votes object.total_num_votes 100 %}%">
+        {% blocktrans count counter=answer.num_votes %}1 vote{% plural %}{{ counter }} votes{% endblocktrans %}
+      </div>
+      {% endif %}
+    </button>
+    {% if can_vote %}
+  </form>
+  {% endif %}
+</div>

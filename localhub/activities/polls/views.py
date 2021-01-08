@@ -5,11 +5,13 @@
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
+from django.views.generic import View
 from django.views.generic.base import TemplateResponseMixin
+from django.views.generic.detail import SingleObjectMixin
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
+from turbo_response import TurboFrame
 
 # Localhub
 from localhub.activities.views.generic import (
@@ -18,7 +20,6 @@ from localhub.activities.views.generic import (
     ActivityListView,
     ActivityUpdateView,
 )
-from localhub.common.views import SuccessActionView
 from localhub.communities.mixins import CommunityRequiredMixin
 
 # Local
@@ -34,7 +35,8 @@ class AnswerVoteView(
     TemplateResponseMixin,
     PermissionRequiredMixin,
     CommunityRequiredMixin,
-    SuccessActionView,
+    SingleObjectMixin,
+    View,
 ):
     """
     Returns HTTP fragment in AJAX response when user has voted.
@@ -43,7 +45,9 @@ class AnswerVoteView(
     permission_required = "polls.vote"
     template_name = "polls/includes/answers.html"
 
-    success_message = _("Thanks for voting!")
+    @cached_property
+    def object(self):
+        return self.get_object()
 
     def get_permission_object(self):
         return self.object.poll
@@ -52,18 +56,6 @@ class AnswerVoteView(
         return Answer.objects.filter(
             poll__community=self.request.community
         ).select_related("poll", "poll__community")
-
-    def get_success_response(self):
-        # reload poll with revised answers and total count
-        # and return HTML fragment
-        return self.render_to_response(
-            {
-                "object": get_object_or_404(
-                    Poll.objects.with_answers(), pk=self.object.poll_id
-                ),
-                "object_type": "poll",
-            }
-        )
 
     def post(self, request, *args, **kwargs):
         has_voted = False
@@ -79,7 +71,18 @@ class AnswerVoteView(
         if not has_voted:
             self.object.poll.notify_on_vote(self.request.user)
 
-        return self.success_response()
+        poll = get_object_or_404(Poll.objects.with_answers(), pk=self.object.poll_id)
+
+        context = {
+            "object": poll,
+            "object_type": "poll",
+        }
+
+        return (
+            TurboFrame(f"poll-answers-{poll.id}")
+            .template("polls/includes/answers.html", context)
+            .response(request)
+        )
 
 
 answer_vote_view = AnswerVoteView.as_view()

@@ -8,11 +8,9 @@
 
 {% block content %}
 {% include "activities/includes/description.html" %}
-<div class="poll-answers"
-     data-controller="ajax"
-     data-ajax-replace-value>
+<turbo-frame id="poll-answers-{{ object.id }}">
   {% include "polls/includes/answers.html" %}
-</div>
+</turbo-frame>
 {% endblock content %}
 
 {% block info %}{% include "polls/includes/info.html" %}{% endblock %}

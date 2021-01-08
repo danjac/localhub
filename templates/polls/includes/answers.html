@@ -5,34 +5,20 @@
 {% load rules %}
 {% load users %}
 
-{% has_perm "polls.vote" user object as can_vote %}
-{% if not can_vote %}
-{% if not object.published %}
-{% dismissable user "poll-vote-public" %}
-{% trans "You can only vote on a poll when it has been made public." %}
-{% enddismissable %}
-{% elif not object.allow_voting %}
-<p class="toast text-center my-2">
-  {% trans "Voting for this poll has been locked." %}
-</p>
-{% endif %}
-{% endif %}
-{% for answer in object.answers.all %}
-{% url 'polls:vote' answer.id as vote_url %}
-<div class="mt-4 text-sm">
-
-  <div class="font-semibold mb-3">{{ answer }}</div>
-  <div class="w-full bg-gray-200 {% if answer.num_votes %} p-0{% else %} p-3{% endif %}{% if can_vote %} cursor-pointer{% endif %}"
-       {% if can_vote %}
-       data-action="click->ajax#post"
-       data-ajax-url-value="{{ vote_url }}"
-       {% endif %}>
-    {% if answer.num_votes %}
-    <div class="{% cycle 'bg-indigo-800' 'bg-green-800' 'bg-teal-800' 'bg-blue-800' %} p-1 font-semibold leading-none text-white text-center rounded"
-         style="width: {% widthratio answer.num_votes object.total_num_votes 100 %}%">
-      {% blocktrans count counter=answer.num_votes %}1 vote{% plural %}{{ counter }} votes{% endblocktrans %}
-    </div>
-    {% endif %}
-  </div>
+<div class="poll-answers">
+  {% has_perm "polls.vote" user object as can_vote %}
+  {% if not can_vote %}
+  {% if not object.published %}
+  {% dismissable user "poll-vote-public" %}
+  {% trans "You can only vote on a poll when it has been made public." %}
+  {% enddismissable %}
+  {% elif not object.allow_voting %}
+  <p class="toast text-center my-2">
+    {% trans "Voting for this poll has been locked." %}
+  </p>
+  {% endif %}
+  {% endif %}
+  {% for answer in object.answers.all %}
+  {% include "polls/includes/answer.html" %}
+  {% endfor %}
 </div>
-{% endfor %}
