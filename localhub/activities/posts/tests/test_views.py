@@ -358,7 +358,7 @@ class TestPostDislikeView:
             community=post.community,
             recipient=post.owner,
         )
-        response = client.post(reverse("posts:dislike", OK=[post.id]),)
+        response = client.post(reverse("posts:dislike", args=[post.id]),)
         assert response.status_code == http.HTTPStatus.OK
         assert Like.objects.count() == 0
 

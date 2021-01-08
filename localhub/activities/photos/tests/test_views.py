@@ -107,7 +107,7 @@ class TestPhotoDislikeView:
             recipient=photo.owner,
         )
         response = client.post(reverse("photos:dislike", args=[photo.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert Like.objects.count() == 0
 
 
