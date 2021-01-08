@@ -1,22 +1,14 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-
 {% load i18n %}
 
-<div data-controller="toggle">
-  <a href="{% url 'events:unattend' object.id %}"
-     role="button"
-     class="dropdown-menu-item line-through{% if not is_attending %} hidden{% endif %}"
-     data-controller="ajax"
-     data-turbo="false"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">{% trans "Attending" %}</a>
-  <a href="{% url 'events:attend' object.id %}"
-     role="button"
-     class="dropdown-menu-item{% if is_attending %} hidden{% endif %}"
-     data-controller="ajax"
-     data-turbo="false"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">{% trans "Attending" %}</a>
-</div>
+<form method="post"
+      action="{% if is_attending %}{% url 'events:unattend' object.id %}{% else %}{% url 'events:attend' object.id %}{% endif %}">
+  {% csrf_token %}
+  {% if is_attending %}
+  <button class="dropdown-menu-item line-through">{% translate "Attending" %}</button>
+  {% else %}
+  <button class="dropdown-menu-item">{% translate "Attending" %}</button>
+  {% endif %}
+</form>

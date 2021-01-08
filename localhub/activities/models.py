@@ -150,7 +150,7 @@ class ActivityQuerySet(
 
         Returns:
             QuerySet
-         """
+        """
         return self.annotate(
             has_reshared=boolean_value(False)
             if user.is_anonymous
@@ -535,8 +535,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
 
     @property
     def indexable_description(self):
-        """Returns default indexable description fields for search trackers.
-        """
+        """Returns default indexable description fields for search trackers."""
         return " ".join(
             [
                 value
@@ -707,8 +706,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
         return reshared
 
     def update_reshares(self):
-        """Sync latest updates with all reshares.
-        """
+        """Sync latest updates with all reshares."""
         self.reshares.update(**self.get_resharable_data())
 
     @transaction.atomic
@@ -770,3 +768,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
         """
         self.get_comments().remove_content_objects()
         return super().delete(*args, **kwargs)
+
+    def get_dom_id(self):
+        """Return a unique HTML-friendly string"""
+        return f"{self._meta.model_name}-{self.pk}"

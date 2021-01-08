@@ -9,12 +9,14 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, DetailView, ListView
+from django.views.generic import DeleteView, DetailView, ListView, View
+from django.views.generic.detail import SingleObjectMixin
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
-from turbo_response import HttpResponseSeeOther
+from turbo_response import HttpResponseSeeOther, TurboFrame, TurboStream
 from turbo_response.views import TurboCreateView, TurboFormView, TurboUpdateView
 
 # Localhub
@@ -23,7 +25,6 @@ from localhub.comments.forms import CommentForm
 from localhub.common.mixins import ParentObjectMixin, SearchMixin
 from localhub.common.pagination import PresetCountPaginator
 from localhub.common.template.defaultfilters import resolve_url
-from localhub.common.views import SuccessActionView
 from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
@@ -298,9 +299,17 @@ class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailVie
 
 
 class BaseActivityActionView(
-    ActivityQuerySetMixin, PermissionRequiredMixin, SuccessActionView
+    ActivityQuerySetMixin, PermissionRequiredMixin, SingleObjectMixin, View
 ):
-    ...
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+    @cached_property
+    def object(self):
+        return self.get_object()
+
+    def get_response(self):
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ActivityReshareView(BaseActivityActionView):
@@ -321,7 +330,11 @@ class ActivityReshareView(BaseActivityActionView):
 
         self.reshare.notify_on_publish()
 
-        return self.success_response()
+        messages.success(
+            request, self.success_message % {"model": self.object._meta.verbose_name}
+        )
+
+        return self.get_response()
 
 
 class ActivityPublishView(BaseActivityActionView):
@@ -335,8 +348,7 @@ class ActivityPublishView(BaseActivityActionView):
         self.object.published = timezone.now()
         self.object.save(update_fields=["published"])
         self.object.notify_on_publish()
-
-        return self.success_response()
+        return self.get_response()
 
 
 activity_publish_view = ActivityPublishView.as_view()
@@ -349,6 +361,9 @@ class ActivityPinView(BaseActivityActionView):
         "The %(model)s has been pinned to the top of the activity stream"
     )
 
+    def get_success_url(self):
+        return self.success_url
+
     def post(self, request, *args, **kwargs):
         for model in get_activity_models():
             model.objects.for_community(community=request.community).update(
@@ -358,7 +373,10 @@ class ActivityPinView(BaseActivityActionView):
         self.object.is_pinned = True
         self.object.save()
 
-        return self.success_response()
+        messages.success(
+            request, self.success_message % {"model": self.object._meta.verbose_name}
+        )
+        return self.get_response()
 
 
 class ActivityUnpinView(BaseActivityActionView):
@@ -368,21 +386,33 @@ class ActivityUnpinView(BaseActivityActionView):
         "The %(model)s has been unpinned from the top of the activity stream"
     )
 
+    def get_success_url(self):
+        return self.success_url
+
     def post(self, request, *args, **kwargs):
         self.object.is_pinned = False
         self.object.save()
-
-        return self.success_response()
+        messages.success(
+            request, self.success_message % {"model": self.object._meta.verbose_name}
+        )
+        return self.get_response()
 
 
 class BaseActivityBookmarkView(BaseActivityActionView):
     permission_required = "activities.bookmark_activity"
-    is_success_ajax_response = True
+
+    def get_response(self, has_bookmarked):
+        return (
+            TurboFrame(self.object.get_dom_id() + "-bookmark")
+            .template(
+                "activities/includes/bookmark.html",
+                {"object": self.object, "has_bookmarked": has_bookmarked},
+            )
+            .response(self.request)
+        )
 
 
 class ActivityBookmarkView(BaseActivityBookmarkView):
-    success_message = _("You have added this %(model)s to your bookmarks")
-
     def post(self, request, *args, **kwargs):
         try:
             Bookmark.objects.create(
@@ -393,28 +423,30 @@ class ActivityBookmarkView(BaseActivityBookmarkView):
         except IntegrityError:
             # dupe, ignore
             pass
-        return self.success_response()
+        return self.get_response(has_bookmarked=True)
 
 
 class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
-    success_message = _("You have removed this %(model)s from your bookmarks")
-
     def post(self, request, *args, **kwargs):
         self.object.get_bookmarks().filter(user=request.user).delete()
-        return self.success_response()
-
-    def delete(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
+        return self.get_response(has_bookmarked=False)
 
 
 class BaseActivityLikeView(BaseActivityActionView):
     permission_required = "activities.like_activity"
-    is_success_ajax_response = True
+
+    def get_response(self, has_liked):
+        return (
+            TurboFrame(self.object.get_dom_id() + "-like")
+            .template(
+                "activities/includes/like.html",
+                {"object": self.object, "has_liked": has_liked},
+            )
+            .response(self.request)
+        )
 
 
 class ActivityLikeView(BaseActivityLikeView):
-    success_message = _("You have liked this %(model)s")
-
     def post(self, request, *args, **kwargs):
         try:
             Like.objects.create(
@@ -427,15 +459,13 @@ class ActivityLikeView(BaseActivityLikeView):
         except IntegrityError:
             # dupe, ignore
             pass
-        return self.success_response()
+        return self.get_response(has_liked=True)
 
 
 class ActivityDislikeView(BaseActivityLikeView):
-    success_message = _("You have stopped liking this %(model)s")
-
     def post(self, request, *args, **kwargs):
         self.object.get_likes().filter(user=request.user).delete()
-        return self.success_response()
+        return self.get_response(has_liked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -460,5 +490,13 @@ class ActivityDeleteView(
             self.object.notify_on_delete(self.request.user)
         else:
             self.object.delete()
+
+        target = request.POST.get("target", None)
+        if target:
+            return TurboStream(target).remove.response()
+
+        messages.success(
+            request, self.success_message % {"model": self.object._meta.verbose_name}
+        )
 
         return HttpResponseRedirect(self.get_success_url())

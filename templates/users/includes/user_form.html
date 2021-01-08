@@ -1,16 +1,10 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "includes/forms/ajax_form.html" %}
+{% extends "includes/forms/form.html" %}
 
 {% load i18n %}
-{% load users %}
 
 {% block form_fields %}
-{% dismissable user "personal-settings" %}
-{% blocktrans %}
-Your settings apply to all communities you belong to.
-{% endblocktrans %}
-{% enddismissable %}
 {{ block.super }}
 {% endblock %}

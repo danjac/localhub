@@ -88,7 +88,7 @@ class TestPhotoLikeView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("photos:like", args=[photo.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         like = Like.objects.get()
         assert like.user == member.member
         assert like.recipient == photo.owner

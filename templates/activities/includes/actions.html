@@ -52,23 +52,27 @@
 
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
-    {% include "activities/includes/like.html" with has_liked=object.has_liked %}
+    <turbo-frame id="{{ object.get_dom_id }}-like">
+      {% include "activities/includes/like.html" with has_liked=object.has_liked %}
+    </turbo-frame>
     {% endif %}
 
     {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
     {% if can_bookmark %}
-    {% include "activities/includes/bookmark.html" with has_bookmarked=object.has_bookmarked %}
+    <turbo-frame id="{{ object.get_dom_id }}-bookmark">
+      {% include "activities/includes/bookmark.html" with has_bookmarked=object.has_bookmarked %}
+    </turbo-frame>
     {% endif %}
 
     {% if not object.has_reshared %}
     {% has_perm "activities.reshare_activity" user object as can_reshare %}
     {% if can_reshare %}
-    <a class="dropdown-menu-item"
-       role="button"
-       data-controller="ajax"
-       data-turbo="false"
-       data-action="ajax#post"
-       href="{{ object|resolve_url:"reshare" }}">{% trans "Reshare" %}</a>
+    <form method="post"
+          action="{{ object|resolve_url:"reshare" }}">
+      {% csrf_token %}
+      <button class="dropdown-menu-item"
+              href="">{% trans "Reshare" %}</button>
+    </form>
     {% endif %}
     {% endif %}
 
@@ -84,13 +88,14 @@
     {% if can_change %}
 
     {% if not object.published %}
-    <a class="dropdown-menu-item"
-       role="button"
-       data-controller="ajax"
-       data-turbo="false"
-       data-action="ajax#post"
-       data-ajax-confirm-value="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_type }}? You cannot reverse this action.{% endblocktrans %}"
-       href="{{ object|resolve_url:"publish" }}">{% trans "Publish" %}</a>
+    <form method="post"
+          action="{{ object|resolve_url:"publish" }}"
+          data-controller="confirm"
+          data-action="confirm#confirm"
+          data-confirm-text-value="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_type }}? You cannot reverse this action.{% endblocktrans %}">
+      {% csrf_token %}
+      <button class="dropdown-menu-item">{% trans "Publish" %}</button>
+    </form>
     {% endif %}
     <a class="dropdown-menu-item"
        href="{{ object|resolve_url:"update" }}">{% trans "Edit" %}</a>
@@ -104,17 +109,20 @@
 
     {% has_perm "activities.delete_activity" user object as can_delete %}
     {% if can_delete %}
-    <a class="dropdown-menu-item"
-       href="{{ object|resolve_url:"delete" }}"
-       role="button"
-       data-turbo="false"
-       data-controller="ajax"
-       data-action="ajax#post"
-       {% if not is_detail %}
-       data-ajax-redirect-value="{{ request.get_full_path }}"
-       {% endif %}
-       data-ajax-confirm-value="{% blocktrans %}Are you sure you want to delete this {{ object_type }}?{% endblocktrans %}">
-      {% trans "Delete" %}</a>
+    <form method="post"
+          action="{{ object|resolve_url:"delete" }}"
+          data-controller="confirm"
+          data-action="confirm#confirm"
+          data-confirm-text-value="{% blocktrans %}Are you sure you want to delete this {{ object_type }}?{% endblocktrans %}">
+      {% csrf_token %}
+      {% if not is_detail %}
+      <input type="hidden"
+             name="target"
+             value="{{ object.get_dom_id }}">
+      {% endif %}
+      <button class="dropdown-menu-item">
+        {% trans "Delete" %}</button>
+    </form>
     {% endif %}
 
     {% if object.description %}

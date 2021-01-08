@@ -46,5 +46,12 @@
     </div>
   </div>
 </div>
-{% include "users/includes/user_form.html" with submit_btn=_("Save Settings") %}
+{% dismissable user "personal-settings" %}
+{% blocktrans %}
+Your settings apply to all communities you belong to.
+{% endblocktrans %}
+{% enddismissable %}
+
+
+{% include "includes/forms/form.html" with submit_btn=_("Save Settings") %}
 {% endblock content %}

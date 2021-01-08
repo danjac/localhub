@@ -25,7 +25,7 @@
 
 <form action="{% url 'account_email' %}"
       method="POST"
-      class="p-5 border border-gray-500 bg-gray-100 max-w-xl">
+      class="p-5 border border-gray-500 bg-white max-w-xl">
   {% csrf_token %}
 
   {% for emailaddress in emailaddresses %}
@@ -52,12 +52,15 @@
   <div class="flex text-center mt-2 pt-2 border-t">
     <button class="btn btn-primary mr-1"
             type="submit"
+            value="true"
             name="action_primary">{% trans 'Make Primary' %}</button>
     <button class="btn btn-secondary mr-1"
             type="submit"
+            value="true"
             name="action_send">{% trans 'Re-send Verification' %}</button>
     <button class="btn btn-secondary"
             type="submit"
+            value="true"
             name="action_remove">{% trans 'Remove' %}</button>
   </div>
 
@@ -78,9 +81,10 @@
 
 <form method="POST"
       action="{% url 'account_email' %}"
-      class="p-5 border border-gray-500 bg-gray-100 max-w-xl">
+      class="p-5 border border-gray-500 bg-white max-w-xl">
   {% include "includes/forms/fields.html" %}
   <button name="action_add"
+          value="true"
           class="btn btn-primary"
           type="submit">{% trans "Add E-mail" %}</button>
 </form>

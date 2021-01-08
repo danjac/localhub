@@ -1,6 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import http
+
 # Django
 from django.conf import settings
 from django.urls import reverse
@@ -30,7 +33,7 @@ def event_for_member(member):
 class TestEventCreateView:
     def test_get(self, client, member):
         response = client.get(reverse("events:create"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, member, send_webpush_mock):
         response = client.post(
@@ -59,14 +62,14 @@ class TestEventListView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.get(reverse("events:list"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(dict(response.context or {})["object_list"]) == 3
 
 
 class TestEventUpdateView:
     def test_get(self, client, event_for_member):
         response = client.get(reverse("events:update", args=[event_for_member.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, event_for_member, send_webpush_mock):
         response = client.post(
@@ -90,7 +93,7 @@ class TestEventDeleteView:
     def test_get(self, client, event_for_member):
         # test confirmation page for non-JS clients
         response = client.get(reverse("events:delete", args=[event_for_member.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, event_for_member):
         response = client.post(reverse("events:delete", args=[event_for_member.id]))
@@ -103,7 +106,7 @@ class TestEventDetailView:
         response = client.get(
             event.get_absolute_url(), HTTP_HOST=event.community.domain
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert "comment_form" in dict(response.context or {})
 
 
@@ -114,7 +117,7 @@ class TestEventLikeView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("events:like", args=[event.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         like = Like.objects.get()
         assert like.user == member.member
 
@@ -132,7 +135,7 @@ class TestEventDislikeView:
             recipient=event.owner,
         )
         response = client.post(reverse("events:dislike", args=[event.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert Like.objects.count() == 0
 
 
@@ -142,7 +145,7 @@ class TestEventDownloadView:
             reverse("events:download", args=[event.id]),
             HTTP_HOST=event.community.domain,
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert "DTSTART" in force_str(response.content)
 
 
@@ -157,7 +160,7 @@ class TestEventCancelView:
 class TestEventAttendView:
     def test_post(self, client, event, member, send_webpush_mock):
         response = client.post(reverse("events:attend", args=[event.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert member.member in event.attendees.all()
 
 
@@ -165,7 +168,7 @@ class TestEventUnattendView:
     def test_post(self, client, event, member, send_webpush_mock):
         event.attendees.add(member.member)
         response = client.post(reverse("events:unattend", args=[event.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert member.member not in event.attendees.all()
 
 
@@ -175,7 +178,7 @@ class TestEventCalendarView:
             reverse("events:calendar",),
             {"month": event.starts.month, "year": event.starts.year},
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert "current_date" not in response.context
         assert len(response.context["object_list"]) == 1
 
@@ -184,7 +187,7 @@ class TestEventCalendarView:
         response = client.get(
             reverse("events:calendar",), {"month": now.month, "year": now.year},
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert "current_date" not in response.context
         assert response.context["is_current_month"]
 
@@ -192,7 +195,7 @@ class TestEventCalendarView:
         response = client.get(
             reverse("events:calendar",), {"month": 13, "year": event.starts.year},
         )
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
 
     def test_get_date_view(self, client, event, member):
         response = client.get(
@@ -203,7 +206,7 @@ class TestEventCalendarView:
                 "day": event.starts.day,
             },
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert "current_date" in response.context
         assert len(response.context["object_list"]) == 1
 
@@ -212,4 +215,4 @@ class TestEventCalendarView:
             reverse("events:calendar",),
             {"month": event.starts.month, "year": event.starts.year, "day": 32},
         )
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND

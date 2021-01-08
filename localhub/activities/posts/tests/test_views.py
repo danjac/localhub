@@ -1,6 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import http
+
 # Django
 from django.conf import settings
 from django.urls import reverse
@@ -52,7 +55,7 @@ class TestPostListView:
 class TestPostCreateView:
     def test_get(self, client, member):
         response = client.get(reverse("posts:create"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, member, send_webpush_mock):
         response = client.post(
@@ -97,7 +100,7 @@ class TestPostCreateView:
 class TestPostUpdateView:
     def test_get(self, client, post_for_member):
         response = client.get(reverse("posts:update", args=[post_for_member.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, post_for_member, send_webpush_mock):
         response = client.post(
@@ -141,7 +144,7 @@ class TestPostUpdateView:
 class TestPostUpdateTagsView:
     def test_get(self, client, moderator, post):
         response = client.get(reverse("posts:update_tags", args=[post.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, moderator, post, mailoutbox, send_webpush_mock):
         response = client.post(
@@ -169,7 +172,7 @@ class TestPostCommentCreateView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.get(reverse("posts:comment", args=[post.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, member, send_webpush_mock):
         owner = UserFactory()
@@ -193,7 +196,7 @@ class TestPostDeleteView:
     def test_get(self, client, post_for_member):
         # test confirmation page for non-JS clients
         response = client.get(reverse("posts:delete", args=[post_for_member.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, post_for_member):
         response = client.post(reverse("posts:delete", args=[post_for_member.id]))
@@ -228,7 +231,7 @@ class TestPostDetailView:
             recipient=member.member, content_object=post, is_read=False
         )
         response = client.get(post.get_absolute_url(), HTTP_HOST=post.community.domain)
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert "comment_form" in response.context
         notification.refresh_from_db()
         assert notification.is_read
@@ -312,7 +315,7 @@ class TestPostBookmarkView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("posts:bookmark", args=[post.id]),)
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         bookmark = Bookmark.objects.get()
         assert bookmark.user == member.member
 
@@ -327,7 +330,7 @@ class TestPostRemoveBookmarkView:
             user=member.member, content_object=post, community=post.community,
         )
         response = client.post(reverse("posts:remove_bookmark", args=[post.id]),)
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert Bookmark.objects.count() == 0
 
 
@@ -338,7 +341,7 @@ class TestPostLikeView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("posts:like", args=[post.id]),)
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         like = Like.objects.get()
         assert like.user == member.member
 
@@ -355,8 +358,8 @@ class TestPostDislikeView:
             community=post.community,
             recipient=post.owner,
         )
-        response = client.post(reverse("posts:dislike", args=[post.id]),)
-        assert response.status_code == 204
+        response = client.post(reverse("posts:dislike", OK=[post.id]),)
+        assert response.status_code == http.HTTPStatus.OK
         assert Like.objects.count() == 0
 
 
@@ -367,7 +370,7 @@ class TestFlagView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.get(reverse("posts:flag", args=[post.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(
@@ -396,7 +399,7 @@ class TestOpengraphPreviewView:
         response = client.get(
             reverse("posts:opengraph_preview"), {"url": "https://imgur.com"}
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         data = response.json()["fields"]
         assert data["title"] == "Imgur"
         assert data["url"] == "https://imgur.com/"
@@ -407,7 +410,7 @@ class TestOpengraphPreviewView:
         response = client.get(
             reverse("posts:opengraph_preview"), {"url": "https://imgur.com/cat.gif"}
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         data = response.json()["fields"]
         assert data["title"] == "cat.gif"
         assert data["url"] == "https://imgur.com/cat.gif"
@@ -418,4 +421,4 @@ class TestOpengraphPreviewView:
         response = client.get(
             reverse("posts:opengraph_preview"), {"url": "https://imgur.com"}
         )
-        assert response.status_code == 400
+        assert response.status_code == http.HTTPStatus.BAD_REQUEST

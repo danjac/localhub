@@ -10,7 +10,7 @@
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 
 <article role="{{ object_type }}"
-         id="{{ object_type }}-{{ object.id }}"
+         id="{{ object.get_dom_id }}"
          class="card{% if activity_css_class %} {{ activity_css_class }}{% endif %}"
          data-controller="clipboard{% if is_content_sensitive %} toggle{% endif %}"
          data-clipboard-message-value="{% trans 'Markdown content has been copied' %}">

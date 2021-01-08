@@ -1,21 +1,13 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% load i18n %}
-<div data-controller="toggle">
-  <a class="dropdown-menu-item line-through{% if not has_bookmarked %} hidden{% endif %}"
-     href="{{ object|resolve_url:"remove_bookmark" }}"
-     role="button"
-     data-controller="ajax"
-     data-ajax-redirect-value="none"
-     data-turbo="false"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
-  <a class="dropdown-menu-item{% if has_bookmarked %} hidden{% endif %}"
-     href="{{ object|resolve_url:"bookmark" }}"
-     role="button"
-     data-controller="ajax"
-     data-ajax-redirect-value="none"
-     data-turbo="false"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
-</div>
+<form method="post"
+      action="{% if has_bookmarked %}{{ object|resolve_url:"remove_bookmark" }}{% else %}{{ object|resolve_url:"bookmark" }}{% endif %}">
+  {% csrf_token %}
+  {% if has_bookmarked %}
+  <button class="dropdown-menu-item line-through">{% trans "Bookmark" %}</button>
+  {% else %}
+  <button class="dropdown-menu-item">{% trans "Bookmark" %}</button>
+  {% endif %}
+</form>

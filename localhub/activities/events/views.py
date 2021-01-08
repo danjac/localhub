@@ -6,6 +6,7 @@ import calendar
 import datetime
 
 # Django
+from django.contrib import messages
 from django.http import Http404, HttpResponse
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -16,6 +17,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 # Third Party Libraries
 import pytz
+from turbo_response import TurboFrame
 
 # Localhub
 from localhub.activities.views.generic import (
@@ -47,7 +49,9 @@ class EventCancelView(BaseEventActionView):
         self.object.canceled = timezone.now()
         self.object.save()
         self.object.notify_on_cancel(self.request.user)
-        return self.success_response()
+        messages.success(request, self.success_message)
+
+        return self.get_response()
 
 
 event_cancel_view = EventCancelView.as_view()
@@ -55,29 +59,34 @@ event_cancel_view = EventCancelView.as_view()
 
 class BaseEventAttendView(BaseEventActionView):
     permission_required = "events.attend"
-    is_success_ajax_response = True
+
+    def get_response(self, is_attending):
+        return (
+            TurboFrame(self.object.get_dom_id() + "-attend")
+            .template(
+                "events/includes/attend.html",
+                {"object": self.object, "is_attending": is_attending},
+            )
+            .response(self.request)
+        )
 
 
 class EventAttendView(BaseEventAttendView):
-    success_message = _("You are now attending this event")
-
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.attendees.add(self.request.user)
         self.object.notify_on_attend(self.request.user)
-        return self.success_response()
+        return self.get_response(is_attending=True)
 
 
 event_attend_view = EventAttendView.as_view()
 
 
 class EventUnattendView(BaseEventAttendView):
-    success_message = _("You are no longer attending this event")
-
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.attendees.remove(self.request.user)
-        return self.success_response()
+        return self.get_response(is_attending=False)
 
 
 event_unattend_view = EventUnattendView.as_view()
