@@ -34,7 +34,7 @@ class ActionView(PermissionRequiredMixin, SingleObjectMixin, View):
     def get_permission_object(self):
         return self.object
 
-    def get_response(self):
+    def render_to_response(self):
         return HttpResponseRedirect(self.get_success_url())
 
 

@@ -11,12 +11,12 @@ from django.views.generic import ListView
 
 # Third Party Libraries
 from taggit.models import Tag
+from turbo_response import TurboFrame
 
 # Localhub
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.common.mixins import ParentObjectMixin, SearchMixin
-from localhub.common.views import SuccessActionView
-from localhub.communities.mixins import CommunityPermissionRequiredMixin
+from localhub.common.views import ActionView
 
 # Local
 from .mixins import TagQuerySetMixin
@@ -145,15 +145,23 @@ class TagDetailView(ParentObjectMixin, BaseActivityStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class BaseTagActionView(
-    TagQuerySetMixin, CommunityPermissionRequiredMixin, SuccessActionView
-):
-    ...
+class BaseTagActionView(TagQuerySetMixin, ActionView):
+    def get_permission_object(self):
+        return self.request.community
 
 
 class BaseTagFollowView(BaseTagActionView):
     permission_required = "users.follow_tag"
-    is_success_ajax_response = True
+
+    def render_to_response(self, is_following):
+        return (
+            TurboFrame(f"hashtag-{self.object.id}-follow")
+            .template(
+                "hashtags/includes/follow.html",
+                {"object": self.object, "is_following": is_following},
+            )
+            .response(self.request)
+        )
 
 
 class TagFollowView(BaseTagFollowView):
@@ -161,7 +169,7 @@ class TagFollowView(BaseTagFollowView):
 
     def post(self, request, *args, **kwargs):
         self.request.user.following_tags.add(self.object)
-        return self.success_response()
+        return self.render_to_response(is_following=True)
 
 
 tag_follow_view = TagFollowView.as_view()
@@ -172,7 +180,7 @@ class TagUnfollowView(BaseTagFollowView):
 
     def post(self, request, *args, **kwargs):
         self.request.user.following_tags.remove(self.object)
-        return self.success_response()
+        return self.render_to_response(is_following=False)
 
 
 tag_unfollow_view = TagUnfollowView.as_view()
@@ -180,15 +188,22 @@ tag_unfollow_view = TagUnfollowView.as_view()
 
 class BaseTagBlockView(BaseTagActionView):
     permission_required = "users.block_tag"
-    is_success_ajax_response = True
+
+    def render_to_response(self, is_blocked):
+        return (
+            TurboFrame(f"hashtag-{self.object.id}-block")
+            .template(
+                "hashtags/includes/block.html",
+                {"object": self.object, "is_blocked": is_blocked},
+            )
+            .response(self.request)
+        )
 
 
 class TagBlockView(BaseTagBlockView):
-    success_message = _("You are now blocking #%(object)s")
-
     def post(self, request, *args, **kwargs):
         self.request.user.blocked_tags.add(self.object)
-        return self.success_response()
+        return self.render_to_response(is_blocked=True)
 
 
 tag_block_view = TagBlockView.as_view()
@@ -199,7 +214,7 @@ class TagUnblockView(BaseTagBlockView):
 
     def post(self, request, *args, **kwargs):
         self.request.user.blocked_tags.remove(self.object)
-        return self.success_response()
+        return self.render_to_response(is_blocked=False)
 
 
 tag_unblock_view = TagUnblockView.as_view()

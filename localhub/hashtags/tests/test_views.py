@@ -1,5 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
+# Standard Library
+import http
 
 # Django
 from django.urls import reverse
@@ -26,7 +28,7 @@ class TestTagAutocompleteListView:
         PhotoFactory(community=member.community, owner=member.member).tags.add("movies")
 
         response = client.get(reverse("hashtags:autocomplete_list"), {"q": "movie"})
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(response.context["object_list"]) == 1
 
 
@@ -36,7 +38,7 @@ class TestTagFollowView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         response = client.post(reverse("hashtags:follow", args=[tag.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert tag in member.member.following_tags.all()
 
 
@@ -47,7 +49,7 @@ class TestTagUnfollowView:
         tag = Tag.objects.get()
         member.member.following_tags.add(tag)
         response = client.post(reverse("hashtags:unfollow", args=[tag.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert tag not in member.member.following_tags.all()
 
 
@@ -57,7 +59,7 @@ class TestTagBlockView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         response = client.post(reverse("hashtags:block", args=[tag.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert tag in member.member.blocked_tags.all()
 
 
@@ -68,7 +70,7 @@ class TestTagUnblockView:
         tag = Tag.objects.get()
         member.member.blocked_tags.add(tag)
         response = client.post(reverse("hashtags:unblock", args=[tag.id]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert tag not in member.member.blocked_tags.all()
 
 

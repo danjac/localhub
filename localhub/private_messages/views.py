@@ -51,7 +51,7 @@ class BaseMessageFormView(PermissionRequiredMixin, TurboFormView):
     def get_success_url(self):
         return self.object.get_absolute_url()
 
-    def get_response(self):
+    def get_success_response(self):
         if success_message := self.get_success_message():
             messages.success(self.request, success_message)
         return HttpResponseSeeOther(self.get_success_url())
@@ -79,7 +79,7 @@ class BaseReplyFormView(ParentObjectMixin, BaseMessageFormView):
 
         self.notify()
 
-        return self.get_response()
+        return self.get_success_response()
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -153,7 +153,7 @@ class MessageRecipientCreateView(
 
         self.object.notify_on_send()
 
-        return self.get_response()
+        return self.get_success_response()
 
 
 message_recipient_create_view = MessageRecipientCreateView.as_view()
@@ -176,7 +176,7 @@ class MessageCreateView(
 
         self.object.notify_on_send()
 
-        return self.get_response()
+        return self.get_success_response()
 
     def get_form_kwargs(self):
         return {
@@ -288,7 +288,7 @@ message_mark_read_view = MessageMarkReadView.as_view()
 
 
 class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, ActionView):
-    def get_response(self, has_bookmarked):
+    def render_to_response(self, has_bookmarked):
         return (
             TurboFrame(f"message-{self.object.id}-bookmark")
             .template(
@@ -309,7 +309,7 @@ class MessageBookmarkView(BaseMessageBookmarkView):
             )
         except IntegrityError:
             pass
-        return self.get_response(has_bookmarked=True)
+        return self.render_to_response(has_bookmarked=True)
 
 
 message_bookmark_view = MessageBookmarkView.as_view()
@@ -318,7 +318,7 @@ message_bookmark_view = MessageBookmarkView.as_view()
 class MessageRemoveBookmarkView(BaseMessageBookmarkView):
     def post(self, request, *args, **kwargs):
         Bookmark.objects.filter(user=request.user, message=self.object).delete()
-        return self.get_response(has_bookmarked=False)
+        return self.render_to_response(has_bookmarked=False)
 
 
 message_remove_bookmark_view = MessageRemoveBookmarkView.as_view()

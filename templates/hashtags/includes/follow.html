@@ -2,25 +2,12 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div data-controller="toggle">
-  <a href="{% url 'hashtags:unfollow' object.id %}"
-     role="button"
-     class="line-through{% if not is_following %} hidden{% endif %}"
-     data-controller="ajax"
-     data-turbo="false"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">
-    {% trans "Follow" %}
-  </a>
-  <a href="{% url 'hashtags:follow' object.id %}"
-     role="button"
-     {% if is_following %}
-     class="hidden"
-     {% endif %}
-     data-controller="ajax"
-     data-turbo="false"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">
-    {% trans "Follow" %}
-  </a>
-</div>
+<form method="post"
+      action="{% if is_following %}{% url 'hashtags:unfollow' object.id %}{% else %}{% url 'hashtags:follow' object.id %}{% endif %}">
+  {% csrf_token %}
+  {% if is_following %}
+  <button class="line-through">{% trans "Follow" %}</button>
+  {% else %}
+  <button>{% trans "Follow" %}</button>
+  {% endif %}
+</form>

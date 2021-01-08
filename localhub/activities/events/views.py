@@ -51,7 +51,7 @@ class EventCancelView(BaseEventActionView):
         self.object.notify_on_cancel(self.request.user)
         messages.success(request, self.success_message)
 
-        return self.get_response()
+        return self.render_to_response()
 
 
 event_cancel_view = EventCancelView.as_view()
@@ -60,7 +60,7 @@ event_cancel_view = EventCancelView.as_view()
 class BaseEventAttendView(BaseEventActionView):
     permission_required = "events.attend"
 
-    def get_response(self, is_attending):
+    def render_to_response(self, is_attending):
         return (
             TurboFrame(self.object.get_dom_id() + "-attend")
             .template(
@@ -76,7 +76,7 @@ class EventAttendView(BaseEventAttendView):
         self.object = self.get_object()
         self.object.attendees.add(self.request.user)
         self.object.notify_on_attend(self.request.user)
-        return self.get_response(is_attending=True)
+        return self.render_to_response(is_attending=True)
 
 
 event_attend_view = EventAttendView.as_view()
@@ -86,7 +86,7 @@ class EventUnattendView(BaseEventAttendView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.attendees.remove(self.request.user)
-        return self.get_response(is_attending=False)
+        return self.render_to_response(is_attending=False)
 
 
 event_unattend_view = EventUnattendView.as_view()

@@ -219,7 +219,7 @@ class BaseCommentActionView(CommentQuerySetMixin, ActionView):
 class BaseCommentBookmarkView(BaseCommentActionView):
     permission_required = "comments.bookmark_comment"
 
-    def get_response(self, has_bookmarked):
+    def render_to_response(self, has_bookmarked):
         if self.request.accept_turbo_stream:
             return (
                 TurboFrame(f"comment-bookmark-{self.object.id}")
@@ -242,7 +242,7 @@ class CommentBookmarkView(BaseCommentBookmarkView):
             )
         except IntegrityError:
             pass
-        return self.get_response(has_bookmarked=True)
+        return self.render_to_response(has_bookmarked=True)
 
 
 comment_bookmark_view = CommentBookmarkView.as_view()
@@ -251,7 +251,7 @@ comment_bookmark_view = CommentBookmarkView.as_view()
 class CommentRemoveBookmarkView(BaseCommentBookmarkView):
     def post(self, request, *args, **kwargs):
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
-        return self.get_response(has_bookmarked=False)
+        return self.render_to_response(has_bookmarked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -263,7 +263,7 @@ comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 class BaseCommentLikeView(BaseCommentActionView):
     permission_required = "comments.like_comment"
 
-    def get_response(self, has_liked):
+    def render_to_response(self, has_liked):
         if self.request.accept_turbo_stream:
             return (
                 TurboFrame(f"comment-like-{self.object.id}")
@@ -289,7 +289,7 @@ class CommentLikeView(BaseCommentLikeView):
             ).notify()
         except IntegrityError:
             pass
-        return self.get_response(has_liked=True)
+        return self.render_to_response(has_liked=True)
 
 
 comment_like_view = CommentLikeView.as_view()
@@ -300,7 +300,7 @@ class CommentDislikeView(BaseCommentLikeView):
 
     def post(self, request, *args, **kwargs):
         Like.objects.filter(user=request.user, comment=self.object).delete()
-        return self.get_response(has_liked=False)
+        return self.render_to_response(has_liked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

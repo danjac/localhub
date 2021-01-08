@@ -418,7 +418,7 @@ class BaseFollowUserView(BaseUserActionView,):
     permission_required = "users.follow_user"
     exclude_blocking_users = True
 
-    def get_response(self, is_following):
+    def render_to_response(self, is_following):
         is_detail = self.request.POST.get("is_detail", False)
         return (
             TurboFrame(f"user-{self.object.id}-follow")
@@ -440,7 +440,7 @@ class UserFollowView(BaseFollowUserView):
     def post(self, request, *args, **kwargs):
         self.request.user.following.add(self.object)
         self.request.user.notify_on_follow(self.object, self.request.community)
-        return self.get_response(is_following=True)
+        return self.render_to_response(is_following=True)
 
 
 user_follow_view = UserFollowView.as_view()
@@ -451,7 +451,7 @@ class UserUnfollowView(BaseFollowUserView):
 
     def post(self, request, *args, **kwargs):
         self.request.user.following.remove(self.object)
-        return self.get_response(is_following=False)
+        return self.render_to_response(is_following=False)
 
 
 user_unfollow_view = UserUnfollowView.as_view()
@@ -461,13 +461,13 @@ class BaseUserBlockView(BaseUserActionView):
     permission_required = "users.block_user"
     success_message = None
 
-    def get_response(self):
+    def render_to_response(self):
         if self.success_message:
             messages.success(
                 self.request, self.success_message % {"object": self.object}
             )
 
-        return super().get_response()
+        return super().render_to_response()
 
 
 class UserBlockView(BaseUserBlockView):
@@ -475,7 +475,7 @@ class UserBlockView(BaseUserBlockView):
 
     def post(self, request, *args, **kwargs):
         self.request.user.block_user(self.object)
-        return self.get_response()
+        return self.render_to_response()
 
 
 user_block_view = UserBlockView.as_view()
@@ -486,7 +486,7 @@ class UserUnblockView(BaseUserBlockView):
 
     def post(self, request, *args, **kwargs):
         self.request.user.blocked.remove(self.object)
-        return self.get_response()
+        return self.render_to_response()
 
 
 user_unblock_view = UserUnblockView.as_view()

@@ -58,7 +58,9 @@
           {% if can_follow_tag %}
           <div class="table-nav-item">
             {% with following|contains:tag as is_following %}
-            {% include "hashtags/includes/follow.html" with object=tag %}
+            <turbo-frame id="hashtag-{{ tag.id }}-follow">
+              {% include "hashtags/includes/follow.html" with object=tag %}
+            </turbo-frame>
             {% endwith %}
           </div>
           {% endif %}
@@ -66,7 +68,9 @@
           {% if can_block_tag %}
           <div class="table-nav-item">
             {% with blocked|contains:tag as is_blocked %}
-            {% include "hashtags/includes/block.html" with object=tag %}
+            <turbo-frame id="hashtag-{{ tag.id }}-block">
+              {% include "hashtags/includes/block.html" with object=tag %}
+            </turbo-frame>
             {% endwith %}
           </div>
           {% endif %}

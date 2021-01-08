@@ -323,7 +323,7 @@ class ActivityReshareView(BaseActivityActionView):
             request, self.success_message % {"model": self.object._meta.verbose_name}
         )
 
-        return self.get_response()
+        return self.render_to_response()
 
 
 class ActivityPublishView(BaseActivityActionView):
@@ -337,7 +337,7 @@ class ActivityPublishView(BaseActivityActionView):
         self.object.published = timezone.now()
         self.object.save(update_fields=["published"])
         self.object.notify_on_publish()
-        return self.get_response()
+        return self.render_to_response()
 
 
 activity_publish_view = ActivityPublishView.as_view()
@@ -365,7 +365,7 @@ class ActivityPinView(BaseActivityActionView):
         messages.success(
             request, self.success_message % {"model": self.object._meta.verbose_name}
         )
-        return self.get_response()
+        return self.render_to_response()
 
 
 class ActivityUnpinView(BaseActivityActionView):
@@ -384,13 +384,13 @@ class ActivityUnpinView(BaseActivityActionView):
         messages.success(
             request, self.success_message % {"model": self.object._meta.verbose_name}
         )
-        return self.get_response()
+        return self.render_to_response()
 
 
 class BaseActivityBookmarkView(BaseActivityActionView):
     permission_required = "activities.bookmark_activity"
 
-    def get_response(self, has_bookmarked):
+    def render_to_response(self, has_bookmarked):
         return (
             TurboFrame(self.object.get_dom_id() + "-bookmark")
             .template(
@@ -412,19 +412,19 @@ class ActivityBookmarkView(BaseActivityBookmarkView):
         except IntegrityError:
             # dupe, ignore
             pass
-        return self.get_response(has_bookmarked=True)
+        return self.render_to_response(has_bookmarked=True)
 
 
 class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object.get_bookmarks().filter(user=request.user).delete()
-        return self.get_response(has_bookmarked=False)
+        return self.render_to_response(has_bookmarked=False)
 
 
 class BaseActivityLikeView(BaseActivityActionView):
     permission_required = "activities.like_activity"
 
-    def get_response(self, has_liked):
+    def render_to_response(self, has_liked):
         return (
             TurboFrame(self.object.get_dom_id() + "-like")
             .template(
@@ -448,13 +448,13 @@ class ActivityLikeView(BaseActivityLikeView):
         except IntegrityError:
             # dupe, ignore
             pass
-        return self.get_response(has_liked=True)
+        return self.render_to_response(has_liked=True)
 
 
 class ActivityDislikeView(BaseActivityLikeView):
     def post(self, request, *args, **kwargs):
         self.object.get_likes().filter(user=request.user).delete()
-        return self.get_response(has_liked=False)
+        return self.render_to_response(has_liked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
