@@ -90,7 +90,9 @@
           {% has_perm "users.follow_user" user object as can_follow_user %}
           {% if can_follow_user %}
           <div class="table-nav-item">
-            {% include "users/includes/follow.html" with is_following=object.is_following %}
+            <turbo-frame id="user-{{ object.id }}-follow">
+              {% include "users/includes/follow.html" with is_following=object.is_following %}
+            </turbo-frame>
           </div>
           {% endif %}
 

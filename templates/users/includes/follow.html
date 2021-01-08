@@ -2,24 +2,18 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div data-controller="toggle"
-     class="{{ css_class }}">
-  <a href="{% url 'users:unfollow' object.username %}"
-     role="button"
-     data-turbo="false"
-     class="line-through {{ is_following|yesno:"block,hidden" }}"
-     data-controller="ajax"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">
-    {% trans "Follow" %}
-  </a>
-  <a href="{% url 'users:follow' object.username %}"
-     role="button"
-     class="{{ is_following|yesno:"hidden,block" }}"
-     data-turbo="false"
-     data-controller="ajax"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">
-    {% trans "Follow" %}
-  </a>
-</div>
+<form method="post"
+      action="{% if is_following %}{% url 'users:unfollow' object.username %}{% else %}{% url 'users:follow' object.username %}{% endif %}">
+  {% csrf_token %}
+  {% if is_detail %}
+  <input type="hidden"
+         name="is_detail"
+         value="true">
+  {% endif %}
+  {% if is_following %}
+  <button class="line-through{% if is_detail %} dropdown-menu-item{% endif %}">{% trans "Follow" %}</button>
+  {% else %}
+  <button {% if is_detail %}class="dropdown-menu-item"
+          {% endif %}>{% trans "Follow" %}</button>
+  {% endif %}
+</form>

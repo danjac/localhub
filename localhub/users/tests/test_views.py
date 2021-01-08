@@ -1,6 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import http
+
 # Django
 from django.urls import reverse
 
@@ -28,7 +31,7 @@ class TestUserPreviewView:
     def test_get(self, client, member):
         user = MembershipFactory(community=member.community).member
         response = client.get(reverse("users:preview", args=[user.username]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_url"] == user.get_absolute_url()
 
     def test_get_with_object_url(self, client, member):
@@ -37,7 +40,7 @@ class TestUserPreviewView:
         response = client.get(
             reverse("users:preview", args=[user.username]), {"object_url": object_url},
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_url"] == object_url
 
     def test_get_with_bad_object_url(self, client, member):
@@ -47,7 +50,7 @@ class TestUserPreviewView:
         response = client.get(
             reverse("users:preview", args=[user.username]), {"object_url": object_url},
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_url"] == user.get_absolute_url()
 
 
@@ -55,7 +58,7 @@ class TestMemberListView:
     def test_get(self, client, member):
         user = MembershipFactory(community=member.community).member
         response = client.get(reverse("users:member_list"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
         object_list = response.context["object_list"]
         assert user in object_list
@@ -64,7 +67,7 @@ class TestMemberListView:
     def test_get_if_anonymous(self, client, community):
         user = MembershipFactory(community=community).member
         response = client.get(reverse("users:member_list"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
         object_list = response.context["object_list"]
         assert user in object_list
@@ -80,7 +83,7 @@ class TestActivityLikesView:
             content_object=post, community=post.community, recipient=post.owner,
         )
         response = client.get(reverse("users:activity_likes", args=["danjac"]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_list"][0]["object"] == post
         assert response.context["num_likes"] == 1
 
@@ -95,7 +98,7 @@ class TestActivityMentionsView:
         response = client.get(
             reverse("users:activity_mentions", args=[member.member.username])
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(response.context["object_list"]) == 0
 
     def test_get(self, client, member, transactional_db):
@@ -106,7 +109,7 @@ class TestActivityMentionsView:
             community=member.community, owner=member.member, mentions="@danjac @tester",
         )
         response = client.get(reverse("users:activity_mentions", args=["danjac"]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_list"][0]["object"] == post
 
 
@@ -122,7 +125,7 @@ class TestCommentLikesView:
             recipient=comment.owner,
         )
         response = client.get(reverse("users:comment_likes", args=["danjac"]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_list"][0] == comment
         assert response.context["num_likes"] == 1
 
@@ -137,7 +140,7 @@ class TestCommentMentionsView:
         response = client.get(
             reverse("users:comment_mentions", args=[member.member.username])
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(response.context["object_list"]) == 0
 
     def test_get(self, client, member, transactional_db):
@@ -148,7 +151,7 @@ class TestCommentMentionsView:
             community=member.community, owner=member.member, content="@danjac @tester",
         )
         response = client.get(reverse("users:comment_mentions", args=["danjac"]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_list"][0] == comment
 
 
@@ -157,7 +160,7 @@ class TestFollowingUserListView:
         user = MembershipFactory(community=member.community).member
         member.member.following.add(user)
         response = client.get(reverse("users:following_list"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_list"][0] == user
 
 
@@ -166,7 +169,7 @@ class TestBlockedUserListView:
         user = MembershipFactory(community=member.community).member
         member.member.blocked.add(user)
         response = client.get(reverse("users:blocked_list"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_list"][0] == user
 
 
@@ -175,7 +178,7 @@ class TestFollowerUserListView:
         user = MembershipFactory(community=member.community).member
         user.following.add(member.member)
         response = client.get(reverse("users:follower_list"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["object_list"][0] == user
 
 
@@ -191,7 +194,7 @@ class TestUserCommentsView:
             recipient=comment.owner,
         )
         response = client.get(reverse("users:comments", args=[comment.owner.username]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(dict(response.context or {})["object_list"]) == 1
         assert dict(response.context or {})["num_likes"] == 1
 
@@ -202,7 +205,7 @@ class TestUserActivitiesView:
         response = client.get(
             reverse("users:activities", args=[member.member.username])
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_if_not_found(self, client, member):
         response = client.get(reverse("users:activities", args=["testuser"]))
@@ -224,7 +227,7 @@ class TestUserActivitiesView:
         response = client.get(
             reverse("users:activities", args=[member.member.username])
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(dict(response.context or {})["object_list"]) == 2
         assert dict(response.context or {})["num_likes"] == 1
 
@@ -245,7 +248,7 @@ class TestUserActivitiesView:
         )
 
         response = client.get(reverse("users:activities", args=[other.member.username]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(dict(response.context or {})["object_list"]) == 2
         assert dict(response.context or {})["num_likes"] == 1
 
@@ -260,13 +263,13 @@ class TestUserActivitiesView:
             community=member.community, member=UserFactory(username="tester@gmail.com"),
         )
         response = client.get(reverse("users:activities", args=[other.member.username]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
 
 class TestUserUpdateView:
     def test_get(self, client, login_user):
         response = client.get(reverse("user_update"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, login_user):
         response = client.post(
@@ -281,7 +284,7 @@ class TestUserUpdateView:
 class TestUserDeleteView:
     def test_get(self, client, login_user):
         response = client.get(reverse("user_delete"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, user_model, login_user):
         response = client.post(reverse("user_delete"))
@@ -295,7 +298,7 @@ class TestUserFollowView:
             community=member.community, member=UserFactory(),
         ).member
         response = client.post(reverse("users:follow", args=[user.username]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert user in member.member.following.all()
         notification = Notification.objects.get()
         assert notification.recipient == user
@@ -327,7 +330,7 @@ class TestUserUnfollowView:
         user = MembershipFactory(community=member.community).member
         member.member.following.add(user)
         response = client.post(reverse("users:unfollow", args=[user.username]))
-        assert response.status_code == 204
+        assert response.status_code == http.HTTPStatus.OK
         assert user not in member.member.following.all()
 
 
@@ -387,7 +390,7 @@ class TestUserMessageListView:
         )
         to_someone_else = MessageFactory(community=member.community, sender=other_user)
         response = client.get(reverse("users:messages", args=[other_user.username]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
         object_list = response.context["object_list"]
         assert from_me in object_list
@@ -404,7 +407,7 @@ class TestUserMessageListView:
         )
         to_someone_else = MessageFactory(community=member.community, sender=other_user)
         response = client.get(reverse("users:messages", args=[member.member.username]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
         object_list = response.context["object_list"]
         assert from_me in object_list
@@ -415,5 +418,5 @@ class TestUserMessageListView:
 class TestDismissNoticeView:
     def test_post(self, client, login_user):
         response = client.post(reverse("dismiss_notice", args=["private-stash"]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         login_user.refresh_from_db()

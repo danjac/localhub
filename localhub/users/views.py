@@ -4,7 +4,9 @@
 
 # Django
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.http import Http404
 from django.urls import resolve
@@ -14,7 +16,8 @@ from django.views.generic import DeleteView, DetailView, ListView, View
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
-from turbo_response import TurboStream
+from turbo_response import HttpResponseSeeOther, TurboFrame, TurboStream
+from turbo_response.views import TurboUpdateView
 
 # Localhub
 from localhub.activities.utils import get_activity_models
@@ -22,7 +25,7 @@ from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
 from localhub.common.mixins import SearchMixin
-from localhub.common.views import SuccessActionView, SuccessUpdateView
+from localhub.common.views import ActionView
 from localhub.communities.rules import is_member
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
@@ -50,6 +53,13 @@ class UserPreviewView(MemberQuerySetMixin, UserQuerySetMixin, DetailView):
     context_object_name = "user_obj"
     slug_field = "username"
     slug_url_kwarg = "username"
+
+    def render_to_response(self, context, **response_kwargs):
+        return (
+            TurboFrame(f"user-preview-{self.object.id}")
+            .template(self.template_name, context)
+            .response(self.request)
+        )
 
     def get_object_url(self):
         """Allow a different object url e.g. to message or comment tabs."""
@@ -362,7 +372,7 @@ user_autocomplete_list_view = UserAutocompleteListView.as_view()
 
 
 class UserUpdateView(
-    CurrentUserMixin, PermissionRequiredMixin, SuccessUpdateView,
+    SuccessMessageMixin, CurrentUserMixin, PermissionRequiredMixin, TurboUpdateView,
 ):
     permission_required = "users.change_user"
     success_message = _("Your details have been updated")
@@ -375,7 +385,7 @@ class UserUpdateView(
     def form_valid(self, form):
         self.object = form.save()
         self.object.notify_on_update()
-        return self.success_response()
+        return HttpResponseSeeOther(self.get_success_url())
 
     def get_context_data(self, **kwargs):
         return {
@@ -399,26 +409,29 @@ class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
 user_delete_view = UserDeleteView.as_view()
 
 
-class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = "users.delete_user"
-    success_url = settings.HOME_PAGE_URL
-    template_name = "users/user_confirm_delete.html"
-
-
-user_delete_view = UserDeleteView.as_view()
-
-
-class BaseUserActionView(UserQuerySetMixin, SuccessActionView):
+class BaseUserActionView(UserQuerySetMixin, ActionView):
     slug_field = "username"
     slug_url_kwarg = "username"
 
 
-class BaseFollowUserView(
-    PermissionRequiredMixin, BaseUserActionView,
-):
+class BaseFollowUserView(BaseUserActionView,):
     permission_required = "users.follow_user"
-    is_success_ajax_response = True
     exclude_blocking_users = True
+
+    def get_response(self, is_following):
+        is_detail = self.request.POST.get("is_detail", False)
+        return (
+            TurboFrame(f"user-{self.object.id}-follow")
+            .template(
+                "users/includes/follow.html",
+                {
+                    "object": self.object,
+                    "is_following": is_following,
+                    "is_detail": is_detail,
+                },
+            )
+            .response(self.request)
+        )
 
 
 class UserFollowView(BaseFollowUserView):
@@ -427,8 +440,7 @@ class UserFollowView(BaseFollowUserView):
     def post(self, request, *args, **kwargs):
         self.request.user.following.add(self.object)
         self.request.user.notify_on_follow(self.object, self.request.community)
-
-        return self.success_response()
+        return self.get_response(is_following=True)
 
 
 user_follow_view = UserFollowView.as_view()
@@ -439,14 +451,23 @@ class UserUnfollowView(BaseFollowUserView):
 
     def post(self, request, *args, **kwargs):
         self.request.user.following.remove(self.object)
-        return self.success_response()
+        return self.get_response(is_following=False)
 
 
 user_unfollow_view = UserUnfollowView.as_view()
 
 
-class BaseUserBlockView(PermissionRequiredMixin, BaseUserActionView):
+class BaseUserBlockView(BaseUserActionView):
     permission_required = "users.block_user"
+    success_message = None
+
+    def get_response(self):
+        if self.success_message:
+            messages.success(
+                self.request, self.success_message % {"object": self.object}
+            )
+
+        return super().get_response()
 
 
 class UserBlockView(BaseUserBlockView):
@@ -454,7 +475,7 @@ class UserBlockView(BaseUserBlockView):
 
     def post(self, request, *args, **kwargs):
         self.request.user.block_user(self.object)
-        return self.success_response()
+        return self.get_response()
 
 
 user_block_view = UserBlockView.as_view()
@@ -465,7 +486,7 @@ class UserUnblockView(BaseUserBlockView):
 
     def post(self, request, *args, **kwargs):
         self.request.user.blocked.remove(self.object)
-        return self.success_response()
+        return self.get_response()
 
 
 user_unblock_view = UserUnblockView.as_view()
