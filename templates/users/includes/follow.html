@@ -6,7 +6,7 @@
      class="{{ css_class }}">
   <a href="{% url 'users:unfollow' object.username %}"
      role="button"
-     data-turbolinks="false"
+     data-turbo="false"
      class="line-through {{ is_following|yesno:"block,hidden" }}"
      data-controller="ajax"
      data-toggle-target="togglable"
@@ -16,7 +16,7 @@
   <a href="{% url 'users:follow' object.username %}"
      role="button"
      class="{{ is_following|yesno:"hidden,block" }}"
-     data-turbolinks="false"
+     data-turbo="false"
      data-controller="ajax"
      data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">

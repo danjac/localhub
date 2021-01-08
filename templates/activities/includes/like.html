@@ -6,14 +6,14 @@
      href="{{ object|resolve_url:"dislike" }}"
      role="button"
      data-controller="ajax"
-     data-turbolinks="false"
+     data-turbo="false"
      data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
   <a class="dropdown-menu-item{% if has_liked %} hidden{% endif %}"
      href="{{ object|resolve_url:"like" }}"
      role="button"
      data-controller="ajax"
-     data-turbolinks="false"
+     data-turbo="false"
      data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
 </div>

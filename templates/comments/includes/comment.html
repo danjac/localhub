@@ -152,7 +152,7 @@
           <a href="{% url 'comments:delete' comment.id %}"
              class="dropdown-menu-item"
              role="button"
-             data-turbolinks="false"
+             data-turbo="false"
              data-controller="ajax"
              data-action="ajax#post"
              {% if not is_detail %}
@@ -166,7 +166,7 @@
           <a href="#"
              class="dropdown-menu-item"
              role="button"
-             data-turbolinks="false"
+             data-turbo="false"
              data-clipboard-target="button"
              data-action="clipboard#copy">
             {% trans "Copy Markdown" %}

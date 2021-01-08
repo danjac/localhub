@@ -7,14 +7,14 @@
      class="dropdown-menu-item line-through{% if not has_bookmarked %} hidden{% endif %}"
      role="button"
      data-controller="ajax"
-     data-turbolinks="false"
+     data-turbo="false"
      data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
   <a href="{% url 'private_messages:message_bookmark' object.id %}"
      class="dropdown-menu-item{% if has_bookmarked %} hidden{% endif %}"
      role="button"
      data-controller="ajax"
-     data-turbolinks="false"
+     data-turbo="false"
      data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
 </div>

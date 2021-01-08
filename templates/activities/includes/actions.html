@@ -26,14 +26,14 @@
        href="{{ object|resolve_url:"unpin" }}"
        class="line-through"
        role="button"
-       data-turbolinks="false"
+       data-turbo="false"
        data-controller="ajax"
        data-action="ajax#post">{% trans "Pin" %}</a>
     {% else %}
     <a class="dropdown-menu-item"
        href="{{ object|resolve_url:"pin" }}"
        role="button"
-       data-turbolinks="false"
+       data-turbo="false"
        data-controller="ajax"
        data-action="ajax#post">{% trans "Pin" %}</a>
     {% endif %}
@@ -66,7 +66,7 @@
     <a class="dropdown-menu-item"
        role="button"
        data-controller="ajax"
-       data-turbolinks="false"
+       data-turbo="false"
        data-action="ajax#post"
        href="{{ object|resolve_url:"reshare" }}">{% trans "Reshare" %}</a>
     {% endif %}
@@ -87,7 +87,7 @@
     <a class="dropdown-menu-item"
        role="button"
        data-controller="ajax"
-       data-turbolinks="false"
+       data-turbo="false"
        data-action="ajax#post"
        data-ajax-confirm-value="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_type }}? You cannot reverse this action.{% endblocktrans %}"
        href="{{ object|resolve_url:"publish" }}">{% trans "Publish" %}</a>
@@ -107,7 +107,7 @@
     <a class="dropdown-menu-item"
        href="{{ object|resolve_url:"delete" }}"
        role="button"
-       data-turbolinks="false"
+       data-turbo="false"
        data-controller="ajax"
        data-action="ajax#post"
        {% if not is_detail %}
@@ -121,7 +121,7 @@
     <a class="dropdown-menu-item"
        href="#"
        role="button"
-       data-turbolinks="false"
+       data-turbo="false"
        data-clipboard-target="button"
        data-action="clipboard#copy">
       {% trans "Copy Markdown" %}
@@ -134,7 +134,7 @@
 <a href="#"
    class="text-sm mr-2"
    role="button"
-   data-turbolinks="false"
+   data-turbo="false"
    data-clipboard-target="button"
    data-action="clipboard#copy">
   {% trans "Copy Markdown" %}

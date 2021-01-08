@@ -19,7 +19,7 @@ You have blocked {{ counter }} people.
   <a class="table-nav-item line-through"
      href="{% url 'users:unblock' object.username %}"
      role="button"
-     data-turbolinks="false"
+     data-turbo="false"
      data-controller="ajax"
      data-action="ajax#post toggle#toggle"
      data-ajax-redirect-value="{{ request.get_full_path }}">

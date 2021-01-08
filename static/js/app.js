@@ -1,8 +1,8 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import '@hotwired/turbo';
 import axios from 'axios';
-import Turbolinks from 'turbolinks';
 
 import { Application } from 'stimulus';
 import { definitionsFromContext } from 'stimulus/webpack-helpers';
@@ -21,6 +21,3 @@ application.load(definitionsFromContext(context));
 
 // Instant click setup
 instantClick();
-
-// Turbolinks setup
-Turbolinks.start();

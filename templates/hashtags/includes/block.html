@@ -7,7 +7,7 @@
   <a href="{% url 'hashtags:unblock' object.id %}"
      role="button"
      class="line-through{% if not is_blocked %} hidden{% endif %}"
-     data-turbolinks="false"
+     data-turbo="false"
      data-controller="ajax"
      data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">
@@ -19,7 +19,7 @@
      class="hidden"
      {% endif %}
      data-controller="ajax"
-     data-turbolinks="false"
+     data-turbo="false"
      data-toggle-target="togglable"
      data-action="ajax#post toggle#toggle">
     {% trans "Block" %}

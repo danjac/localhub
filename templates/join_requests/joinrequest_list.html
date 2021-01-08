@@ -80,7 +80,7 @@
           {% if is_pending or is_rejected %}
           <a class="table-nav-item"
              role="button"
-             data-turbolinks="false"
+             data-turbo="false"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-redirect-value="{{ request.path }}"
@@ -91,7 +91,7 @@
           {% if is_pending %}
           <a class="table-nav-item"
              role="button"
-             data-turbolinks="false"
+             data-turbo="false"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-redirect-value="{{ request.path }}"
@@ -100,7 +100,7 @@
           {% endif %}
           <a class="table-nav-item"
              role="button"
-             data-turbolinks="false"
+             data-turbo="false"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-redirect-value="{{ request.path }}"

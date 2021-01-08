@@ -36,7 +36,7 @@
   {% if is_pending or is_rejected %}
   <a class="page-nav-item"
      role="button"
-     data-turbolinks="false"
+     data-turbo="false"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-confirm-value="{% trans 'Are you sure you want to accept this request?' %}"
@@ -47,7 +47,7 @@
   {% if is_pending %}
   <a class="page-nav-item"
      role="button"
-     data-turbolinks="false"
+     data-turbo="false"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-redirect-value="{{ request.get_full_path }}"
@@ -56,7 +56,7 @@
   {% endif %}
   <a class="page-nav-item"
      role="button"
-     data-turbolinks="false"
+     data-turbo="false"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-confirm-value="{% trans 'Are you sure you want to delete this request?' %}"

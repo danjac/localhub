@@ -52,7 +52,7 @@
           <a href="{% url 'private_messages:message_mark_read' message.id %}"
              class="dropdown-menu-item"
              role="button"
-             data-turbolinks="false"
+             data-turbo="false"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-redirect-value="{{ request.get_full_path }}">{% trans "Mark As Read" %}</a>
@@ -74,7 +74,7 @@
           <a href="{% url 'private_messages:message_delete' message.id %}"
              class="dropdown-menu-item"
              role="button"
-             data-turbolinks="false"
+             data-turbo="false"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-redirect-value="{{ post_delete_redirect|default:request.get_full_path }}"
@@ -83,7 +83,7 @@
           <a href="#"
              class="dropdown-menu-item"
              role="button"
-             data-turbolinks="false"
+             data-turbo="false"
              data-clipboard-target="button"
              data-action="clipboard#copy">
             {% trans "Copy Markdown" %}
