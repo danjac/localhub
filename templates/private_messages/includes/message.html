@@ -49,16 +49,16 @@
              data-dropdown-target="menu">
 
           {% if is_recipient and not message.read %}
-          <a href="{% url 'private_messages:message_mark_read' message.id %}"
-             class="dropdown-menu-item"
-             role="button"
-             data-turbo="false"
-             data-controller="ajax"
-             data-action="ajax#post"
-             data-ajax-redirect-value="{{ request.get_full_path }}">{% trans "Mark As Read" %}</a>
+          <form id="message-{{ message.id }}-mark-read"
+                method="post"
+                action="{% url 'private_messages:message_mark_read' message.id %}">
+            {% csrf_token %}
+            <button class="dropdown-menu-item">{% trans "Mark As Read" %}</button>
+          </form>
           {% endif %}
-
-          {% include "private_messages/includes/bookmark.html" with object=message has_bookmarked=message.has_bookmarked %}
+          <turbo-frame id="message-{{ message.id }}-bookmark">
+            {% include "private_messages/includes/bookmark.html" with object=message has_bookmarked=message.has_bookmarked %}
+          </turbo-frame>
 
           {% if can_reply %}
           <a href="{% url 'private_messages:message_reply' message.id %}"
@@ -71,15 +71,16 @@
             {% trans "Follow-Up" %}
           </a>
           {% endif %}
-          <a href="{% url 'private_messages:message_delete' message.id %}"
-             class="dropdown-menu-item"
-             role="button"
-             data-turbo="false"
-             data-controller="ajax"
-             data-action="ajax#post"
-             data-ajax-redirect-value="{{ post_delete_redirect|default:request.get_full_path }}"
-             data-ajax-confirm-value="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}">{% trans "Delete" %}</a>
-
+          <form method="post"
+                action="{% url 'private_messages:message_delete' message.id %}"
+                data-controller="confirm"
+                data-action="confirm#confirm"
+                data-confirm-text-value="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}">
+            {% csrf_token %}
+            <button class="dropdown-menu-item">
+              {% trans "Delete" %}
+            </button>
+          </form>
           <a href="#"
              class="dropdown-menu-item"
              role="button"

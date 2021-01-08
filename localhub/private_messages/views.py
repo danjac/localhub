@@ -3,26 +3,25 @@
 
 # Django
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.db.models import F
-from django.urls import reverse, reverse_lazy
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, ListView
+from django.views.generic import DeleteView, DetailView, ListView, View
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
+from turbo_response import HttpResponseSeeOther, TurboFrame, TurboStream
+from turbo_response.views import TurboFormView
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.mixins import ParentObjectMixin, SearchMixin
-from localhub.common.views import (
-    SuccessActionView,
-    SuccessDeleteView,
-    SuccessFormView,
-    SuccessView,
-)
+from localhub.common.views import ActionView
 from localhub.communities.mixins import CommunityRequiredMixin
 
 # Local
@@ -35,7 +34,7 @@ from .mixins import (
 from .models import Message
 
 
-class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
+class BaseMessageFormView(PermissionRequiredMixin, TurboFormView):
 
     permission_required = "private_messages.create_message"
     template_name = "private_messages/message_form.html"
@@ -48,6 +47,14 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
         return _("Your message has been sent to %(recipient)s") % {
             "recipient": self.object.recipient.get_display_name()
         }
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+    def get_response(self):
+        if success_message := self.get_success_message():
+            messages.success(self.request, success_message)
+        return HttpResponseSeeOther(self.get_success_url())
 
 
 class BaseReplyFormView(ParentObjectMixin, BaseMessageFormView):
@@ -72,7 +79,7 @@ class BaseReplyFormView(ParentObjectMixin, BaseMessageFormView):
 
         self.notify()
 
-        return self.success_response()
+        return self.get_response()
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -146,7 +153,7 @@ class MessageRecipientCreateView(
 
         self.object.notify_on_send()
 
-        return self.success_response()
+        return self.get_response()
 
 
 message_recipient_create_view = MessageRecipientCreateView.as_view()
@@ -169,7 +176,7 @@ class MessageCreateView(
 
         self.object.notify_on_send()
 
-        return self.success_response()
+        return self.get_response()
 
     def get_form_kwargs(self):
         return {
@@ -256,39 +263,43 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
 message_detail_view = MessageDetailView.as_view()
 
 
-class MessageMarkAllReadView(RecipientQuerySetMixin, SuccessView):
-    success_url = reverse_lazy("private_messages:inbox")
-
+class MessageMarkAllReadView(RecipientQuerySetMixin, View):
     def get_queryset(self):
         return super().get_queryset().unread()
 
     def post(self, request, *args, **kwargs):
         self.get_queryset().for_recipient(self.request.user).mark_read()
-        return self.success_response()
+        return HttpResponseRedirect(reverse("private_messages:inbox"))
 
 
 message_mark_all_read_view = MessageMarkAllReadView.as_view()
 
 
-class MessageMarkReadView(RecipientQuerySetMixin, SuccessActionView):
+class MessageMarkReadView(RecipientQuerySetMixin, ActionView):
     def get_queryset(self):
         return super().get_queryset().unread()
 
     def post(self, request, *args, **kwargs):
         self.object.mark_read()
-        return self.success_response()
+        return TurboStream(f"message-{self.object.id}-mark-read").remove.response()
 
 
 message_mark_read_view = MessageMarkReadView.as_view()
 
 
-class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, SuccessActionView):
-    is_success_ajax_response = True
+class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, ActionView):
+    def get_response(self, has_bookmarked):
+        return (
+            TurboFrame(f"message-{self.object.id}-bookmark")
+            .template(
+                "private_messages/includes/bookmark.html",
+                {"object": self.object, "has_bookmarked": has_bookmarked},
+            )
+            .response(self.request)
+        )
 
 
 class MessageBookmarkView(BaseMessageBookmarkView):
-    success_message = _("You have bookmarked this message")
-
     def post(self, request, *args, **kwargs):
         try:
             Bookmark.objects.create(
@@ -298,27 +309,22 @@ class MessageBookmarkView(BaseMessageBookmarkView):
             )
         except IntegrityError:
             pass
-        return self.success_response()
+        return self.get_response(has_bookmarked=True)
 
 
 message_bookmark_view = MessageBookmarkView.as_view()
 
 
 class MessageRemoveBookmarkView(BaseMessageBookmarkView):
-    success_message = _("You have removed this message from your bookmarks")
-
     def post(self, request, *args, **kwargs):
         Bookmark.objects.filter(user=request.user, message=self.object).delete()
-        return self.success_response()
-
-    def delete(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
+        return self.get_response(has_bookmarked=False)
 
 
 message_remove_bookmark_view = MessageRemoveBookmarkView.as_view()
 
 
-class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessDeleteView):
+class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
     """
     Does a "soft delete" which sets sender/recipient deleted flag
     accordingly.
@@ -332,8 +338,9 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessDeleteView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.soft_delete(self.request.user)
-        return self.success_response()
+        self.object.soft_delete(request.user)
+        messages.success(request, self.success_message)
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         if self.request.user == self.object.recipient:
