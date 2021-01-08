@@ -14,6 +14,7 @@
       {% endif %}
       class="{% block css_class %}{{ css_class|default:"p-1 md:p-3 border border-gray-500 bg-white w-full" }}{% endblock %}"
       {% block form_extra_attrs %}{% endblock %}
+      novalidate
       {% endspaceless %}>
 
   {% block form_fields %}

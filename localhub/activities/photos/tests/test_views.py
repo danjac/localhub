@@ -1,6 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import http
+
 # Django
 from django.conf import settings
 from django.urls import reverse
@@ -23,11 +26,11 @@ pytestmark = pytest.mark.django_db
 class TestPhotoCreateView:
     def test_get(self, client, member):
         response = client.get(reverse("photos:create"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post_missing_image(self, client, member):
         response = client.post(reverse("photos:create"), {"title": "test"})
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.UNPROCESSABLE_ENTITY
         assert "image" in response.context["form"].errors
 
     def test_post(self, client, member, fake_image, send_webpush_mock):
@@ -43,7 +46,7 @@ class TestPhotoCreateView:
 class TestPhotoUpdateView:
     def test_get(self, client, photo_for_member):
         response = client.get(reverse("photos:update", args=[photo_for_member.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(
         self, client, photo_for_member, fake_image, send_webpush_mock,
@@ -61,7 +64,7 @@ class TestPhotoDeleteView:
     def test_get(self, client, photo_for_member):
         # test confirmation page for non-JS clients
         response = client.get(reverse("photos:delete", args=[photo_for_member.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, photo_for_member):
         response = client.post(reverse("photos:delete", args=[photo_for_member.id]))
@@ -74,7 +77,7 @@ class TestPhotoDetailView:
         response = client.get(
             photo.get_absolute_url(), HTTP_HOST=photo.community.domain
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert "comment_form" in response.context
 
 
@@ -112,7 +115,7 @@ class TestPhotoListView:
     def test_get(self, client, member):
         PhotoFactory.create_batch(3, community=member.community, owner=member.member)
         response = client.get(reverse("photos:list"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(response.context["object_list"]) == 3
 
 
@@ -120,5 +123,5 @@ class TestGalleryView:
     def test_get(self, client, member):
         PhotoFactory.create_batch(3, community=member.community, owner=member.member)
         response = client.get(reverse("photos:gallery"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(response.context["object_list"]) == 3

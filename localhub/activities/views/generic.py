@@ -3,14 +3,19 @@
 
 # Django
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, ListView
+from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
+from turbo_response import HttpResponseSeeOther
+from turbo_response.views import TurboCreateView, TurboFormView, TurboUpdateView
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
@@ -18,13 +23,7 @@ from localhub.comments.forms import CommentForm
 from localhub.common.mixins import ParentObjectMixin, SearchMixin
 from localhub.common.pagination import PresetCountPaginator
 from localhub.common.template.defaultfilters import resolve_url
-from localhub.common.views import (
-    SuccessActionView,
-    SuccessCreateView,
-    SuccessDeleteView,
-    SuccessFormView,
-    SuccessUpdateView,
-)
+from localhub.common.views import SuccessActionView
 from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
@@ -36,7 +35,10 @@ from ..utils import get_activity_models
 
 
 class ActivityCreateView(
-    CommunityPermissionRequiredMixin, ActivityTemplateMixin, SuccessCreateView,
+    SuccessMessageMixin,
+    CommunityPermissionRequiredMixin,
+    ActivityTemplateMixin,
+    TurboCreateView,
 ):
     permission_required = "activities.create_activity"
 
@@ -67,6 +69,9 @@ class ActivityCreateView(
         data["submit_actions"] = self.get_submit_actions()
         return data
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def form_valid(self, form):
 
         publish = self.is_private is False and "save_private" not in self.request.POST
@@ -83,7 +88,7 @@ class ActivityCreateView(
         if publish:
             self.object.notify_on_publish()
 
-        return self.success_response()
+        return HttpResponseSeeOther(self.get_success_url())
 
 
 class ActivityFlagView(
@@ -108,12 +113,12 @@ activity_flag_view = ActivityFlagView.as_view()
 
 
 class ActivityCommentCreateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, ParentObjectMixin, SuccessFormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, ParentObjectMixin, TurboFormView,
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
     permission_required = "activities.create_comment"
-    success_message = _("Your %(model)s has been posted")
+    success_message = _("Your comment has been posted")
 
     parent_context_object_name = "content_object"
 
@@ -122,6 +127,9 @@ class ActivityCommentCreateView(
 
     def get_parent_queryset(self):
         return self.get_queryset()
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -132,17 +140,24 @@ class ActivityCommentCreateView(
 
         self.object.notify_on_create()
 
-        return self.success_response()
+        messages.success(
+            self.request, self.success_message,
+        )
+
+        return HttpResponseSeeOther(self.get_success_url())
 
 
 class ActivityUpdateView(
     PermissionRequiredMixin,
     ActivityQuerySetMixin,
     ActivityTemplateMixin,
-    SuccessUpdateView,
+    TurboUpdateView,
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your %(model)s has been updated")
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
     def form_valid(self, form):
 
@@ -156,7 +171,12 @@ class ActivityUpdateView(
         if self.object.published:
             self.object.notify_on_update()
 
-        return self.success_response()
+        messages.success(
+            self.request,
+            self.success_message % {"model": self.object._meta.verbose_name},
+        )
+
+        return HttpResponseSeeOther(self.get_success_url())
 
 
 class ActivityUpdateTagsView(ActivityUpdateView):
@@ -422,10 +442,7 @@ class ActivityDislikeView(BaseActivityLikeView):
 
 
 class ActivityDeleteView(
-    PermissionRequiredMixin,
-    ActivityQuerySetMixin,
-    ActivityTemplateMixin,
-    SuccessDeleteView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, ActivityTemplateMixin, DeleteView,
 ):
     permission_required = "activities.delete_activity"
     success_message = _("You have deleted this %(model)s")
@@ -444,4 +461,4 @@ class ActivityDeleteView(
         else:
             self.object.delete()
 
-        return self.success_response()
+        return HttpResponseRedirect(self.get_success_url())
