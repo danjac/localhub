@@ -16,7 +16,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
-from turbo_response import HttpResponseSeeOther
+from turbo_response import HttpResponseSeeOther, TurboFrame
 from turbo_response.views import TurboCreateView, TurboUpdateView
 
 # Localhub
@@ -265,6 +265,18 @@ comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 class BaseCommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.like_comment"
 
+    def get_response(self, has_liked):
+        if self.request.accept_turbo_stream:
+            return (
+                TurboFrame(f"comment-like-{self.object.id}")
+                .template(
+                    "comments/includes/like.html",
+                    {"object": self.object, "has_liked": has_liked},
+                )
+                .response(self.request)
+            )
+        return HttpResponseRedirect(self.get_success_url())
+
 
 class CommentLikeView(BaseCommentLikeView):
     success_message = _("You have liked this comment")
@@ -279,7 +291,7 @@ class CommentLikeView(BaseCommentLikeView):
             ).notify()
         except IntegrityError:
             pass
-        return HttpResponseRedirect(self.get_success_url())
+        return self.get_response(has_liked=True)
 
 
 comment_like_view = CommentLikeView.as_view()
@@ -290,7 +302,7 @@ class CommentDislikeView(BaseCommentLikeView):
 
     def post(self, request, *args, **kwargs):
         Like.objects.filter(user=request.user, comment=self.object).delete()
-        return HttpResponseRedirect(self.get_success_url())
+        return self.get_response(has_liked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

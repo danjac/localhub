@@ -129,7 +129,7 @@ a.btn-secondary {
 }
 
 .dropdown-menu-item {
-  @apply block p-1 text-gray-800;
+  @apply block p-1 text-gray-800 w-full text-left;
 }
 
 .dropdown-menu-item-container a {

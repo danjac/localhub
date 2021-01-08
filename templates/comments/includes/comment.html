@@ -118,7 +118,9 @@
              data-dropdown-target="menu">
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
-          {% include "comments/includes/like.html" with object=comment has_liked=comment.has_liked %}
+          <turbo-frame id="comment-like-{{ comment.id }}">
+            {% include "comments/includes/like.html" with object=comment has_liked=comment.has_liked %}
+          </turbo-frame>
           {% endif %}
 
           {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
@@ -150,7 +152,6 @@
           {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
           {% if can_delete_comment %}
           <form method="post"
-                class="inline-block"
                 action="{% url 'comments:delete' comment.id %}"
                 data-controller="confirm"
                 data-action="confirm#confirm"
