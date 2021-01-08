@@ -3,21 +3,23 @@
 
 # Django
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count, F, Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DeleteView, DetailView, ListView, TemplateView
 
 # Third Party Libraries
 import rules
 from rules.contrib.views import PermissionRequiredMixin
+from turbo_response.views import TurboUpdateView
 
 # Localhub
 from localhub.common.mixins import SearchMixin
-from localhub.common.views import SuccessDeleteView, SuccessUpdateView
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 
@@ -159,7 +161,10 @@ community_list_view = CommunityListView.as_view()
 
 
 class CommunityUpdateView(
-    CurrentCommunityMixin, CommunityAdminRequiredMixin, SuccessUpdateView
+    SuccessMessageMixin,
+    CurrentCommunityMixin,
+    CommunityAdminRequiredMixin,
+    TurboUpdateView,
 ):
     form_class = CommunityForm
     success_message = _("Community settings have been updated")
@@ -284,7 +289,10 @@ membership_detail_view = MembershipDetailView.as_view()
 
 
 class MembershipUpdateView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessUpdateView,
+    SuccessMessageMixin,
+    PermissionRequiredMixin,
+    MembershipQuerySetMixin,
+    TurboUpdateView,
 ):
     model = Membership
     form_class = MembershipForm
@@ -296,7 +304,7 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class BaseMembershipDeleteView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessDeleteView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, DeleteView,
 ):
     permission_required = "communities.delete_membership"
     model = Membership
@@ -319,7 +327,8 @@ class MembershipDeleteView(BaseMembershipDeleteView):
 
         send_membership_deleted_email(self.object.member, self.object.community)
 
-        return self.success_response()
+        messages.success(request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 membership_delete_view = MembershipDeleteView.as_view()
@@ -347,7 +356,8 @@ class MembershipLeaveView(BaseMembershipDeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
-        return self.success_response()
+        messages.success(request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 membership_leave_view = MembershipLeaveView.as_view()
