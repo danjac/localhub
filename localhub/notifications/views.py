@@ -8,10 +8,14 @@ import json
 from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
-from django.views.generic import ListView, TemplateView, View
+from django.urls import reverse
+from django.views.generic import DeleteView, ListView, TemplateView, View
+from django.views.generic.detail import SingleObjectMixin
+
+# Third Party Libraries
+from turbo_response import TurboStream
 
 # Localhub
-from localhub.common.views import SuccessActionView, SuccessDeleteView, SuccessView
 from localhub.communities.mixins import CommunityRequiredMixin
 
 # Local
@@ -59,7 +63,7 @@ notification_list_view = NotificationListView.as_view()
 
 
 class NotificationMarkAllReadView(
-    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessView,
+    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, View
 ):
     def post(self, request, *args, **kwargs):
         qs = self.get_queryset()
@@ -71,16 +75,23 @@ class NotificationMarkAllReadView(
             for notification in qs.prefetch_related("content_object")
         ]
         qs.update(is_read=True)
-        return self.success_response()
+        return HttpResponseRedirect(reverse("notifications:list"))
 
 
 notification_mark_all_read_view = NotificationMarkAllReadView.as_view()
 
 
-class NotificationMarkReadView(UnreadNotificationQuerySetMixin, SuccessActionView):
-    is_success_ajax_response = True
-
+class NotificationMarkReadView(
+    UnreadNotificationQuerySetMixin, SingleObjectMixin, View
+):
     def post(self, request, *args, **kwargs):
+        try:
+            target = request.POST["target"]
+        except KeyError:
+            return HttpResponseBadRequest("target not provided")
+
+        self.object = self.get_object()
+
         self.object.is_read = True
         self.object.save()
 
@@ -88,40 +99,29 @@ class NotificationMarkReadView(UnreadNotificationQuerySetMixin, SuccessActionVie
             sender=self.object.content_object.__class__,
             instance=self.object.content_object,
         )
-        return self.success_response()
+        return TurboStream(target).remove.response()
 
 
 notification_mark_read_view = NotificationMarkReadView.as_view()
 
 
-class NotificationMarkReadRedirectView(
-    NotificationSuccessRedirectMixin, NotificationMarkReadView
-):
-    is_success_ajax_response = False
-
-
-notification_mark_read_redirect_view = NotificationMarkReadRedirectView.as_view()
-
-
 class NotificationDeleteAllView(
-    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessView
+    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, View,
 ):
-    def delete(self, request):
-        self.get_queryset().delete()
-        return HttpResponseRedirect(self.get_success_url())
-
     def post(self, request):
-        return self.delete(request)
+        self.get_queryset().delete()
+        return HttpResponseRedirect(reverse("notifications:list"))
 
 
 notification_delete_all_view = NotificationDeleteAllView.as_view()
 
 
-class NotificationDeleteView(
-    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessDeleteView
-):
-
-    ...
+class NotificationDeleteView(NotificationQuerySetMixin, DeleteView):
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        target = f"notification-{self.object.id}"
+        self.object.delete()
+        return TurboStream(target).remove.response()
 
 
 notification_delete_view = NotificationDeleteView.as_view()

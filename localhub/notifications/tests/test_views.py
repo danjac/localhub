@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Standard Library
+import http
 import json
 
 # Django
@@ -61,7 +62,7 @@ class TestNotificationListView:
         )
         response = client.get(reverse("notifications:list"))
         assert len(response.context["object_list"]) == 4
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
 
 class TestNotificationMarkReadView:
@@ -80,34 +81,11 @@ class TestNotificationMarkReadView:
         )
 
         response = client.post(
-            reverse("notifications:mark_read", args=[notification.id])
+            reverse("notifications:mark_read", args=[notification.id]),
+            {"target": f"notification-mark-read-{notification.id}"},
         )
         assert mock_notification_read.send.called_with(instance=post)
-        assert response.status_code == 204
-        notification.refresh_from_db()
-        assert notification.is_read
-
-
-class TestNotificationMarkReadRedirectView:
-    def test_post(self, client, member, mocker):
-        owner = MembershipFactory(community=member.community).member
-        post = PostFactory(community=member.community, owner=owner)
-        notification = NotificationFactory(
-            content_object=post,
-            recipient=member.member,
-            actor=post.owner,
-            community=post.community,
-        )
-
-        mock_notification_read = mocker.patch(
-            "localhub.notifications.signals.notification_read"
-        )
-
-        response = client.post(
-            reverse("notifications:mark_read_redirect", args=[notification.id])
-        )
-        assert mock_notification_read.send.called_with(instance=post)
-        assert response.url == reverse("notifications:list")
+        assert response.status_code == http.HTTPStatus.OK
         notification.refresh_from_db()
         assert notification.is_read
 
@@ -148,7 +126,7 @@ class TestNotificationDeleteView:
             community=post.community,
         )
         response = client.post(reverse("notifications:delete", args=[notification.id]))
-        assert response.url == reverse("notifications:list")
+        assert response.status_code == http.HTTPStatus.OK
         assert not Notification.objects.exists()
 
 
@@ -162,7 +140,7 @@ class TestNotificationDeleteAllView:
             actor=post.owner,
             community=post.community,
         )
-        response = client.delete(reverse("notifications:delete_all"))
+        response = client.post(reverse("notifications:delete_all"))
         assert response.url == reverse("notifications:list")
         assert not Notification.objects.exists()
 
@@ -175,7 +153,7 @@ class TestSubscribeView:
             json.dumps(body),
             content_type="application/json",
         )
-        assert response.status_code == 400
+        assert response.status_code == http.HTTPStatus.BAD_REQUEST
         assert not PushSubscription.objects.exists()
 
     def test_post(self, client, member):
@@ -188,7 +166,7 @@ class TestSubscribeView:
             json.dumps(body),
             content_type="application/json",
         )
-        assert response.status_code == 201
+        assert response.status_code == http.HTTPStatus.CREATED
 
         sub = PushSubscription.objects.get()
         assert sub.user == member.member
@@ -206,7 +184,7 @@ class TestUnsubscribeView:
             json.dumps(body),
             content_type="application/json",
         )
-        assert response.status_code == 400
+        assert response.status_code == http.HTTPStatus.BAD_REQUEST
 
     def test_post(self, client, member):
         PushSubscription.objects.create(
@@ -225,12 +203,12 @@ class TestUnsubscribeView:
             json.dumps(body),
             content_type="application/json",
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert not PushSubscription.objects.exists()
 
 
 class TestServiceWorkerView:
     def test_get(self, client, login_user):
         response = client.get(reverse("notifications:service_worker"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response["Content-Type"] == "application/javascript"

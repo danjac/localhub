@@ -69,7 +69,7 @@ You can enable emails for your notifications
   <tbody>
     {% for notification in object_list %}
     {% notification notification %}
-    <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200">
+    <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200" id="notification-{{ notification.pk }}">
       <td class="border px-2 py-2{% if not notification.is_read %} text-bold{% endif %}">
 
         {{ notification_content }}
@@ -87,19 +87,23 @@ You can enable emails for your notifications
       <td class="border px-2 py-2">
         <div class="table-nav">
           {% if not notification.is_read %}
-          <a class="table-nav-item"
-             href="{% url 'notifications:mark_read_redirect' notification.pk %}"
-             role="button"
-             data-turbo="false"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Mark Read" %}</a>
+          <form method="post"
+                class="table-nav-item"
+                action="{% url 'notifications:mark_read' notification.pk %}"
+                id="notification-mark-read-{{ notification.pk }}">
+            {% csrf_token %}
+            <input type="hidden"
+                   name="target"
+                   value="notification-mark-read-{{ notification.pk }}">
+            <button>{% trans "Mark Read" %}</button>
+          </form>
           {% endif %}
-          <a class="table-nav-item"
-             href="{% url 'notifications:delete' notification.pk %}"
-             role="button"
-             data-turbo="false"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Delete" %}</a>
+          <form method="post"
+                class="table-nav-item"
+                action="{% url 'notifications:delete' notification.pk %}">
+            {% csrf_token %}
+            <button>{% trans "Delete" %}</button>
+          </form>
         </div>
       </td>
     </tr>
