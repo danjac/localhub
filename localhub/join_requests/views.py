@@ -5,20 +5,22 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, ListView, View
-from django.views.generic.detail import SingleObjectMixin
+from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
+from turbo_response import HttpResponseSeeOther
+from turbo_response.views import TurboCreateView
 
 # Localhub
 from localhub.common.mixins import SearchMixin
-from localhub.common.views import SuccessCreateView, SuccessDeleteView
+from localhub.common.views import ActionView
 from localhub.communities.mixins import CommunityAdminRequiredMixin
 from localhub.communities.models import Membership
 
@@ -30,14 +32,10 @@ from .models import JoinRequest
 
 
 class BaseJoinRequestActionView(
-    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, SingleObjectMixin, View
+    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, ActionView
 ):
     def get_success_url(self):
         return self.request.POST.get("redirect", reverse("join_requests:list"))
-
-    @cached_property
-    def object(self):
-        return self.get_object()
 
 
 class JoinRequestAcceptView(BaseJoinRequestActionView):
@@ -98,7 +96,10 @@ join_request_reject_view = JoinRequestRejectView.as_view()
 
 
 class JoinRequestCreateView(
-    LoginRequiredMixin, CommunityAdminRequiredMixin, SuccessCreateView,
+    SuccessMessageMixin,
+    LoginRequiredMixin,
+    CommunityAdminRequiredMixin,
+    TurboCreateView,
 ):
     model = JoinRequest
     form_class = JoinRequestForm
@@ -116,8 +117,7 @@ class JoinRequestCreateView(
     def form_valid(self, form):
         self.object = form.save()
         send_join_request_email(self.object)
-        return HttpResponseRedirect(self.get_success_url())
-        return self.success_response()
+        return HttpResponseSeeOther(self.get_success_url())
 
     def get_success_url(self):
         return (
@@ -130,7 +130,7 @@ class JoinRequestCreateView(
 join_request_create_view = JoinRequestCreateView.as_view()
 
 
-class JoinRequestDeleteView(PermissionRequiredMixin, SuccessDeleteView):
+class JoinRequestDeleteView(PermissionRequiredMixin, DeleteView):
     model = JoinRequest
     permission_required = "join_requests.delete"
 
@@ -156,6 +156,12 @@ class JoinRequestDeleteView(PermissionRequiredMixin, SuccessDeleteView):
         return _("Join request for %(sender)s has been deleted") % {
             "sender": self.object.sender.get_display_name()
         }
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        messages.success(request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 join_request_delete_view = JoinRequestDeleteView.as_view()
