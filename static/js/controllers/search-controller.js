@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import Turbolinks from 'turbolinks';
+import { visit } from '@hotwired/turbo';
 
 import ApplicationController from './application-controller';
 
@@ -42,7 +42,7 @@ export default class extends ApplicationController {
       : this.element.getAttribute('action');
     const search = this.inputTarget.value;
     if (url && search) {
-      Turbolinks.visit(`${url}?${this.searchParam}=${search}`);
+      visit(`${url}?${this.searchParam}=${search}`);
     }
   }
 

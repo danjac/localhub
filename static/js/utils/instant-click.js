@@ -8,9 +8,9 @@
 import hoverintent from 'hoverintent';
 
 export default function instantClick(interval = 50, sensitivity = 5) {
-  document.addEventListener('turbolinks:load', () => {
+  document.addEventListener('turbo:load', () => {
     document.querySelectorAll('a').forEach((el) => {
-      if (el.dataset.turbolinks === 'false') {
+      if (el.dataset.turbo === 'false') {
         return;
       }
 
