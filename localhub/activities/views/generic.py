@@ -9,10 +9,8 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, DetailView, ListView, View
-from django.views.generic.detail import SingleObjectMixin
+from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -25,6 +23,7 @@ from localhub.comments.forms import CommentForm
 from localhub.common.mixins import ParentObjectMixin, SearchMixin
 from localhub.common.pagination import PresetCountPaginator
 from localhub.common.template.defaultfilters import resolve_url
+from localhub.common.views import ActionView
 from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
@@ -298,18 +297,8 @@ class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailVie
         ).get_page(self.request.GET.get(self.page_kwarg, 1))
 
 
-class BaseActivityActionView(
-    ActivityQuerySetMixin, PermissionRequiredMixin, SingleObjectMixin, View
-):
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
-    @cached_property
-    def object(self):
-        return self.get_object()
-
-    def get_response(self):
-        return HttpResponseRedirect(self.get_success_url())
+class BaseActivityActionView(ActivityQuerySetMixin, ActionView):
+    ...
 
 
 class ActivityReshareView(BaseActivityActionView):

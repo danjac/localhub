@@ -11,8 +11,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, DetailView, ListView, View
-from django.views.generic.detail import SingleObjectMixin
+from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -22,6 +21,7 @@ from turbo_response.views import TurboCreateView, TurboUpdateView
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.mixins import ParentObjectMixin, SearchMixin
+from localhub.common.views import ActionView
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
 
@@ -212,19 +212,11 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
 comment_detail_view = CommentDetailView.as_view()
 
 
-class BaseCommentActionView(CommentQuerySetMixin, SingleObjectMixin, View):
-    @cached_property
-    def object(self):
-        return self.get_object()
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
-    def get_permission_object(self):
-        return self.object
+class BaseCommentActionView(CommentQuerySetMixin, ActionView):
+    ...
 
 
-class BaseCommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
+class BaseCommentBookmarkView(BaseCommentActionView):
     permission_required = "comments.bookmark_comment"
 
     def get_response(self, has_bookmarked):
@@ -268,7 +260,7 @@ class CommentRemoveBookmarkView(BaseCommentBookmarkView):
 comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 
 
-class BaseCommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
+class BaseCommentLikeView(BaseCommentActionView):
     permission_required = "comments.like_comment"
 
     def get_response(self, has_liked):
