@@ -227,10 +227,20 @@ class BaseCommentActionView(CommentQuerySetMixin, SingleObjectMixin, View):
 class BaseCommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.bookmark_comment"
 
+    def get_response(self, has_bookmarked):
+        if self.request.accept_turbo_stream:
+            return (
+                TurboFrame(f"comment-bookmark-{self.object.id}")
+                .template(
+                    "comments/includes/bookmark.html",
+                    {"object": self.object, "has_bookmarked": has_bookmarked},
+                )
+                .response(self.request)
+            )
+        return HttpResponseRedirect(self.get_success_url())
+
 
 class CommentBookmarkView(BaseCommentBookmarkView):
-    success_message = _("You have bookmarked this comment")
-
     def post(self, request, *args, **kwargs):
         try:
             Bookmark.objects.create(
@@ -240,20 +250,16 @@ class CommentBookmarkView(BaseCommentBookmarkView):
             )
         except IntegrityError:
             pass
-        messages.success(request, self.success_message)
-        return HttpResponseRedirect(self.object.get_absolute_url())
+        return self.get_response(has_bookmarked=True)
 
 
 comment_bookmark_view = CommentBookmarkView.as_view()
 
 
 class CommentRemoveBookmarkView(BaseCommentBookmarkView):
-    success_message = _("You have removed this comment from your bookmarks")
-
     def post(self, request, *args, **kwargs):
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
-        messages.success(request, self.success_message)
-        return HttpResponseRedirect(self.object.get_absolute_url())
+        return self.get_response(has_bookmarked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

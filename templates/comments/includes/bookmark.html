@@ -2,19 +2,12 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div data-controller="toggle">
-  <a href="{% url 'comments:remove_bookmark' object.id %}"
-     class="dropdown-menu-item line-through{% if not has_bookmarked %} hidden{% endif %}"
-     role="button"
-     data-controller="ajax"
-     data-turbo="false"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
-  <a href="{% url 'comments:bookmark' object.id %}"
-     class="dropdown-menu-item{% if has_bookmarked %} hidden{% endif %}"
-     role="button"
-     data-controller="ajax"
-     data-turbo="false"
-     data-toggle-target="togglable"
-     data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
-</div>
+<form method="post"
+      action="{% if has_bookmarked %}{% url 'comments:remove_bookmark' object.id %}{% else %}{% url 'comments:bookmark' object.id %}{% endif %}">
+  {% csrf_token %}
+  {% if has_bookmarked %}
+  <button class="dropdown-menu-item line-through">{% trans "Bookmark" %}</button>
+  {% else %}
+  <button class="dropdown-menu-item">{% trans "Bookmark" %}</button>
+  {% endif %}
+</form>

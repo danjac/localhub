@@ -125,7 +125,9 @@
 
           {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
           {% if can_bookmark_comment %}
-          {% include "comments/includes/bookmark.html" with object=comment has_bookmarked=comment.has_bookmarked %}
+          <turbo-frame id="comment-bookmark-{{ comment.id }}">
+            {% include "comments/includes/bookmark.html" with object=comment has_bookmarked=comment.has_bookmarked %}
+          </turbo-frame>
           {% endif %}
 
           {% has_perm "comments.reply_to_comment" user comment as can_reply %}
