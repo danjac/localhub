@@ -18,6 +18,8 @@ django-silk
 django-storages
 django-taggit
 django-timezone-field
+django-turbo-allauth
+django-turbo-response
 django-widget-tweaks
 factory-boy
 future

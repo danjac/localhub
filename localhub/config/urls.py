@@ -43,7 +43,7 @@ urlpatterns = [
     path("not-found/", view=community_not_found_view, name="community_not_found"),
     path("~dismiss-notice/<str:notice>/", dismiss_notice_view, name="dismiss_notice"),
     # Third-party
-    path("account/", include("allauth.urls")),
+    path("account/", include("turbo_allauth.urls")),
     path("markdownx/", include("markdownx.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
 ]

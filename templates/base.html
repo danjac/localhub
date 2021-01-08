@@ -102,13 +102,13 @@
            class="inline-block text-white hover:text-gray-100 md:mr-2">
           {{ user.username }}
         </a>
-        <a href="{% url 'account_logout' %}"
-           class="hidden md:inline-block text-white hover:text-gray-100"
-           role="button"
-           data-turbo="false"
-           data-controller="ajax"
-           data-action="ajax#post"
-           data-ajax-redirect-value="{{ home_page_url }}">{% trans "Logout" %}</a>
+        <form class="inline-block"
+              method="post"
+              action="{% url 'account_logout' %}">
+          {% csrf_token %}
+          <button class="hidden md:inline-block text-white hover:text-gray-100"
+                  role="button">{% trans "Logout" %}</button>
+        </form>
       </div>
       {% else %}
       <div>

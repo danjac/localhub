@@ -3,25 +3,24 @@
 
 # Django
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, View
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
+from turbo_response import HttpResponseSeeOther
+from turbo_response.views import TurboCreateView, TurboUpdateView
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.mixins import ParentObjectMixin, SearchMixin
-from localhub.common.views import (
-    SuccessActionView,
-    SuccessCreateView,
-    SuccessDeleteView,
-    SuccessUpdateView,
-)
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
 
@@ -32,12 +31,15 @@ from .models import Comment
 
 
 class CommentUpdateView(
-    PermissionRequiredMixin, CommentQuerySetMixin, SuccessUpdateView,
+    SuccessMessageMixin, PermissionRequiredMixin, CommentQuerySetMixin, TurboUpdateView,
 ):
     form_class = CommentForm
     model = Comment
     permission_required = "comments.change_comment"
     success_message = _("Your %(model)s has been updated")
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,14 +53,17 @@ class CommentUpdateView(
         self.object.save()
 
         self.object.notify_on_update()
-        return self.success_response()
+        return HttpResponseSeeOther(self.get_success_url())
 
 
 comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentFlagView(
-    PermissionRequiredMixin, CommentQuerySetMixin, BaseFlagCreateView
+    SuccessMessageMixin,
+    PermissionRequiredMixin,
+    CommentQuerySetMixin,
+    BaseFlagCreateView,
 ):
     permission_required = "comments.flag_comment"
     success_message = _("This comment has been flagged to the moderators")
@@ -79,7 +84,11 @@ comment_flag_view = CommentFlagView.as_view()
 
 
 class CommentReplyView(
-    CommentQuerySetMixin, PermissionRequiredMixin, ParentObjectMixin, SuccessCreateView,
+    SuccessMessageMixin,
+    CommentQuerySetMixin,
+    PermissionRequiredMixin,
+    ParentObjectMixin,
+    TurboCreateView,
 ):
     permission_required = "comments.reply_to_comment"
     model = Comment
@@ -116,7 +125,7 @@ class CommentReplyView(
 
         self.object.notify_on_create()
 
-        return self.success_response()
+        return HttpResponseSeeOther(self.content_object.get_absolute_url())
 
 
 comment_reply_view = CommentReplyView.as_view()
@@ -202,7 +211,7 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
 comment_detail_view = CommentDetailView.as_view()
 
 
-class BaseCommentActionView(CommentQuerySetMixin, SuccessActionView):
+class BaseCommentActionView(CommentQuerySetMixin, View):
     ...
 
 
@@ -223,6 +232,7 @@ class CommentBookmarkView(BaseCommentBookmarkView):
             )
         except IntegrityError:
             pass
+        messages.success(request, self.success_message)
         return self.success_response()
 
 
@@ -282,7 +292,7 @@ comment_dislike_view = CommentDislikeView.as_view()
 
 
 class CommentDeleteView(
-    PermissionRequiredMixin, CommentQuerySetMixin, SuccessDeleteView,
+    PermissionRequiredMixin, CommentQuerySetMixin, View,
 ):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
@@ -302,7 +312,7 @@ class CommentDeleteView(
         else:
             self.object.delete()
 
-        return self.success_response()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_delete_view = CommentDeleteView.as_view()
