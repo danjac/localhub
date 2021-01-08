@@ -2,15 +2,18 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 <div class="notification flex my-2{% if css_class %} {{ css_class }}{% endif %}"
-     data-controller="ajax"
-     data-ajax-remove-value>
+     id="notice-{{ notice }}">
   <div class="mx-auto text-center px-2">
     {{ dismissable_content }}
   </div>
   {% if user.is_authenticated %}
-  <button data-ajax-url-value="{% url 'dismiss_notice' notice %}"
-          data-action="ajax#post">
-    <i class="fa fa-times-circle"></i>
-  </button>
-  {% endif %}
+  <form class="inline-block"
+        method="post"
+        action="{% url 'dismiss_notice' notice %}">
+    {% csrf_token %}
+    <button>
+      <i class="fa fa-times-circle"></i>
+    </button>
+    {% endif %}
+  </form>
 </div>

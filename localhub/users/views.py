@@ -6,7 +6,7 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.urls import resolve
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
@@ -14,6 +14,7 @@ from django.views.generic import DeleteView, DetailView, ListView, View
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
+from turbo_response import TurboStream
 
 # Localhub
 from localhub.activities.utils import get_activity_models
@@ -482,7 +483,7 @@ user_delete_view = UserDeleteView.as_view()
 class DismissNoticeView(CurrentUserMixin, View):
     def post(self, request, notice):
         self.request.user.dismiss_notice(notice)
-        return HttpResponse()
+        return TurboStream(f"notice-{notice}").remove.response()
 
 
 dismiss_notice_view = DismissNoticeView.as_view()
