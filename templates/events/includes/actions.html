@@ -28,15 +28,14 @@
 
 {% has_perm "events.cancel" user object as can_cancel %}
 {% if can_cancel %}
-<a href="{% url 'events:cancel' object.id %}"
-   class="dropdown-menu-item"
-   data-controller="ajax"
-   data-action="ajax#post"
-   {% if not is_detail %}
-   data-ajax-redirect-value="{{ request.get_full_path }}"
-   {% endif %}
-   data-ajax-confirm-value="{% trans 'Are you sure you want to cancel this event?' %}">
-  {% trans "Cancel Event" %}</a>
+<form method="post"
+      action="{% url 'events:cancel' object.id %}"
+      data-controller="confirm"
+      data-action="confirm#confirm"
+      data-confirm-text-value="{% trans 'Are you sure you want to cancel this event?' %}">
+  {% csrf_token %}
+  <button class="dropdown-menu-item">{% trans "Cancel Event" %}</button>
+</form>
 {% endif %}
 
 
