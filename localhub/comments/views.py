@@ -321,6 +321,8 @@ class CommentDeleteView(
         else:
             self.object.delete()
 
+        messages.success(request, self.success_message)
+
         return HttpResponseRedirect(self.get_success_url())
 
 
