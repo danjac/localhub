@@ -4,11 +4,14 @@
 
 # Django
 from django.conf import settings
-from django.views.generic import ListView
+from django.views.generic import DeleteView, ListView
+
+# Third Party Libraries
+from turbo_response import HttpResponseSeeOther
+from turbo_response.views import TurboCreateView
 
 # Localhub
 from localhub.common.mixins import ParentObjectMixin
-from localhub.common.views import SuccessCreateView, SuccessDeleteView
 
 # Local
 from .forms import FlagForm
@@ -17,13 +20,13 @@ from .models import Flag
 
 
 class BaseFlagCreateView(
-    ParentObjectMixin, SuccessCreateView,
+    ParentObjectMixin, TurboCreateView,
 ):
     form_class = FlagForm
     template_name = "flags/flag_form.html"
 
     def get_success_url(self):
-        return super().get_success_url(object=self.parent)
+        return self.parent.get_absolute_url()
 
     def form_valid(self, form):
         flag = form.save(commit=False)
@@ -34,7 +37,7 @@ class BaseFlagCreateView(
 
         flag.notify()
 
-        return self.success_response()
+        return HttpResponseSeeOther(self.get_success_url())
 
 
 class FlagListView(FlagQuerySetMixin, ListView):
@@ -54,7 +57,7 @@ class FlagListView(FlagQuerySetMixin, ListView):
 flag_list_view = FlagListView.as_view()
 
 
-class FlagDeleteView(FlagQuerySetMixin, SuccessDeleteView):
+class FlagDeleteView(FlagQuerySetMixin, DeleteView):
     model = Flag
 
     def get_success_url(self):

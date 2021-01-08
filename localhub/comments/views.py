@@ -11,7 +11,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import DeleteView, DetailView, ListView, View
+from django.views.generic.detail import SingleObjectMixin
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -211,13 +212,20 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
 comment_detail_view = CommentDetailView.as_view()
 
 
-class BaseCommentActionView(CommentQuerySetMixin, View):
-    ...
+class BaseCommentActionView(CommentQuerySetMixin, SingleObjectMixin, View):
+    @cached_property
+    def object(self):
+        return self.get_object()
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+    def get_permission_object(self):
+        return self.object
 
 
 class BaseCommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.bookmark_comment"
-    is_success_ajax_response = True
 
 
 class CommentBookmarkView(BaseCommentBookmarkView):
@@ -233,7 +241,7 @@ class CommentBookmarkView(BaseCommentBookmarkView):
         except IntegrityError:
             pass
         messages.success(request, self.success_message)
-        return self.success_response()
+        return HttpResponseRedirect(self.object.get_absolute_url())
 
 
 comment_bookmark_view = CommentBookmarkView.as_view()
@@ -244,7 +252,8 @@ class CommentRemoveBookmarkView(BaseCommentBookmarkView):
 
     def post(self, request, *args, **kwargs):
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
-        return self.success_response()
+        messages.success(request, self.success_message)
+        return HttpResponseRedirect(self.object.get_absolute_url())
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -255,7 +264,6 @@ comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 
 class BaseCommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.like_comment"
-    is_success_ajax_response = True
 
 
 class CommentLikeView(BaseCommentLikeView):
@@ -271,7 +279,7 @@ class CommentLikeView(BaseCommentLikeView):
             ).notify()
         except IntegrityError:
             pass
-        return self.success_response()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_like_view = CommentLikeView.as_view()
@@ -282,7 +290,7 @@ class CommentDislikeView(BaseCommentLikeView):
 
     def post(self, request, *args, **kwargs):
         Like.objects.filter(user=request.user, comment=self.object).delete()
-        return self.success_response()
+        return HttpResponseRedirect(self.get_success_url())
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -292,11 +300,12 @@ comment_dislike_view = CommentDislikeView.as_view()
 
 
 class CommentDeleteView(
-    PermissionRequiredMixin, CommentQuerySetMixin, View,
+    PermissionRequiredMixin, CommentQuerySetMixin, DeleteView,
 ):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
     success_message = _("You have deleted this comment")
+    model = Comment
 
     def get_success_url(self):
         obj = self.object.get_content_object()

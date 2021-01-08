@@ -175,7 +175,7 @@ class TestCommentBookmarkView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("comments:bookmark", args=[comment.id]))
-        assert response.status_code == 204
+        assert response.url == comment.get_absolute_url()
         bookmark = Bookmark.objects.get()
         assert bookmark.user == member.member
 
@@ -192,7 +192,7 @@ class TestCommentRemoveBookmarkView:
             user=member.member, content_object=comment, community=comment.community,
         )
         response = client.post(reverse("comments:remove_bookmark", args=[comment.id]))
-        assert response.status_code == 204
+        assert response.url == comment.get_absolute_url()
         assert Bookmark.objects.count() == 0
 
 
@@ -205,7 +205,7 @@ class TestCommentLikeView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("comments:like", args=[comment.id]))
-        assert response.status_code == 204
+        assert response.url == comment.get_absolute_url()
         like = Like.objects.get()
         assert like.user == member.member
 
@@ -225,7 +225,7 @@ class TestCommentDislikeView:
             recipient=comment.owner,
         )
         response = client.post(reverse("comments:dislike", args=[comment.id]))
-        assert response.status_code == 204
+        assert response.url == comment.get_absolute_url()
         assert Like.objects.count() == 0
 
 
@@ -286,7 +286,7 @@ class TestCommentReplyView:
             reverse("comments:reply", args=[parent.id]), {"content": "test"}
         )
         comment = Comment.objects.get(parent=parent)
-        assert response.url == comment.get_absolute_url()
+        assert response.url == post.get_absolute_url()
         assert comment.owner == member.member
         assert comment.content_object == parent.content_object
         assert comment.parent == parent
