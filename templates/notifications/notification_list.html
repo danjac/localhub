@@ -16,20 +16,22 @@
   <div class="page-nav mt-3 lg:mt-0">
     {% if object_list %}
     {% if is_unread_notifications %}
-    <a class="page-nav-item"
-       href="{% url 'notifications:mark_all_read' %}"
-       role="button"
-       data-turbo="false"
-       data-controller="ajax"
-       data-action="ajax#post">{% trans "Mark All Read" %}</a>
+    <form class="page-nav-item"
+          method="post"
+          action="{% url 'notifications:mark_all_read' %}">
+      {% csrf_token %}
+      <button>{% trans "Mark All Read" %}</button>
+    </form>
     {% endif %}
-    <a class="page-nav-item"
-       href="{% url 'notifications:delete_all' %}"
-       role="button"
-       data-turbo="false"
-       data-controller="ajax"
-       data-action="ajax#post"
-       data-ajax-confirm-value="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
+    <form class="page-nav-item"
+          method="post"
+          action="{% url 'notifications:delete_all' %}"
+          data-controller="confirm"
+          data-action="confirm#confirm"
+          data-confirm-text-value="{% trans 'Are you sure you want to delete all your notifications?' %}">
+      {% csrf_token %}
+      <button>{% trans "Delete All" %}</button>
+    </form>
     {% endif %}
     {% if webpush_settings.enabled %}
     <span class="page-nav-item hidden"
@@ -69,7 +71,8 @@ You can enable emails for your notifications
   <tbody>
     {% for notification in object_list %}
     {% notification notification %}
-    <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200" id="notification-{{ notification.pk }}">
+    <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200"
+        id="notification-{{ notification.pk }}">
       <td class="border px-2 py-2{% if not notification.is_read %} text-bold{% endif %}">
 
         {{ notification_content }}

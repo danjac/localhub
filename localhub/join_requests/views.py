@@ -7,21 +7,18 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, View
+from django.views.generic.detail import SingleObjectMixin
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
 from localhub.common.mixins import SearchMixin
-from localhub.common.views import (
-    SuccessActionView,
-    SuccessCreateView,
-    SuccessDeleteView,
-)
+from localhub.common.views import SuccessCreateView, SuccessDeleteView
 from localhub.communities.mixins import CommunityAdminRequiredMixin
 from localhub.communities.models import Membership
 
@@ -33,9 +30,17 @@ from .models import JoinRequest
 
 
 class BaseJoinRequestActionView(
-    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, SuccessActionView
+    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, SingleObjectMixin, View
 ):
-    success_url = reverse_lazy("join_requests:list")
+    def get_success_url(self):
+        return self.request.POST.get("redirect", reverse("join_requests:list"))
+
+    @cached_property
+    def object(self):
+        return self.get_object()
+
+    def get_permission_object(self):
+        return self.object
 
 
 class JoinRequestAcceptView(BaseJoinRequestActionView):
@@ -70,7 +75,7 @@ class JoinRequestAcceptView(BaseJoinRequestActionView):
 
         self.object.sender.notify_on_join(self.object.community)
 
-        return self.success_response()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 join_request_accept_view = JoinRequestAcceptView.as_view()
@@ -89,7 +94,7 @@ class JoinRequestRejectView(BaseJoinRequestActionView):
     def post(self, request, *args, **kwargs):
         self.object.reject()
         send_rejection_email(self.object)
-        return self.success_response()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 join_request_reject_view = JoinRequestRejectView.as_view()
@@ -114,6 +119,7 @@ class JoinRequestCreateView(
     def form_valid(self, form):
         self.object = form.save()
         send_join_request_email(self.object)
+        return HttpResponseRedirect(self.get_success_url())
         return self.success_response()
 
     def get_success_url(self):
