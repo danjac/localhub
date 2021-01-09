@@ -15,7 +15,12 @@ from localhub.communities.views import (
     community_not_found_view,
     community_welcome_view,
 )
-from localhub.users.views import dismiss_notice_view, user_delete_view, user_update_view
+from localhub.users.views import (
+    accept_cookies,
+    dismiss_notice_view,
+    user_delete_view,
+    user_update_view,
+)
 
 urlpatterns = [
     # Local
@@ -41,6 +46,7 @@ urlpatterns = [
     path("account/~delete", user_delete_view, name="user_delete"),
     path("welcome/", view=community_welcome_view, name="community_welcome"),
     path("not-found/", view=community_not_found_view, name="community_not_found"),
+    path("~accept-cookies/", accept_cookies, name="accept_cookies"),
     path("~dismiss-notice/<str:notice>/", dismiss_notice_view, name="dismiss_notice"),
     # Third-party
     path("account/", include("turbo_allauth.urls")),

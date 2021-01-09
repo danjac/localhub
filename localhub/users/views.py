@@ -1,6 +1,8 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import datetime
 
 # Django
 from django.conf import settings
@@ -10,8 +12,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.http import Http404
 from django.urls import resolve
+from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, ListView, View
 
 # Third Party Libraries
@@ -508,3 +512,15 @@ class DismissNoticeView(CurrentUserMixin, View):
 
 
 dismiss_notice_view = DismissNoticeView.as_view()
+
+
+@require_POST
+def accept_cookies(request):
+    response = TurboStream("accept-cookies").remove.response()
+    response.set_cookie(
+        "accept-cookies",
+        value="true",
+        expires=timezone.now() + datetime.timedelta(days=30),
+        samesite="Lax",
+    )
+    return response

@@ -272,6 +272,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "localhub.communities.context_processors.community",
                 "localhub.common.template.context_processors.home_page_url",
+                "localhub.common.template.context_processors.is_cookies_accepted",
             ],
             "libraries": {"pagination": "localhub.common.pagination.templatetags"},
         },

@@ -420,3 +420,10 @@ class TestDismissNoticeView:
         response = client.post(reverse("dismiss_notice", args=["private-stash"]))
         assert response.status_code == http.HTTPStatus.OK
         login_user.refresh_from_db()
+
+
+class TestAcceptCookies:
+    def test_post(self, client):
+        response = client.post(reverse("accept_cookies"))
+        assert response.status_code == http.HTTPStatus.OK
+        assert "accept-cookies" in response.cookies

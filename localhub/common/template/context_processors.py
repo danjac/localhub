@@ -7,3 +7,7 @@ from django.conf import settings
 
 def home_page_url(request):
     return {"home_page_url": settings.HOME_PAGE_URL}
+
+
+def is_cookies_accepted(request):
+    return {"accept_cookies": "accept-cookies" in request.COOKIES}
