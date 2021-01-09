@@ -8,26 +8,17 @@
 {% with actor_url=notification.actor.get_absolute_url %}
 {% if notification.verb == 'new_follower' %}
 {% blocktrans %}
-<a href="{{ actor_url }}"
-   data-controller="hovercard"
-   data-hovercard-url-value="{{ actor_preview_url }}"
-   data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
+<a href="{{ actor_url }}">
   {{ actor }}</a> is now following you.
 {% endblocktrans %}
 {% elif notification.verb == 'new_member' %}
 {% blocktrans %}
-<a href="{{ actor_url }}"
-   data-controller="hovercard"
-   data-hovercard-url-value="{{ actor_preview_url }}"
-   data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
+<a href="{{ actor_url }}">
   {{ actor }}</a> has joined this community.
 {% endblocktrans %}
 {% elif notification.verb == 'update' %}
 {% blocktrans %}
-<a href="{{ actor_url }}"
-   data-controller="hovercard"
-   data-hovercard-url-value="{{ actor_preview_url }}"
-   data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
+<a href="{{ actor_url }}">
   {{ actor }}</a> has updated their profile.
 {% endblocktrans %}
 {% endif %}

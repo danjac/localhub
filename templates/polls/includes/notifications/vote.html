@@ -4,9 +4,6 @@
 {% load i18n %}
 
 {% blocktrans %}
-<a href="{{ actor_url }}"
-   data-controller="hovercard"
-   data-hovercard-url-value="{{ actor_preview_url }}"
-   data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
+<a href="{{ actor_url }}">
   {{ actor_display }}</a> has voted in your <a href="{{ object_url }}">{{ object_name }}</a>.
 {% endblocktrans %}

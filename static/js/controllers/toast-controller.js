@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Events } from '~/constants';
+import useTurbo from '~/utils/turbo';
 import { fadeOut, maximizeZIndex } from '~/utils/dom-helpers';
 
 import ApplicationController from './application-controller';
@@ -21,6 +22,20 @@ export default class extends ApplicationController {
     this.bus.sub(Events.TOAST_MESSAGE, ({ detail: { type, message } }) => {
       this.showMessage(type, message);
     });
+    useTurbo(this);
+  }
+
+  turboSubmitEnd(event) {
+    const { fetchResponse } = event.detail;
+    const headers = fetchResponse.response ? fetchResponse.response.headers : null;
+    if (!headers) {
+      return;
+    }
+    const msg = headers.get('X-Message');
+    const type = headers.get('X-Message-Type');
+    if (action && type) {
+      this.showMessage(type, msg);
+    }
   }
 
   showMessage(type, message) {

@@ -4,27 +4,18 @@
 {% load i18n %}
 {% if verb == "reply" %}
 {% blocktrans %}
-<a href="{{ actor_url }}"
-   data-controller="hovercard"
-   data-hovercard-url-value="{{ actor_preview_url }}"
-   data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
+<a href="{{ actor_url }}">
   {{ actor_display }}</a> has replied to your <a href="{{ object_url }}">message</a>.
 {% endblocktrans %}
 {% elif verb == "follow_up" %}
 {% blocktrans %}
-<a href="{{ actor_url }}"
-   data-controller="hovercard"
-   data-hovercard-url-value="{{ actor_preview_url }}"
-   data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
+<a href="{{ actor_url }}">
   {{ actor_display }}</a> has sent you a <a href="{{ object_url }}">follow-up</a> to one of
 their messages.
 {% endblocktrans %}
 {% else %}
 {% blocktrans %}
-<a href="{{ actor_url }}"
-   data-controller="hovercard"
-   data-hovercard-url-value="{{ actor_preview_url }}"
-   data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
+<a href="{{ actor_url }}">
   {{ actor_display }}</a> has sent you a <a href="{{ object_url }}">message</a>.
 {% endblocktrans %}
 {% endif %}

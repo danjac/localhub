@@ -20,7 +20,7 @@ from markdownx.utils import markdownify as default_markdownify
 
 # Localhub
 from localhub.hashtags.utils import linkify_hashtags
-from localhub.users.utils import get_preview_attrs, linkify_mentions
+from localhub.users.utils import linkify_mentions
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "abbr",
@@ -51,7 +51,7 @@ ALLOWED_ATTRIBUTES.update(
     {
         "img": ["alt", "src"],
         "a": ["rel", "target", "href",],
-        "span": ["data-typeahead-target", "data-hovercard-target"],
+        "span": ["data-typeahead-target"],
     }
 )
 
@@ -86,16 +86,9 @@ def user_mention_preview_attrs(attrs, new=False):
     markdown pre-rendering"""
     if href := attrs.get((None, "href")):
         try:
-            match = resolve(href)
+            resolve(href)
         except Http404:
             return attrs
-        if (
-            match.url_name == "activities"
-            and match.app_name == "users"
-            and "username" in match.kwargs
-        ):
-            for k, v in get_preview_attrs(match.kwargs["username"]):
-                attrs[(None, k)] = v
     return attrs
 
 
@@ -108,9 +101,7 @@ def markdownify(content):
 
     """
     return cleaner.clean(
-        default_markdownify(
-            linkify_hashtags(linkify_mentions(content, with_preview_attrs=False))
-        )
+        default_markdownify(linkify_hashtags(linkify_mentions(content)))
     )
 
 

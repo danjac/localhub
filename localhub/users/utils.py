@@ -33,7 +33,7 @@ def extract_mentions(content):
     )
 
 
-def linkify_mentions(content, css_class=None, with_preview_attrs=True):
+def linkify_mentions(content, css_class=None):
     """
     Replace all @mentions in the text with links to user profile page.
     """
@@ -43,29 +43,11 @@ def linkify_mentions(content, css_class=None, with_preview_attrs=True):
     css_class = f' class="{css_class}"' if css_class else ""
     for token in tokens:
         for mention in MENTIONS_RE.findall(token):
-            if with_preview_attrs:
-                preview_attrs = " ".join(
-                    [f'{k}="{v}"' for k, v in get_preview_attrs(mention)]
-                )
-            else:
-                preview_attrs = ""
             url = reverse("users:activities", args=[slugify_unicode(mention)])
             token = token.replace(
-                "@" + mention,
-                f'<a {preview_attrs} href="{url}"{css_class}>@{mention}</a>',
+                "@" + mention, f'<a href="{url}"{css_class}>@{mention}</a>',
             )
 
         rv.append(token)
 
     return " ".join(rv)
-
-
-def get_preview_attrs(username):
-    return [
-        ("data-action", "mouseenter->hovercard#show mouseleave->hovercard#hide"),
-        ("data-controller", "hovercard"),
-        (
-            "data-hovercard-url-value",
-            reverse("users:preview", args=[slugify_unicode(username)]),
-        ),
-    ]
