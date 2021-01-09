@@ -7,16 +7,6 @@ from django.utils.functional import cached_property
 from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 
-# Local
-from .success import (
-    SuccessActionView,
-    SuccessCreateView,
-    SuccessDeleteView,
-    SuccessFormView,
-    SuccessUpdateView,
-    SuccessView,
-)
-
 
 class ActionView(SingleObjectMixin, View):
     """Handles a simple POST action on an object"""
@@ -32,13 +22,3 @@ class ActionView(SingleObjectMixin, View):
 
     def render_to_response(self):
         return HttpResponseRedirect(self.get_success_url())
-
-
-__all__ = [
-    "SuccessActionView",
-    "SuccessCreateView",
-    "SuccessDeleteView",
-    "SuccessFormView",
-    "SuccessView",
-    "SuccessUpdateView",
-]
