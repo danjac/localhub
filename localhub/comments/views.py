@@ -20,7 +20,7 @@ from turbo_response.views import TurboCreateView, TurboUpdateView
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
-from localhub.common.mixins import ParentObjectMixin, SearchMixin
+from localhub.common.mixins import ParentObjectMixin, SearchMixin, SuccessHeaderMixin
 from localhub.common.views import ActionView
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
@@ -212,7 +212,9 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
 comment_detail_view = CommentDetailView.as_view()
 
 
-class BaseCommentActionView(PermissionRequiredMixin, CommentQuerySetMixin, ActionView):
+class BaseCommentActionView(
+    PermissionRequiredMixin, CommentQuerySetMixin, SuccessHeaderMixin, ActionView
+):
     ...
 
 
@@ -233,6 +235,8 @@ class BaseCommentBookmarkView(BaseCommentActionView):
 
 
 class CommentBookmarkView(BaseCommentBookmarkView):
+    success_message = _("You have bookmarked this comment")
+
     def post(self, request, *args, **kwargs):
         try:
             Bookmark.objects.create(
@@ -249,6 +253,8 @@ comment_bookmark_view = CommentBookmarkView.as_view()
 
 
 class CommentRemoveBookmarkView(BaseCommentBookmarkView):
+    success_message = _("You have removed this comment from your bookmarks")
+
     def post(self, request, *args, **kwargs):
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
         return self.render_to_response(has_bookmarked=False)

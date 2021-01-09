@@ -33,7 +33,8 @@ export default class extends ApplicationController {
     }
     const msg = headers.get('X-Message');
     const type = headers.get('X-Message-Type');
-    if (action && type) {
+    console.log(msg, type);
+    if (msg && type) {
       this.showMessage(type, msg);
     }
   }

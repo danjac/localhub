@@ -4,10 +4,10 @@
 # Local
 from .parent import ParentObjectMixin
 from .search import SearchMixin
-from .success import SuccessMixin
+from .success import SuccessHeaderMixin
 
 __all__ = [
     "ParentObjectMixin",
     "SearchMixin",
-    "SuccessMixin",
+    "SuccessHeaderMixin",
 ]
