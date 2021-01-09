@@ -7,9 +7,6 @@ from django.utils.functional import cached_property
 from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 
-# Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
-
 # Local
 from .success import (
     SuccessActionView,
@@ -21,18 +18,17 @@ from .success import (
 )
 
 
-class ActionView(PermissionRequiredMixin, SingleObjectMixin, View):
+class ActionView(SingleObjectMixin, View):
     """Handles a simple POST action on an object"""
 
+    success_url = None
+
     def get_success_url(self):
-        return self.object.get_absolute_url()
+        return self.success_url or self.object.get_absolute_url()
 
     @cached_property
     def object(self):
         return self.get_object()
-
-    def get_permission_object(self):
-        return self.object
 
     def render_to_response(self):
         return HttpResponseRedirect(self.get_success_url())

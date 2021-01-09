@@ -212,7 +212,7 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
 comment_detail_view = CommentDetailView.as_view()
 
 
-class BaseCommentActionView(CommentQuerySetMixin, ActionView):
+class BaseCommentActionView(PermissionRequiredMixin, CommentQuerySetMixin, ActionView):
     ...
 
 

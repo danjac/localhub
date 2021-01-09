@@ -409,7 +409,7 @@ class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
 user_delete_view = UserDeleteView.as_view()
 
 
-class BaseUserActionView(UserQuerySetMixin, ActionView):
+class BaseUserActionView(PermissionRequiredMixin, UserQuerySetMixin, ActionView):
     slug_field = "username"
     slug_url_kwarg = "username"
 

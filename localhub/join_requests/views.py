@@ -32,7 +32,7 @@ from .models import JoinRequest
 
 
 class BaseJoinRequestActionView(
-    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, ActionView
+    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, ActionView,
 ):
     def get_success_url(self):
         return self.request.POST.get("redirect", reverse("join_requests:list"))

@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
 # Third Party Libraries
+from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag
 from turbo_response import TurboFrame
 
@@ -145,7 +146,7 @@ class TagDetailView(ParentObjectMixin, BaseActivityStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class BaseTagActionView(TagQuerySetMixin, ActionView):
+class BaseTagActionView(PermissionRequiredMixin, TagQuerySetMixin, ActionView):
     def get_permission_object(self):
         return self.request.community
 

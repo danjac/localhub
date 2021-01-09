@@ -3,19 +3,20 @@
 
 # Django
 from django.conf import settings
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
-from django.views.generic import DetailView, ListView
+from django.views.generic import DeleteView, DetailView, ListView
+
+# Third Party Libraries
+from turbo_response.views import TurboCreateView
 
 # Localhub
 from localhub.common.mixins import SearchMixin
-from localhub.common.views import (
-    SuccessActionView,
-    SuccessCreateView,
-    SuccessDeleteView,
-)
+from localhub.common.views import ActionView
 from localhub.communities.mixins import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
@@ -29,12 +30,12 @@ from .models import Invite
 
 
 class BaseInviteAdminActionView(
-    CommunityAdminRequiredMixin, InviteQuerySetMixin, SuccessActionView
+    CommunityAdminRequiredMixin, InviteQuerySetMixin, ActionView
 ):
     ...
 
 
-class BaseInviteRecipientActionView(InviteRecipientQuerySetMixin, SuccessActionView):
+class BaseInviteRecipientActionView(InviteRecipientQuerySetMixin, ActionView):
     ...
 
 
@@ -55,7 +56,8 @@ class InviteResendView(BaseInviteAdminActionView):
         self.object.save()
 
         send_invitation_email(self.object)
-        return self.success_response()
+        messages.success(request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 invite_resend_view = InviteResendView.as_view()
@@ -88,7 +90,8 @@ class InviteAcceptView(BaseInviteRecipientActionView):
         self.object.accept(self.request.user)
         request.user.notify_on_join(self.object.community)
 
-        return self.success_response()
+        messages.success(request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 invite_accept_view = InviteAcceptView.as_view()
@@ -103,14 +106,15 @@ class InviteRejectView(BaseInviteRecipientActionView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.reject()
-        return self.success_response()
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 invite_reject_view = InviteRejectView.as_view()
 
 
 class InviteCreateView(
-    CommunityAdminRequiredMixin, CommunityRequiredMixin, SuccessCreateView,
+    CommunityAdminRequiredMixin, CommunityRequiredMixin, TurboCreateView,
 ):
     model = Invite
     form_class = InviteForm
@@ -135,18 +139,26 @@ class InviteCreateView(
 
         # send email to recipient
         send_invitation_email(self.object)
-        return self.success_response()
+
+        messages.success(self.request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 invite_create_view = InviteCreateView.as_view()
 
 
 class InviteDeleteView(
-    CommunityAdminRequiredMixin, InviteQuerySetMixin, SuccessDeleteView,
+    CommunityAdminRequiredMixin, InviteQuerySetMixin, DeleteView,
 ):
     success_url = reverse_lazy("invites:list")
     success_message = _("You have deleted this invite")
     model = Invite
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        messages.success(self.request, self.success_message)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 invite_delete_view = InviteDeleteView.as_view()

@@ -17,6 +17,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 # Third Party Libraries
 import pytz
+from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import TurboFrame
 
 # Localhub
@@ -40,7 +41,7 @@ class BaseEventActionView(BaseActivityActionView):
     model = Event
 
 
-class EventCancelView(BaseEventActionView):
+class EventCancelView(PermissionRequiredMixin, BaseEventActionView):
     success_message = _("This event has been canceled")
 
     permission_required = "events.cancel"
@@ -57,7 +58,7 @@ class EventCancelView(BaseEventActionView):
 event_cancel_view = EventCancelView.as_view()
 
 
-class BaseEventAttendView(BaseEventActionView):
+class BaseEventAttendView(PermissionRequiredMixin, BaseEventActionView):
     permission_required = "events.attend"
 
     def render_to_response(self, is_attending):
