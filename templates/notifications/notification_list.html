@@ -36,6 +36,7 @@
     {% if webpush_settings.enabled %}
     <span class="page-nav-item hidden"
           data-controller="webpush"
+          data-webpush-csrf-token-value="{{ csrf_token }}"
           data-webpush-service-worker-url-value="{% url 'notifications:service_worker' %}"
           data-webpush-subscribe-url-value="{% url 'notifications:subscribe' %}"
           data-webpush-unsubscribe-url-value="{% url 'notifications:unsubscribe' %}"

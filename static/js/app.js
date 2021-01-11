@@ -2,17 +2,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import '@hotwired/turbo';
-import axios from 'axios';
 
 import { Application } from 'stimulus';
 import { definitionsFromContext } from 'stimulus/webpack-helpers';
 
 import instantClick from './utils/instant-click';
-
-// Axios setup
-axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // Stimulus setup
 const application = Application.start();

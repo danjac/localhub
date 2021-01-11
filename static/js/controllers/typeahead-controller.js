@@ -1,9 +1,9 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
+import { getJSON } from '~/utils/fetch-json';
 import * as classList from '~/utils/class-list';
 import { Keys } from '~/constants';
 import { fitIntoViewport, maximizeZIndex } from '~/utils/dom-helpers';
@@ -136,13 +136,12 @@ export default class extends ApplicationController {
 
   async doSearch(text, searchUrl) {
     try {
-      const response = await axios.get(searchUrl, {
-        params: {
-          q: text,
-        },
+      const response = await getJSON(searchUrl, {
+        q: text,
       });
-      if (response.data) {
-        this.selectorTarget.innerHTML = response.data;
+      const data = await response.text();
+      if (data) {
+        this.selectorTarget.innerHTML = data;
         const results = this.selectorTarget.querySelectorAll('[data-typeahead-value]');
         if (
           results.length &&
@@ -155,6 +154,7 @@ export default class extends ApplicationController {
         }
       }
     } catch (err) {
+      console.log(err);
       this.closeSelector();
     }
   }

@@ -85,10 +85,6 @@ class NotificationMarkReadView(
     UnreadNotificationQuerySetMixin, SingleObjectMixin, View
 ):
     def post(self, request, *args, **kwargs):
-        try:
-            target = request.POST["target"]
-        except KeyError:
-            return HttpResponseBadRequest("target not provided")
 
         self.object = self.get_object()
 
@@ -99,7 +95,7 @@ class NotificationMarkReadView(
             sender=self.object.content_object.__class__,
             instance=self.object.content_object,
         )
-        return TurboStream(target).remove.response()
+        return TurboStream(f"notification-{self.object.id}").remove.response()
 
 
 notification_mark_read_view = NotificationMarkReadView.as_view()

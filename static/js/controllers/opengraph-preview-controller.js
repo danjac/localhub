@@ -1,8 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import axios from 'axios';
-
+import { getJSON } from '~/utils/fetch-json';
 import { Events } from '~/constants';
 import ApplicationController from './application-controller';
 
@@ -72,14 +71,13 @@ export default class extends ApplicationController {
     this.bus.pub(Events.FORM_FETCHING);
 
     try {
-      const response = await axios.get(this.urlValue, {
-        params: { url },
-      });
-      const { html, fields } = response.data;
+      const response = await getJSON(this.urlValue, { url });
+      const { html, fields } = await response.json();
       this.syncForm(fields);
       this.containerTarget.innerHTML = html;
       this.clearButtonTarget.removeAttribute('disabled');
     } catch (err) {
+      console.log(err);
       this.resetForm();
       if (this.hasErrorMessageValue) {
         this.toaster.error(this.errorMessageValue);

@@ -17,19 +17,24 @@
 {% if page_obj.number == 1 %}
 
 {% if notifications %}
-<div data-controller="notifications">
+<div class="relative mb-12">
   {% for item in notifications %}
   {% notification item %}
-  <div class="notification flex mb-3{% if not forloop.first %} hidden{% endif %}"
-       data-notifications-target="notification">
+  <div class="notification flex absolute w-full top-0 left-0"
+       id="notification-{{ item.id }}">
     <div class="mx-auto text-center">
       {{ notification_content }}
     </div>
 
-    <button data-action="notifications#dismiss"
-            data-notifications-mark-read-url="{% url 'notifications:mark_read' item.id %}">
-      <i class="fa fa-times-circle"></i>
-    </button>
+    <form method="post"
+          class="inline-block"
+          action="{% url 'notifications:mark_read' item.id %}">
+      {% csrf_token %}
+      <button>
+        <i class="fa fa-times-circle"></i>
+      </button>
+
+    </form>
   </div>
   {% endnotification %}
   {% endfor %}

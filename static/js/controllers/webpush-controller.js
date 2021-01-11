@@ -1,8 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import axios from 'axios';
-
+import { postJSON } from '~/utils/fetch-json';
 import { urlB64ToUint8Array } from '~/utils/encoders';
 import ApplicationController from './application-controller';
 
@@ -11,6 +10,7 @@ let registration = null;
 export default class extends ApplicationController {
   static targets = ['subscribe', 'unsubscribe'];
   static values = {
+    csrfToken: String,
     publicKey: String,
     serviceWorkerUrl: String,
     subscribeUrl: String,
@@ -91,18 +91,11 @@ export default class extends ApplicationController {
       );
   }
 
-  syncWithServer(subscription, url, message) {
-    axios
-      .post(url, JSON.stringify(subscription), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(() => {
-        if (message) {
-          this.toaster.info(message);
-        }
-      });
+  async syncWithServer(subscription, url, message) {
+    await postJSON(url, this.csrfTokenValue, subscription);
+    if (message) {
+      this.toaster.info(message);
+    }
   }
 
   showSubscribe() {
