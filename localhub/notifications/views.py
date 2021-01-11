@@ -95,7 +95,15 @@ class NotificationMarkReadView(
             sender=self.object.content_object.__class__,
             instance=self.object.content_object,
         )
-        return TurboStream(f"notification-{self.object.id}").remove.response()
+
+        target = (
+            f"notification-{self.object.id}"
+            if Notification.objects.filter(
+                recipient=self.request.user, is_read=False
+            ).exists()
+            else "notifications"
+        )
+        return TurboStream(target).remove.response()
 
 
 notification_mark_read_view = NotificationMarkReadView.as_view()

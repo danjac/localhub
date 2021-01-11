@@ -17,7 +17,8 @@
 {% if page_obj.number == 1 %}
 
 {% if notifications %}
-<div class="relative mb-12">
+<div class="relative mb-12"
+     id="notifications">
   {% for item in notifications %}
   {% notification item %}
   <div class="notification flex absolute w-full top-0 left-0"
