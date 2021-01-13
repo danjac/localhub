@@ -26,6 +26,7 @@
        href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
     {% if can_create_message %}
     <a class="page-nav-item"
+       data-turbo-frame="modal"
        href="{% url 'private_messages:message_create_recipient' other_user.username %}">
       {% user_display other_user as other_user_name %}
       {% blocktrans %}

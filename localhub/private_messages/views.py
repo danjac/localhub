@@ -145,6 +145,7 @@ class MessageRecipientCreateView(
         return form
 
     def get(self, request, *args, **kwargs):
+        # render the form inside the frame
         return (
             TurboFrame("modal")
             .template(

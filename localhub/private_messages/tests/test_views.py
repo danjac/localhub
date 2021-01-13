@@ -160,7 +160,7 @@ class TestMessageDetailView:
             community=member.community, sender=sender, recipient=recipient
         )
         response = client.get(message.get_absolute_url())
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
 
 
 class TestMessageFollowUpView:
@@ -174,7 +174,7 @@ class TestMessageFollowUpView:
             reverse("private_messages:message_follow_up", args=[parent.id]),
             {"message": "test"},
         )
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
 
     def test_post(self, client, member, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
@@ -216,7 +216,7 @@ class TestMessageReplyView:
             reverse("private_messages:message_reply", args=[parent.id]),
             {"message": "test"},
         )
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
 
     def test_post(self, client, member, send_webpush_mock):
         sender = MembershipFactory(community=member.community).member
@@ -277,7 +277,7 @@ class TestMessageRecipientCreateView:
             ),
             {"message": "test"},
         )
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
 
     def test_post(self, client, member, mailoutbox, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
@@ -287,8 +287,8 @@ class TestMessageRecipientCreateView:
             ),
             {"message": "test"},
         )
+        assert response.status_code == http.HTTPStatus.OK
         message = Message.objects.get()
-        assert message.get_absolute_url() == response.url
         assert message.recipient == recipient
         assert message.sender == member.member
         assert message.community == member.community

@@ -13,6 +13,7 @@
   {% else %}
   {% if can_change or can_delete %}
   <a class="{{ nav_item_class }}"
+     data-turbo-frame="modal"
      href="{% url 'private_messages:message_create_recipient' member.member.username %}">
     {% trans "Send Message" %}
   </a>
