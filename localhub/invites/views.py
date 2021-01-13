@@ -1,10 +1,13 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import http
+
 # Django
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -15,7 +18,7 @@ from django.views.generic import DeleteView, DetailView, ListView
 from turbo_response.views import TurboCreateView
 
 # Localhub
-from localhub.common.mixins import SearchMixin
+from localhub.common.mixins import SearchMixin, SuccessHeaderMixin
 from localhub.common.views import ActionView
 from localhub.communities.mixins import (
     CommunityAdminRequiredMixin,
@@ -39,9 +42,7 @@ class BaseInviteRecipientActionView(InviteRecipientQuerySetMixin, ActionView):
     ...
 
 
-class InviteResendView(BaseInviteAdminActionView):
-    success_url = reverse_lazy("invites:list")
-
+class InviteResendView(SuccessHeaderMixin, BaseInviteAdminActionView):
     def get_queryset(self):
         return super().get_queryset().pending()
 
@@ -56,8 +57,12 @@ class InviteResendView(BaseInviteAdminActionView):
         self.object.save()
 
         send_invitation_email(self.object)
+
         messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+
+        return self.render_success_message(
+            HttpResponse(status=http.HTTPStatus.NO_CONTENT)
+        )
 
 
 invite_resend_view = InviteResendView.as_view()

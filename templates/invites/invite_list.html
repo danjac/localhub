@@ -83,20 +83,22 @@
       <td class="border py-2 px-2">
         <div class="table-nav">
           {% if invite.is_pending %}
-          <a class="table-nav-item"
-             href="{% url 'invites:resend' invite.id %}"
-             role="button"
-             data-turbo="false"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Re-send" %}</a>
+          <form method="post"
+                class="inline-block mr-2"
+                action="{% url 'invites:resend' invite.id %}">
+            {% csrf_token %}
+            <button class="table-nav-item">{% trans "Re-send" %}</button>
+          </form>
           {% endif %}
-          <a class="table-nav-item"
-             href="{% url 'invites:delete' invite.id %}"
-             role="button"
-             data-turbo="false"
-             data-controller="ajax"
-             data-action="ajax#post"
-             data-ajax-confirm-value="{% trans 'You sure you want to delete this invite?' %}">{% trans "Delete" %}</a>
+          <form method="post"
+                action="{% url 'invites:delete' invite.id %}"
+                data-controller="confirm"
+                data-action="confirm#confirm"
+                data-confirm-text-value="{% trans 'You sure you want to delete this invite?' %}">
+            {% csrf_token %}
+            <button class="table-nav-item"
+                    data-ajax-confirm-value="">{% trans "Delete" %}</button>
+          </form>
         </div>
       </td>
     </tr>

@@ -49,7 +49,8 @@ class TestMessageDeleteView:
             community=member.community, sender=member.member, recipient=recipient,
         )
         response = client.post(
-            reverse("private_messages:message_delete", args=[message.id])
+            reverse("private_messages:message_delete", args=[message.id]),
+            {"redirect": "true"},
         )
         assert response.url == reverse("private_messages:outbox")
         message.refresh_from_db()
@@ -64,7 +65,8 @@ class TestMessageDeleteView:
             recipient_deleted=timezone.now(),
         )
         response = client.post(
-            reverse("private_messages:message_delete", args=[message.id])
+            reverse("private_messages:message_delete", args=[message.id]),
+            {"redirect": "true"},
         )
         assert response.url == reverse("private_messages:outbox")
         assert not Message.objects.count()
@@ -75,7 +77,8 @@ class TestMessageDeleteView:
             community=member.community, recipient=member.member, sender=sender,
         )
         response = client.post(
-            reverse("private_messages:message_delete", args=[message.id])
+            reverse("private_messages:message_delete", args=[message.id]),
+            {"redirect": "true"},
         )
         assert response.url == reverse("private_messages:inbox")
         message.refresh_from_db()
@@ -90,7 +93,8 @@ class TestMessageDeleteView:
             sender_deleted=timezone.now(),
         )
         response = client.post(
-            reverse("private_messages:message_delete", args=[message.id])
+            reverse("private_messages:message_delete", args=[message.id]),
+            {"redirect": "true"},
         )
         assert response.url == reverse("private_messages:inbox")
         assert not Message.objects.count()
