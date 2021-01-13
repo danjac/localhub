@@ -23,16 +23,12 @@
 <h1 class="page-header mb-3">{% trans "Mentions" %}</h1>
 
 <div class="tabs text-sm mb-3">
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'users:activity_mentions' user_obj.username %}">{% trans "Activities" %}</a>
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'users:comment_mentions' user_obj.username %}">{% trans "Comments" %}</a>
+  {% active_link 'users:activity_mentions' user_obj.username as link %}
+  <a class="tab-item{% if link.exact %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Activities" %}</a>
+  {% active_link 'users:comment_mentions' user_obj.username as link %}
+  <a class="tab-item{% if link.exact %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Comments" %}</a>
 </div>
 {% block mentions_content %}{% endblock %}
 {% endblock %}

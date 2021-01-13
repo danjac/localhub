@@ -20,19 +20,17 @@
 
   <ul class="sidebar-menu">
     <li class="mb-1">
-      <a href="{{ home_page_url }}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         data-active-link-exact-value
-         class="sidebar-menu-item">{% trans "Activity Stream" %}</a>
+      {% active_link home_page_url as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.exact %} active{% endif %}">{% trans "Activity Stream" %}</a>
     </li>
     {% if is_member %}
     <li class="mb-1">
-      <a href="{% url 'private_messages:inbox' %}"
-         data-controller="active-link"
-         data-active-link-regex-value="{% url 'private_messages:inbox' %}|{% url 'private_messages:outbox' %}"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">
+      {% url 'private_messages:inbox' as inbox_url %}
+      {% url 'private_messages:outbox' as outbox_url %}
+      {% active_link_regex inbox_url|add:"|"|add:outbox_url inbox_url as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">
         <span>{% trans "Messages" %}</span>
         {% if site_counters.unread_messages %}
         <span class="tag tag-primary px-1">{% trans "New" %}</span>
@@ -40,10 +38,9 @@
       </a>
     </li>
     <li class="mb-1">
-      <a href="{% url 'notifications:list' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">
+      {% active_link 'notifications:list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">
         <span>{% trans "Notifications" %}</span>
         {% if site_counters.unread_notifications %}
         <span class="tag tag-primary px-1">{% trans "New" %}</span>
@@ -51,67 +48,60 @@
       </a>
     </li>
     {% endif %}
+
     <li class="mb-1">
-      <a href="{% url 'comments:list' %}"
-         data-controller="active-link"
-         data-active-link-exact
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Comments" %}</a>
+      {% active_link 'comments:list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Comments" %}</a>
     </li>
     {% if is_member %}
     <li class="mb-1">
-      <a href="{% url 'activities:private' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Private Stash" %}</a>
+      {% active_link 'activities:private' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Private Stash" %}</a>
     </li>
     <li class="mb-1">
-      <a href="{% url 'bookmarks:activities' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Bookmarks" %}</a>
+      {% active_link 'bookmarks:activities' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Bookmarks" %}</a>
     </li>
     {% endif %}
     <li class="mb-1">
-      <a href="{% url 'photos:gallery' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Gallery" %}</a>
+      {% active_link 'photos:gallery' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Gallery" %}</a>
     </li>
     <li class="mb-1">
-      <a href="{% url 'events:calendar' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Calendar" %}</a>
+      {% active_link 'events:calendar' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Calendar" %}</a>
     </li>
 
     {% if not is_member and can_create_join_request %}
     <li class="mb-1">
-      <a href="{% url 'join_requests:create' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Request Invite" %}</a>
+      {% active_link 'join_requests:create' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Request Invite" %}</a>
     </li>
     {% endif %}
 
     {% if communities_count %}
     <li class="mb-1">
-      <a href="{% url 'community_list' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Communities" %}</a>
+      {% active_link 'community_list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Communities" %}</a>
     </li>
     {% endif %}
 
     {% if user.is_authenticated %}
     <li class="mb-1 md:mb-0">
-      <a href="{% url 'user_update' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Settings" %}</a>
+      {% active_link 'user_update' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Settings" %}</a>
     </li>
     <li class="mb-1 md:hidden">
-      <a href="{% url 'account_logout' %}"
+      {% active_link 'account_logout' as link %}
+      <a href="{{ link.url }}"
          role="button"
          class="sidebar-menu-item"
          data-turbo="false"
@@ -129,37 +119,32 @@
 
     {% if can_create_activity %}
     <li class="mb-1">
-      <a href="{% url 'posts:create' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Submit Post" %}</a>
+      {% active_link 'posts:create' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Submit Post" %}</a>
     </li>
     <li class="mb-1">
-      <a href="{% url 'events:create' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Submit Event" %}</a>
+      {% active_link 'events:create' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Submit Event" %}</a>
     </li>
     <li class="mb-1">
-      <a href="{% url 'photos:create' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Submit Photo" %}</a>
+      {% active_link 'photos:create' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Submit Photo" %}</a>
     </li>
     <li class="mb-1">
-      <a href="{% url 'polls:create' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Submit Poll" %}</a>
+      {% active_link 'polls:create' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Submit Poll" %}</a>
     </li>
     {% endif %}
 
     {% if can_create_message %}
     <li>
-      <a href="{% url 'private_messages:message_create' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Send Message" %}</a>
+      {% active_link 'private_messages:message_create' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Send Message" %}</a>
     </li>
     {% endif %}
   </ul>
@@ -168,51 +153,44 @@
   <ul class="sidebar-menu mt-4">
     <li class="sidebar-menu-header mb-3">{% trans 'Content' %}</li>
     <li class="mb-1">
-      <a data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item"
-         href="{% url 'hashtags:list' %}">
+      {% active_link 'hashtags:list' as link %}
+      <a class="sidebar-menu-item{% if link.match %} active{% endif %}"
+         href="{{ link.url }}">
         {% trans "Tags" %}
       </a>
     </li>
     <li class="mb-1">
-      <a data-controller="active-link"
-         data-active-link-exact-value
-         data-active-link-active-class="active"
-         class="sidebar-menu-item"
-         href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
+      {% active_link 'activities:timeline' as link %}
+      <a class="sidebar-menu-item{% if link.match %} active{% endif %}"
+         href="{{ link.url }}">{% trans "Timeline" %}
       </a>
     </li>
     {% if is_member %}
     <li class="mb-1">
-      <a data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item"
-         href="{% url 'likes:activities' %}">
+      {% active_link 'likes:activities' as link %}
+      <a class="sidebar-menu-item{% if link.match %} active{% endif %}"
+         href="{{ link.url }}">
         {% trans "Favorites" %}
       </a>
     </li>
     <li class="mb-1">
-      <a data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item"
-         href="{% url 'users:activity_likes' user.username %}">{% trans "Likes" %}
+      {% active_link 'users:activity_likes' user.username as link %}
+      <a class="sidebar-menu-item{% if link.match %} active{% endif %}"
+         href="{{ link.url }}">{% trans "Likes" %}
       </a>
     </li>
     <li class="mb-1">
-      <a data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item"
-         href="{% url 'users:activity_mentions' user.username %}">{% trans "Mentions" %}
+      {% active_link 'users:activity_mentions' user.username  as link %}
+      <a class="sidebar-menu-item{% if link.match %} active{% endif %}"
+         href="{{ link.url }}">{% trans "Mentions" %}
       </a>
     </li>
     {% endif %}
     {% if can_moderate_community and site_counters.flags %}
     <li class="mb-1">
-      <a data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item"
-         href="{% url 'flags:list' %}">
+      {% active_link 'flags:list' as link %}
+      <a class="sidebar-menu-item{% if link.match %} active{% endif %}"
+         href="{{ link.url }}">
         {% trans "Flags" %}
         <span class="tag tag-primary px-1">{% trans "New" %}</span>
       </a>
@@ -223,29 +201,25 @@
   <ul class="sidebar-menu mt-4">
     <li class="sidebar-menu-header mb-3">{% trans "People" %}</li>
     <li class="mb-1">
-      <a href="{% url 'users:member_list' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Members" %}</a>
+      {% active_link 'users:member_list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Members" %}</a>
     </li>
     {% if is_member %}
     <li class="mb-1">
-      <a href="{% url 'users:following_list' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Following" %}</a>
+      {% active_link 'users:following_list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Following" %}</a>
     </li>
     <li class="mb-1">
-      <a href="{% url 'users:follower_list' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Followers" %}</a>
+      {% active_link 'users:follower_list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Followers" %}</a>
     </li>
     <li class="mb-1">
-      <a href="{% url 'users:blocked_list' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Blocked" %}</a>
+      {% active_link 'users:blocked_list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Blocked" %}</a>
     </li>
     {% endif %}
   </ul>
@@ -256,10 +230,9 @@
 
     {% if community.description %}
     <li class="mb-1">
-      <a href="{% url 'communities:community_detail' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">
+      {% active_link 'communities:community_detail' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">
         {% trans "About This Site" %}
       </a>
     </li>
@@ -267,41 +240,36 @@
 
     {% if community.terms %}
     <li class="mb-1">
-      <a href="{% url 'communities:community_terms' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Terms" %}</a>
+      {% active_link 'communities:community_terms' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Terms" %}</a>
     </li>
     {% endif %}
 
     {% if can_manage_community %}
 
     <li class="mb-1">
-      <a href="{% url 'communities:community_update' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Site Settings" %}</a>
+      {% active_link 'communities:community_update' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Site Settings" %}</a>
     </li>
 
     <li class="mb-1">
-      <a href="{% url 'communities:membership_list' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Members" %}</a>
+      {% active_link 'communities:membership_list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Members" %}</a>
     </li>
 
     <li class="mb-1">
-      <a href="{% url 'invites:list' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">{% trans "Invites" %}</a>
+      {% active_link 'invites:list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Invites" %}</a>
     </li>
 
     <li class="mb-1">
-      <a href="{% url 'join_requests:list' %}"
-         data-controller="active-link"
-         data-active-link-active-class="active"
-         class="sidebar-menu-item">
+      {% active_link 'join_requests:list' as link %}
+      <a href="{{ link.url }}"
+         class="sidebar-menu-item{% if link.match %} active{% endif %}">
         <span>{% trans "Join Requests" %}</span>
         {% if site_counters.pending_join_requests %}
         <span class="tag tag-primary px-1">{% trans "New" %}</span>
@@ -309,8 +277,6 @@
 
       </a>
     </li>
-
-
     {% endif %}
 
   </ul>
