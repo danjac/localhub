@@ -1,6 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import http
+
 # Django
 from django.urls import reverse
 from django.utils import timezone
@@ -80,7 +83,7 @@ class TestCommentDetailView:
             reverse("comments:detail", args=[comment.id]),
             HTTP_HOST=comment.community.domain,
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["content_object"] == post
         notification.refresh_from_db()
         assert notification.is_read
@@ -93,7 +96,7 @@ class TestCommentDetailView:
             reverse("comments:detail", args=[comment.id]),
             HTTP_HOST=comment.community.domain,
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["content_object"] is None
 
     def test_get_if_content_object_soft_deleted(self, client, member):
@@ -105,7 +108,7 @@ class TestCommentDetailView:
             reverse("comments:detail", args=[comment.id]),
             HTTP_HOST=comment.community.domain,
         )
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert response.context["content_object"] is None
 
 
@@ -116,7 +119,7 @@ class TestCommentUpdateView:
             owner=member.member, content_object=post, community=member.community,
         )
         response = client.get(reverse("comments:update", args=[comment.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(community=member.community)
@@ -126,7 +129,7 @@ class TestCommentUpdateView:
         response = client.post(
             reverse("comments:update", args=[comment.id]), {"content": "new content"},
         )
-        assert response.url == comment.get_absolute_url()
+        assert response.status_code == http.HTTPStatus.OK
         comment.refresh_from_db()
         assert comment.content == "new content"
         assert comment.editor == member.member
@@ -238,7 +241,7 @@ class TestFlagView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.get(reverse("comments:flag", args=[comment.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(community=member.community)
@@ -273,7 +276,7 @@ class TestCommentReplyView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.get(reverse("comments:reply", args=[parent.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(community=member.community)
