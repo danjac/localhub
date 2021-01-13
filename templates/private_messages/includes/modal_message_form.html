@@ -1,0 +1,10 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "includes/modal.html" %}
+
+{% load i18n %}
+
+{% block modal_header %}Send message{% endblock %}
+{% block modal_content %}
+{% include "includes/forms/form.html" with form_id="send-message-form" %}
+{% endblock %}

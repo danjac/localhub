@@ -90,7 +90,8 @@
 
           {% if can_create_message %}
           <a class="table-nav-item"
-             href="{% url 'private_messages:message_create_recipient' object.username %}">
+             href="{% url 'private_messages:message_create_recipient' object.username %}"
+             data-turbo-frame="modal">
             {% trans "Send Message" %}
           </a>
           {% endif %}

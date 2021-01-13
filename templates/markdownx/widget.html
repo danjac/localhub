@@ -21,12 +21,14 @@
             data-markdown-target="previewTab"
             data-action="tabs#select"
             data-tab="preview">{% trans "Preview" %}</button>
+    {% comment %}
     <button class="tab-item"
             type="button"
             data-tabs-target="tab"
             data-action="tabs#select"
             data-tab="guide">
       {% trans "Help" %}</button>
+    {% endcomment %}
   </div>
   <div class="-mb-px mb-3"
        data-tabs-target="pane"
@@ -126,13 +128,14 @@
          href="https://www.markdownguide.org/basic-syntax">Markdown</a> to format your content.
     </p>
   </div>
-  <div class="hidden markdownx-preview"
+  <div class="hidden markdownx-preview max-h-48 bg-gray-200 overflow-y-scroll"
        data-tabs-target="pane"
        data-tab="preview"></div>
+  {% comment %}
   <div class="hidden"
        data-tabs-target="pane"
        data-tab="guide">
-    <table class="table-fixed text-sm block whitespace-nowrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
+    <table class="table-fixed text-sm block whitespace-nowrap overflow-x-scroll overflow-y-scroll md:w-full md:whitespace-normal md:overflow-x-auto md:table max-h-20">
       <thead>
         <tr>
           <th class="border px-4 py-2 text-left bg-gray-200">{% trans "You type:" %}</th>
@@ -247,4 +250,5 @@
       {% endblocktrans %}
     </div>
   </div>
+  {% endcomment %}
 </div>

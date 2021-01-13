@@ -20,7 +20,7 @@ from turbo_response.views import TurboFormView
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
-from localhub.common.mixins import ParentObjectMixin, SearchMixin
+from localhub.common.mixins import ParentObjectMixin, SearchMixin, SuccessHeaderMixin
 from localhub.common.views import ActionView
 from localhub.communities.mixins import CommunityRequiredMixin
 
@@ -120,7 +120,7 @@ message_follow_up_view = MessageFollowUpView.as_view()
 
 
 class MessageRecipientCreateView(
-    CommunityRequiredMixin, ParentObjectMixin, BaseMessageFormView,
+    CommunityRequiredMixin, ParentObjectMixin, SuccessHeaderMixin, BaseMessageFormView,
 ):
     """Send new message to a specific recipient"""
 
@@ -144,6 +144,29 @@ class MessageRecipientCreateView(
         )
         return form
 
+    def get(self, request, *args, **kwargs):
+        return (
+            TurboFrame("modal")
+            .template(
+                "private_messages/includes/modal_message_form.html",
+                self.get_context_data(),
+            )
+            .response(self.request)
+        )
+
+    def form_invalid(self, form):
+        # return validation errors in stream
+        return (
+            TurboStream("send-message-form")
+            .replace.template("includes/forms/form.html", {"form": form})
+            .response(self.request)
+        )
+
+    def get_success_message(self):
+        return _("Your message has been sent to %(recipient)s") % {
+            "recipient": self.object.recipient.get_display_name()
+        }
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.community = self.request.community
@@ -153,7 +176,8 @@ class MessageRecipientCreateView(
 
         self.object.notify_on_send()
 
-        return self.get_success_response()
+        # return empty turbo frame to close modal
+        return self.render_success_message(TurboFrame("modal").response(),)
 
 
 message_recipient_create_view = MessageRecipientCreateView.as_view()
