@@ -1,3 +1,6 @@
+# Standard Library
+import http
+
 # Django
 from django.conf import settings
 from django.urls import reverse
@@ -19,14 +22,14 @@ class TestInviteListView:
     def test_get(self, client, admin):
         InviteFactory.create_batch(3, community=admin.community)
         response = client.get(reverse("invites:list"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert len(response.context["object_list"]) == 3
 
 
 class TestInviteCreateView:
     def test_get(self, client, admin):
         response = client.get(reverse("invites:create"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, admin, mailoutbox):
         response = client.post(reverse("invites:create"), {"email": "tester@gmail.com"})
@@ -48,7 +51,7 @@ class TestInviteResendView:
         invite = InviteFactory(community=admin.community)
         response = client.post(reverse("invites:resend", args=[invite.id]))
 
-        assert response.url == reverse("invites:list")
+        assert response.status_code == http.HTTPStatus.NO_CONTENT
         mail = mailoutbox[0]
         assert mail.to == [invite.email]
 
@@ -57,7 +60,7 @@ class TestInviteDeleteView:
     def test_get(self, client, admin, mailoutbox):
         invite = InviteFactory(community=admin.community)
         response = client.get(reverse("invites:delete", args=[invite.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
 
     def test_post(self, client, admin, mailoutbox):
         invite = InviteFactory(community=admin.community)
@@ -69,7 +72,7 @@ class TestInviteDeleteView:
 class TestReceivedInviteListView:
     def test_get(self, client, invite):
         response = client.get(reverse("invites:received_list"))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         assert invite in response.context["object_list"]
 
 
@@ -102,12 +105,12 @@ class TestInviteDetailView:
     def test_get_current_user_is_member(self, client, community, member):
         invite = InviteFactory(community=member.community, email=member.member.email)
         response = client.get(reverse("invites:detail", args=[invite.id]))
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
 
     def test_get_current_user_has_wrong_email(self, client, community, member):
         invite = InviteFactory(community=member.community)
         response = client.get(reverse("invites:detail", args=[invite.id]))
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
         invite.refresh_from_db()
         assert invite.is_pending()
 
@@ -116,7 +119,7 @@ class TestInviteDetailView:
     ):
         invite = InviteFactory(community=community, email=login_user.email,)
         response = client.get(reverse("invites:detail", args=[invite.id]))
-        assert response.status_code == 200
+        assert response.status_code == http.HTTPStatus.OK
         invite.refresh_from_db()
         assert invite.is_pending()
 
@@ -125,12 +128,12 @@ class TestInviteAcceptView:
     def test_post_current_user_is_member(self, client, community, member):
         invite = InviteFactory(community=member.community, email=member.member.email)
         response = client.post(reverse("invites:accept", args=[invite.id]))
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
 
     def test_post_current_user_has_wrong_email(self, client, login_user):
         invite = InviteFactory()
         response = client.post(reverse("invites:accept", args=[invite.id]))
-        assert response.status_code == 404
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
         invite.refresh_from_db()
         assert invite.is_pending()
 
