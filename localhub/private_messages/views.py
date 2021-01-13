@@ -145,21 +145,19 @@ class MessageRecipientCreateView(
         return form
 
     def get(self, request, *args, **kwargs):
-        # render the form inside the frame
+        return self.render_frame()
+
+    def form_invalid(self, form):
+        return self.render_frame(form=form)
+
+    def render_frame(self, **context):
+
         return (
             TurboFrame("modal")
             .template(
                 "private_messages/includes/modal_message_form.html",
-                self.get_context_data(),
+                {**self.get_context_data(), **context},
             )
-            .response(self.request)
-        )
-
-    def form_invalid(self, form):
-        # return validation errors in stream
-        return (
-            TurboStream("send-message-form")
-            .replace.template("includes/forms/form.html", {"form": form})
             .response(self.request)
         )
 
