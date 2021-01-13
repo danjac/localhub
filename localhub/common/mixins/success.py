@@ -44,9 +44,12 @@ class SuccessHeaderMixin:
 
         return success_message % dct
 
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
+    def render_success_message(self, response):
         success_message = self.get_success_message()
         if success_message:
             success_header_message(response, success_message)
         return response
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        return self.render_success_message(response)

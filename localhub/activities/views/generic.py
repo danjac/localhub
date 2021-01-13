@@ -19,7 +19,7 @@ from turbo_response.views import TurboCreateView, TurboFormView, TurboUpdateView
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
-from localhub.common.mixins import ParentObjectMixin, SearchMixin
+from localhub.common.mixins import ParentObjectMixin, SearchMixin, SuccessHeaderMixin
 from localhub.common.pagination import PresetCountPaginator
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import ActionView
@@ -459,7 +459,11 @@ class ActivityDislikeView(BaseActivityLikeView):
 
 
 class ActivityDeleteView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, ActivityTemplateMixin, DeleteView,
+    PermissionRequiredMixin,
+    ActivityQuerySetMixin,
+    ActivityTemplateMixin,
+    SuccessHeaderMixin,
+    DeleteView,
 ):
     permission_required = "activities.delete_activity"
     success_message = _("You have deleted this %(model)s")
@@ -468,6 +472,9 @@ class ActivityDeleteView(
         if self.object.deleted or self.object.published:
             return settings.HOME_PAGE_URL
         return reverse("activities:private")
+
+    def get_success_message(self):
+        return self.success_message % {"model": self.object._meta.verbose_name}
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -480,10 +487,8 @@ class ActivityDeleteView(
 
         target = request.POST.get("target", None)
         if target:
-            return TurboStream(target).remove.response()
+            return self.render_success_message(TurboStream(target).remove.response())
 
-        messages.success(
-            request, self.success_message % {"model": self.object._meta.verbose_name}
-        )
+        messages.success(request, self.get_success_message())
 
         return HttpResponseRedirect(self.get_success_url())

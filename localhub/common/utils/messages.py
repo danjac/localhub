@@ -2,15 +2,16 @@
 from functools import partial
 
 # Django
+from django.conf import settings
 from django.contrib import messages
 
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-def create_header_message(response, msg_type, msg):
+def create_header_message(response, msg, msg_type):
     response["X-Message"] = msg
-    response["X-Message-Type"] = msg_type
+    response["X-Message-Type"] = settings.MESSAGE_TAGS[msg_type]
 
 
 debug_header_message = partial(create_header_message, msg_type=messages.DEBUG)

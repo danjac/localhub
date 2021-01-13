@@ -246,7 +246,7 @@ class CommentBookmarkView(BaseCommentBookmarkView):
             )
         except IntegrityError:
             pass
-        return self.render_to_response(has_bookmarked=True)
+        return self.render_success_message(self.render_to_response(has_bookmarked=True))
 
 
 comment_bookmark_view = CommentBookmarkView.as_view()
@@ -257,10 +257,9 @@ class CommentRemoveBookmarkView(BaseCommentBookmarkView):
 
     def post(self, request, *args, **kwargs):
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
-        return self.render_to_response(has_bookmarked=False)
-
-    def delete(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
+        return self.render_success_message(
+            self.render_to_response(has_bookmarked=False)
+        )
 
 
 comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
@@ -316,7 +315,7 @@ comment_dislike_view = CommentDislikeView.as_view()
 
 
 class CommentDeleteView(
-    PermissionRequiredMixin, CommentQuerySetMixin, DeleteView,
+    PermissionRequiredMixin, CommentQuerySetMixin, SuccessHeaderMixin, DeleteView,
 ):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
