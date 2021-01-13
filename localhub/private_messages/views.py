@@ -346,7 +346,7 @@ class MessageRemoveBookmarkView(BaseMessageBookmarkView):
 message_remove_bookmark_view = MessageRemoveBookmarkView.as_view()
 
 
-class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
+class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessHeaderMixin, DeleteView):
     """
     Does a "soft delete" which sets sender/recipient deleted flag
     accordingly.
@@ -361,8 +361,14 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.soft_delete(request.user)
-        messages.success(request, self.success_message)
-        return HttpResponseRedirect(self.get_success_url())
+
+        if "redirect" in request.POST:
+            messages.success(request, self.success_message)
+            return HttpResponseRedirect(self.get_success_url())
+
+        return self.render_success_message(
+            TurboStream(f"message-{self.kwargs['pk']}").remove.response()
+        )
 
     def get_success_url(self):
         if self.request.user == self.object.recipient:

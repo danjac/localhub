@@ -77,6 +77,11 @@
                 data-action="confirm#confirm"
                 data-confirm-text-value="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}">
             {% csrf_token %}
+            {% if is_detail %}
+            <input type="hidden"
+                   name="redirect"
+                   value="true">
+            {% endif %}
             <button class="dropdown-menu-item">
               {% trans "Delete" %}
             </button>
