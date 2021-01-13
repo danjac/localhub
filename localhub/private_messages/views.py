@@ -16,6 +16,7 @@ from django.views.generic import DeleteView, DetailView, ListView, View
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import HttpResponseSeeOther, TurboFrame, TurboStream
+from turbo_response.mixins import TurboFrameTemplateResponseMixin
 from turbo_response.views import TurboFormView
 
 # Localhub
@@ -120,13 +121,20 @@ message_follow_up_view = MessageFollowUpView.as_view()
 
 
 class MessageRecipientCreateView(
-    CommunityRequiredMixin, ParentObjectMixin, SuccessHeaderMixin, BaseMessageFormView,
+    CommunityRequiredMixin,
+    ParentObjectMixin,
+    SuccessHeaderMixin,
+    TurboFrameTemplateResponseMixin,
+    BaseMessageFormView,
 ):
     """Send new message to a specific recipient"""
 
     parent_context_object_name = "recipient"
     parent_slug_kwarg = "username"
     parent_slug_field = "username"
+
+    template_name = "private_messages/includes/modal_message_form.html"
+    turbo_frame_dom_id = "modal"
 
     def get_parent_queryset(self):
         return (
@@ -144,27 +152,16 @@ class MessageRecipientCreateView(
         )
         return form
 
-    def get(self, request, *args, **kwargs):
-        return self.render_frame()
-
-    def form_invalid(self, form):
-        return self.render_frame(form=form)
-
-    def render_frame(self, **context):
-
-        return (
-            TurboFrame("modal")
-            .template(
-                "private_messages/includes/modal_message_form.html",
-                {**self.get_context_data(), **context},
-            )
-            .response(self.request)
-        )
-
     def get_success_message(self):
         return _("Your message has been sent to %(recipient)s") % {
             "recipient": self.object.recipient.get_display_name()
         }
+
+    def get(self, request, *args, **kwargs):
+        return self.render_turbo_frame(self.get_context_data())
+
+    def form_invalid(self, form):
+        return self.render_turbo_frame({**self.get_context_data(), "form": form})
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -176,7 +173,9 @@ class MessageRecipientCreateView(
         self.object.notify_on_send()
 
         # return empty turbo frame to close modal
-        return self.render_success_message(TurboFrame("modal").response(),)
+        return self.render_success_message(
+            TurboFrame(self.get_turbo_frame_dom_id()).response()
+        )
 
 
 message_recipient_create_view = MessageRecipientCreateView.as_view()
