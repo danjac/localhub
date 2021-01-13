@@ -176,25 +176,19 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 
 {% if not is_blocked %}
 <div class="tabs mb-3 text-sm">
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
+  {% active_link 'users:activities' user_obj.username as link %}
+  <a class="tab-item{% if link.exact %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Activities" %}</a>
   {% if can_create_message %}
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'users:messages' user_obj.username %}">
+  {% active_link 'users:messages' user_obj.username as link %}
+  <a class="tab-item{% if link.exact %} active{% endif %}"
+     href="{{ link.url }}">
     {% trans "Messages" %}
   </a>
   {% endif %}
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
+  {% active_link 'users:comments' user_obj.username as link %}
+  <a class="tab-item{% if link.exact %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Comments" %}</a>
 </div>
 {% block user_content %}{% endblock %}
 {% endif %}

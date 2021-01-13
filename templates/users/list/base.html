@@ -17,26 +17,18 @@
 
 {% if is_member %}
 <div class="tabs mb-3 text-sm">
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'users:member_list' %}">{% trans "Members" %}</a>
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'users:follower_list' %}">{% trans "Followers" %}</a>
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'users:blocked_list' %}">{% trans "Blocked" %}</a>
+  {% active_link 'users:member_list' as link %}
+  <a class="tab-item{% if link.match %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Members" %}</a>
+  {% active_link 'users:following_list' as link %}
+  <a class="tab-item{% if link.match %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Following" %}</a>
+  {% active_link 'users:follower_list' as link %}
+  <a class="tab-item{% if link.match %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Followers" %}</a>
+  {% active_link 'users:blocked_list' as link %}
+  <a class="tab-item{% if link.match %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Blocked" %}</a>
 </div>
 {% endif %}
 
