@@ -4,7 +4,6 @@
 # Django
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -35,10 +34,7 @@ from ..utils import get_activity_models
 
 
 class ActivityCreateView(
-    SuccessMessageMixin,
-    CommunityPermissionRequiredMixin,
-    ActivityTemplateMixin,
-    TurboCreateView,
+    CommunityPermissionRequiredMixin, ActivityTemplateMixin, TurboCreateView,
 ):
     permission_required = "activities.create_activity"
 
@@ -46,11 +42,11 @@ class ActivityCreateView(
     is_new = True
 
     def get_success_message(self):
-        return super().get_success_message(
+        return (
             _("Your %(model)s has been published")
             if self.object.published
             else _("Your %(model)s has been saved to your Private Stash")
-        )
+        ) % {"model": self.model._meta.verbose_name}
 
     def get_submit_actions(self):
         view_name = "create_private" if self.is_private else "create"
@@ -87,6 +83,8 @@ class ActivityCreateView(
 
         if publish:
             self.object.notify_on_publish()
+
+        messages.success(self.request, self.get_success_message())
 
         return HttpResponseSeeOther(self.get_success_url())
 

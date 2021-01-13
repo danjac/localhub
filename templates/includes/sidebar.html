@@ -100,14 +100,12 @@
          class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Settings" %}</a>
     </li>
     <li class="mb-1 md:hidden">
-      {% active_link 'account_logout' as link %}
-      <a href="{{ link.url }}"
-         role="button"
-         class="sidebar-menu-item"
-         data-turbo="false"
-         data-controller="ajax"
-         data-action="ajax#post"
-         data-ajax-redirect-value="{{ home_page_url }}">{% trans "Logout" %}</a>
+      <form class="inline-block"
+            method="post"
+            action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button class="sidebar-menu-item">{% trans "Logout" %}</button>
+      </form>
     </li>
     {% endif %}
 
