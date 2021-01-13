@@ -50,7 +50,7 @@ ALLOWED_ATTRIBUTES = bleach.ALLOWED_ATTRIBUTES.copy()
 ALLOWED_ATTRIBUTES.update(
     {
         "img": ["alt", "src"],
-        "a": ["rel", "target", "href",],
+        "a": ["rel", "target", "href", "data-turbo-frame"],
         "span": ["data-typeahead-target"],
     }
 )
@@ -81,12 +81,13 @@ def external_link_attrs(attrs, new=False):
     return attrs
 
 
-def user_mention_preview_attrs(attrs, new=False):
+def turbo_frame_attrs(attrs, new=False):
     """Re-inserts preview attrs as these otherwise mess up
     markdown pre-rendering"""
     if href := attrs.get((None, "href")):
         try:
             resolve(href)
+            attrs[(None, "data-turbo-frame")] = "_top"
         except Http404:
             return attrs
     return attrs
@@ -111,7 +112,7 @@ cleaner = Cleaner(
     filters=[
         partial(
             LinkifyFilter,
-            callbacks=[external_link_attrs, user_mention_preview_attrs],
+            callbacks=[external_link_attrs, turbo_frame_attrs],
             url_re=URL_RE,
         )
     ],

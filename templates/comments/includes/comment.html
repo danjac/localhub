@@ -18,8 +18,10 @@
     <div class="flex flex-wrap items-center mb-3">
       {% if content_object %}
       <a class="inline-block font-semibold mr-2"
+         data-turbo-frame="_top"
          href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
       <a class="tag hover:text-gray-300 mr-2"
+         data-turbo-frame="_top"
          href="{{ content_object|resolve_url:"list" }}">{{ content_object|verbose_name|title }}</a>
 
       {% if can_moderate_community and comment.is_flagged %}
@@ -80,11 +82,9 @@
     <p>{% blocktrans %}This comment has been deleted by a community moderator{% endblocktrans %}</p>
     {% endif %}
     {% if show_content %}
-    {% collapsable is_detail %}
-    <div class="markdown-content">
-      {{ comment.content.markdown|strip_external_images:user|lazify }}
-    </div>
-    {% endcollapsable %}
+    <turbo-frame id="comment-{{ comment.id }}-content">
+      {% include "comments/includes/content.html" %}
+    </turbo-frame>
     {% endif %}
   </div>
   <div class="card-footer">
@@ -139,6 +139,7 @@
           {% has_perm "comments.flag_comment" user comment as can_flag_comment %}
           {% if can_flag_comment and not comment.has_flagged %}
           <a class="dropdown-menu-item"
+             data-turbo-frame="_top"
              href="{% url 'comments:flag' comment.id %}">
             {% trans "Flag" %}
           </a>
@@ -147,6 +148,7 @@
 
           {% if can_change_comment %}
           <a class="dropdown-menu-item"
+             data-turbo-frame="comment-{{ comment.id }}-content"
              href="{% url 'comments:update' comment.id %}#comment-form">
             {% trans "Edit" %}
           </a>
@@ -180,10 +182,12 @@
       <div>
         {% if not is_detail and not comment.deleted %}
         <a class="inline-block text-sm mr-2"
+           data-turbo-frame="_top"
            href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
         {% endif %}
         {% if parent %}
         <a class="inline-block text-sm"
+           data-turbo-frame="_top"
            href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
         {% endif %}
       </div>

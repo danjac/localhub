@@ -127,7 +127,7 @@ class ActivityCommentCreateView(
         return self.get_queryset()
 
     def get_success_url(self):
-        return self.object.get_absolute_url()
+        return self.parent.get_absolute_url()
 
     def form_valid(self, form):
         self.object = form.save(commit=False)

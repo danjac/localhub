@@ -1,0 +1,8 @@
+{% load account %}
+{% load users %}
+
+{% collapsable is_detail %}
+<div class="markdown-content">
+  {{ comment.content.markdown|strip_external_images:user|lazify }}
+</div>
+{% endcollapsable %}

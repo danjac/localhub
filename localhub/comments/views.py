@@ -11,12 +11,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, DetailView, ListView
+from django.views.generic import DeleteView, DetailView, ListView, UpdateView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import HttpResponseSeeOther, TurboFrame
-from turbo_response.views import TurboCreateView, TurboUpdateView
+from turbo_response.views import TurboCreateView
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
@@ -32,20 +32,36 @@ from .models import Comment
 
 
 class CommentUpdateView(
-    SuccessMessageMixin, PermissionRequiredMixin, CommentQuerySetMixin, TurboUpdateView,
+    SuccessHeaderMixin, PermissionRequiredMixin, CommentQuerySetMixin, UpdateView,
 ):
     form_class = CommentForm
     model = Comment
     permission_required = "comments.change_comment"
     success_message = _("Your %(model)s has been updated")
+    template_name = "comments/includes/comment_form.html"
 
-    def get_success_url(self):
-        return self.object.get_absolute_url()
+    def get_turbo_frame_dom_id(self):
+        return f"comment-{self.object.id}-content"
+
+    def render_turbo_frame(self, template_name, context, **kwargs):
+        return (
+            TurboFrame(self.get_turbo_frame_dom_id())
+            .template(template_name, context)
+            .response(self.request, **kwargs)
+        )
+
+    def render_to_response(self, context, **kwargs):
+        return self.render_turbo_frame(self.template_name, context, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["content_object"] = self.object.get_content_object()
-        return context
+        return {
+            **super().get_context_data(**kwargs),
+            "comment": self.object,
+            "show_content": True,
+            "is_detail": True,
+            "parent": self.object.get_parent,
+            "content_object": self.object.get_content_object(),
+        }
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -54,7 +70,14 @@ class CommentUpdateView(
         self.object.save()
 
         self.object.notify_on_update()
-        return HttpResponseSeeOther(self.get_success_url())
+
+        # return normal response inside frame
+
+        return self.render_success_message(
+            self.render_turbo_frame(
+                "comments/includes/content.html", self.get_context_data(),
+            )
+        )
 
 
 comment_update_view = CommentUpdateView.as_view()
@@ -106,6 +129,9 @@ class CommentReplyView(
     def content_object(self):
         return self.parent.get_content_object()
 
+    def get_success_url(self):
+        return self.content_object.get_absolute_url()
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields["content"].label = _("Reply")
@@ -126,7 +152,7 @@ class CommentReplyView(
 
         self.object.notify_on_create()
 
-        return HttpResponseSeeOther(self.content_object.get_absolute_url())
+        return HttpResponseSeeOther(self.get_success_url())
 
 
 comment_reply_view = CommentReplyView.as_view()
