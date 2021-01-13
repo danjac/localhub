@@ -11,16 +11,12 @@
 <h1 class="page-header mb-3">{% trans "Favorites" %}</h1>
 
 <div class="tabs text-sm mb-3">
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'likes:activities' %}">{% trans "Activities" %}</a>
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'likes:comments' %}">{% trans "Comments" %}</a>
+  {% active_link 'likes:activities' as link %}
+  <a class="tab-item{% if link.exact %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Activities" %}</a>
+  {% active_link 'likes:comments' as link %}
+  <a class="tab-item{% if link.exact %} active{% endif %}"
+     href="{{ link.url }}">{% trans "Comments" %}</a>
   </li>
 </div>
 {% block likes_content %}{% endblock %}

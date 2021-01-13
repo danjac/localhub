@@ -15,16 +15,12 @@
 {% with search=view.search_query %}
 <div class="tabs text-sm mb-3">
 
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'private_messages:inbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Inbox" %}</a>
-  <a class="tab-item"
-     data-controller="active-link"
-     data-active-link-exact-value
-     data-active-link-active-class="active"
-     href="{% url 'private_messages:outbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Outbox" %}</a>
+  {% active_link 'private_messages:inbox' as link %}
+  <a class="tab-item{% if link.match %} active{% endif %}"
+     href="{{ link.url }}{% if search %}?q={{ search }}{% endif %}">{% trans "Inbox" %}</a>
+  {% active_link 'private_messages:outbox' as link %}
+  <a class="tab-item{% if link.match %} active{% endif %}"
+     href="{{ link.url }}{% if search %}?q={{ search }}{% endif %}">{% trans "Outbox" %}</a>
 
   {% if can_create_message %}
   <a class="action text-sm"
