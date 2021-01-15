@@ -27,6 +27,7 @@ from localhub.activities.views.generic import (
     ActivityQuerySetMixin,
     ActivityUpdateView,
     BaseActivityActionView,
+    render_activity_list,
 )
 from localhub.communities.decorators import community_required
 
@@ -149,12 +150,9 @@ def event_list_view(request, model, template_name):
         .with_relevance()
         .with_timedelta()
     )
-    if search := request.GET.get("q"):
-        qs = qs.search(search)
-        qs = qs.order_by("-rank", "-created")
-    else:
-        qs = qs.order_by("-relevance", "timedelta")
-    return TemplateResponse(request, template_name, {"object_list": qs, "model": model})
+    return render_activity_list(
+        request, qs, template_name, ordering=("-relevance", "timedelta")
+    )
 
 
 @community_required

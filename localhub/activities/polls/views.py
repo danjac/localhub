@@ -17,9 +17,10 @@ from turbo_response import TurboFrame
 from localhub.activities.views.generic import (
     ActivityCreateView,
     ActivityDetailView,
-    ActivityListView,
     ActivityUpdateView,
+    render_activity_list,
 )
+from localhub.communities.decorators import community_required
 from localhub.communities.mixins import CommunityRequiredMixin
 
 # Local
@@ -29,6 +30,19 @@ from .models import Answer, Poll
 class PollQuerySetMixin:
     def get_queryset(self):
         return super().get_queryset().with_answers()
+
+
+@community_required
+def poll_list_view(request, model, template_name):
+    qs = (
+        model.objects.for_community(request.community)
+        .published_or_owner(request.user)
+        .with_common_annotations(request.user, request.community)
+        .exclude_blocked(request.user)
+        .with_answers()
+    )
+
+    return render_activity_list(request, qs, template_name)
 
 
 class AnswerVoteView(
@@ -134,8 +148,4 @@ class PollUpdateView(AnswersFormSetMixin, ActivityUpdateView):
 
 
 class PollDetailView(PollQuerySetMixin, ActivityDetailView):
-    ...
-
-
-class PollListView(PollQuerySetMixin, ActivityListView):
     ...

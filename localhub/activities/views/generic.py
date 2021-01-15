@@ -23,7 +23,7 @@ from turbo_response.views import TurboCreateView, TurboUpdateView
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
-from localhub.common.mixins import SearchMixin, SuccessHeaderMixin
+from localhub.common.mixins import SuccessHeaderMixin
 from localhub.common.pagination import PresetCountPaginator
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import ActionView
@@ -199,6 +199,7 @@ class ActivityUpdateTagsView(ActivityUpdateView):
         return super().get_queryset().published()
 
 
+@community_required
 def activity_list_view(
     request,
     model,
@@ -206,64 +207,19 @@ def activity_list_view(
     ordering=("-created", "-published"),
     extra_context=None,
 ):
-
     qs = (
         model.objects.for_community(request.community)
         .published_or_owner(request.user)
         .with_common_annotations(request.user, request.community)
         .exclude_blocked(request.user)
     )
-    if search := request.GET.get("q"):
-        qs = qs.search(search)
 
-    if isinstance(ordering, str):
-        ordering = [ordering]
-    else:
-        ordering = list(ordering)
-
-    if search:
-        ordering = ["-rank"] + ordering
-
-    qs = qs.order_by(*ordering)
-
-    return TemplateResponse(
-        request,
-        template_name,
-        {"object_list": qs, "model": model, **(extra_context or {})},
-    )
+    return render_activity_list(request, qs, template_name, ordering, extra_context)
 
 
 class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListView):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
-
-
-class ActivityListView(SearchMixin, BaseActivityListView):
-    ordering = ("-created", "-published")
-
-    def get_ordering(self):
-        if isinstance(self.ordering, str):
-            ordering = [self.ordering]
-        else:
-            ordering = list(self.ordering)
-
-        if self.search_query:
-            ordering = ["-rank"] + ordering
-
-        return ordering
-
-    def get_queryset(self):
-        qs = (
-            super()
-            .get_queryset()
-            .published_or_owner(self.request.user)
-            .with_common_annotations(self.request.user, self.request.community)
-            .exclude_blocked(self.request.user)
-        )
-
-        if self.search_query:
-            qs = qs.search(self.search_query)
-        return qs.order_by(*self.get_ordering())
 
 
 class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailView):
@@ -534,3 +490,30 @@ class ActivityDeleteView(
         messages.success(request, self.get_success_message())
 
         return HttpResponseRedirect(self.get_success_url())
+
+
+def render_activity_list(
+    request,
+    queryset,
+    template_name,
+    ordering=("-created", "-published"),
+    extra_context=None,
+):
+
+    if search := request.GET.get("q"):
+        queryset = queryset.search(search)
+
+    if isinstance(ordering, str):
+        ordering = [ordering]
+    else:
+        ordering = list(ordering)
+    if search:
+        ordering = ["-rank"] + ordering
+
+    queryset = queryset.order_by(*ordering)
+
+    return TemplateResponse(
+        request,
+        template_name,
+        {"object_list": queryset, "model": queryset.model, **(extra_context or {})},
+    )

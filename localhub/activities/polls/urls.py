@@ -20,6 +20,6 @@ urlpatterns = create_activity_urls(
     PollForm,
     create_view_class=views.PollCreateView,
     detail_view_class=views.PollDetailView,
-    list_view_class=views.PollListView,
     update_view_class=views.PollUpdateView,
+    list_view=views.poll_list_view,
 ) + [path("<int:pk>~vote/", views.answer_vote_view, name="vote")]
