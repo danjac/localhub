@@ -2,34 +2,286 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Standard Library
+import datetime
 import itertools
 
 # Django
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.template.response import TemplateResponse
+from django.urls import reverse
+from django.utils import timezone
 from django.utils.formats import date_format
-from django.utils.functional import cached_property
 from django.views.generic import TemplateView
-from django.views.generic.dates import (
-    DateMixin,
-    MonthMixin,
-    YearMixin,
-    _date_from_string,
-)
+from django.views.generic.dates import _date_from_string
 
 # Third Party Libraries
-import rules
+from dateutil import relativedelta
 
 # Localhub
-from localhub.common.mixins import SearchMixin
 from localhub.common.pagination import PresetCountPaginator
+from localhub.communities.decorators import community_required
 from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.join_requests.models import JoinRequest
 from localhub.notifications.models import Notification
 
 # Local
 from ..utils import get_activity_queryset_count, get_activity_querysets, load_objects
+
+
+@community_required
+def activity_stream_view(request):
+    """
+    Default "Home Page" of community.
+    """
+    qs_filter = (
+        lambda qs: qs.for_community(request.community)
+        .published()
+        .with_activity_stream_filters(request.user)
+        .exclude_blocked(request.user)
+    )
+
+    context = {}
+
+    if request.user.is_authenticated:
+        context["notifications"] = (
+            Notification.objects.for_community(request.community)
+            .for_recipient(request.user)
+            .exclude_blocked_actors(request.user)
+            .unread()
+            .select_related("actor", "content_type", "community", "recipient")
+            .order_by("-created")
+        )
+
+    if request.user.has_perm("communities.manage_community", request.community):
+        context["has_join_request"] = JoinRequest.objects.filter(
+            sender=request.user,
+            community=request.community,
+            status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED),
+        ).exists()
+
+    return render_activity_stream(
+        request,
+        qs_filter,
+        "activities/stream.html",
+        ordering="-published",
+        extra_context=context,
+    )
+
+
+@community_required
+def activity_search_view(request):
+    search = request.GET.get("q", None)
+
+    def _filter_queryset(qs):
+        if search:
+            return (
+                qs.for_community(request.community)
+                .exclude_blocked(request.user)
+                .published_or_owner(request.user)
+                .search(search)
+            )
+        return qs.none()
+
+    return render_activity_stream(
+        request,
+        _filter_queryset,
+        "activities/search.html",
+        ordering=("-rank", "-created") if search else None,
+        extra_context={"search": search, "non_search_path": reverse("activity_stream")},
+    )
+
+
+@community_required
+def timeline_view(request):
+
+    current_year, current_month = None, None
+
+    try:
+        current_year = _date_from_string(year=request.GET["year"], year_format="%Y")
+    except (KeyError, Http404):
+        pass
+
+    if current_year:
+        try:
+            current_month = _date_from_string(
+                year=current_year.year,
+                year_format="%Y",
+                month=request.GET["month"],
+                month_format="%m",
+            )
+        except (KeyError, Http404):
+            pass
+
+    since, until = None, None
+
+    if current_month:
+        since = make_date_lookup_value(current_month)
+        until = make_date_lookup_value(
+            current_month + relativedelta.relativedelta(months=1)
+        )
+    elif current_year:
+        since = make_date_lookup_value(current_year)
+        until = make_date_lookup_value(
+            current_year + relativedelta.relativedelta(years=1)
+        )
+
+    date_kwargs = (
+        {"published__gte": since, "published__lt": until} if since and until else None
+    )
+
+    def _filter_queryset(qs, with_date_kwargs=True):
+        qs = (
+            qs.for_community(request.community)
+            .published()
+            .exclude_blocked(request.user)
+        )
+        if with_date_kwargs and date_kwargs:
+            return qs.filter(**date_kwargs)
+        return qs
+
+    _, querysets = get_activity_querysets(
+        lambda model: _filter_queryset(
+            model.objects.for_activity_stream(
+                request.user, request.community
+            ).distinct(),
+            with_date_kwargs=False,
+        )
+    )
+
+    querysets = [
+        qs.only("pk", "published").select_related(None).dates("published", "month")
+        for qs in querysets
+    ]
+
+    sort_order = request.GET.get("order", "desc")
+
+    dates = sorted(set(itertools.chain.from_iterable(querysets)))
+
+    params = request.GET.copy()
+    params["order"] = "desc" if sort_order == "asc" else "asc"
+    if "page" in params:
+        params.pop("page")
+    reverse_sort_url = f"{request.path}?{params.urlencode()}"
+
+    selected_dates = dates
+
+    if current_year:
+        selected_dates = [date for date in dates if date.year == current_year.year]
+
+    if current_month:
+        selected_dates = [
+            date for date in selected_dates if date.month == current_month.month
+        ]
+
+    response = render_activity_stream(
+        request,
+        _filter_queryset,
+        "activities/timeline.html",
+        ordering="published" if sort_order == "asc" else "-published",
+        page_size=settings.LONG_PAGE_SIZE,
+        extra_context={
+            "current_month": current_month.month if current_month else None,
+            "current_year": current_year.year if current_year else None,
+            "date_filters": date_kwargs,
+            "dates": dates,
+            "months": get_months(dates),
+            "order": sort_order,
+            "reverse_sort_url": reverse_sort_url,
+            "selected_dates": selected_dates,
+            "selected_months": get_months(selected_dates),
+            "selected_years": get_years(selected_dates),
+            "years": get_years(dates),
+        },
+    )
+
+    for obj in response.context_data["object_list"]:
+        obj["month"] = date_format(obj["published"], "F Y")
+    return response
+
+
+@community_required
+@login_required
+def private_view(request):
+    search = request.GET.get("q", None)
+
+    def _filter_queryset(qs):
+        qs = qs.for_community(request.community).private(request.user)
+        if search:
+            qs = qs.search(search)
+        return qs
+
+    return render_activity_stream(
+        request,
+        _filter_queryset,
+        "activities/private.html",
+        ordering=("-rank", "-created") if search else "-created",
+        extra_context={"search": search},
+    )
+
+
+def render_activity_stream(
+    request,
+    queryset_filter,
+    template_name,
+    *,
+    ordering=("-created", "-published"),
+    page_size=settings.DEFAULT_PAGE_SIZE,
+    extra_context=None,
+):
+    """
+    Pattern adapted from:
+    https://simonwillison.net/2018/Mar/25/combined-recent-additions/
+    """
+
+    qs, querysets = get_activity_querysets(
+        lambda model: queryset_filter(
+            model.objects.for_activity_stream(
+                request.user, request.community
+            ).distinct()
+        ),
+        ordering=ordering,
+    )
+
+    count = get_activity_queryset_count(
+        lambda model: queryset_filter(model.objects.distinct())
+    )
+
+    page = PresetCountPaginator(
+        object_list=qs, count=count, per_page=page_size, allow_empty_first_page=True,
+    ).get_page(request.GET.get("q", 1))
+
+    page = load_objects(page, querysets)
+
+    context = {
+        "page_obj": page,
+        "paginator": page.paginator,
+        "object_list": page.object_list,
+        "is_paginated": page.has_other_pages(),
+        **(extra_context or None),
+    }
+
+    return TemplateResponse(request, template_name, context)
+
+
+def get_months(dates, year=None):
+    return [
+        (date.strftime("%-m"), date.strftime("%B"))
+        for date in dates
+        if year is None or date.year == year
+    ]
+
+
+def get_years(dates):
+    return sorted(set([date.year for date in dates]))
+
+
+def make_date_lookup_value(value):
+    value = datetime.datetime.combine(value, datetime.time.min)
+    if settings.USE_TZ:
+        value = timezone.make_aware(value)
+    return value
 
 
 class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
@@ -99,281 +351,3 @@ class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
                 "is_paginated": page.has_other_pages(),
             },
         }
-
-
-class ActivityStreamView(BaseActivityStreamView):
-    """
-    Default "Home Page" of community.
-    """
-
-    template_name = "activities/stream.html"
-    ordering = "-published"
-
-    def filter_queryset(self, queryset):
-        return (
-            super()
-            .filter_queryset(queryset)
-            .published()
-            .with_activity_stream_filters(self.request.user)
-            .exclude_blocked(self.request.user)
-        )
-
-    def get_unread_notifications(self):
-        if self.request.user.is_anonymous:
-            return Notification.objects.none()
-
-        return (
-            Notification.objects.for_community(self.request.community)
-            .for_recipient(self.request.user)
-            .exclude_blocked_actors(self.request.user)
-            .unread()
-            .select_related("actor", "content_type", "community", "recipient")
-            .order_by("-created")
-        )
-
-    def has_join_request(self):
-        if self.request.user.is_anonymous or rules.test_rule(
-            "communities.is_member", self.request.user, self.request.community
-        ):
-            return False
-
-        return JoinRequest.objects.filter(
-            sender=self.request.user,
-            community=self.request.community,
-            status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED),
-        ).exists()
-
-    def get_context_data(self, **kwargs):
-
-        return {
-            **super().get_context_data(**kwargs),
-            **{
-                "notifications": self.get_unread_notifications(),
-                "has_join_request": self.has_join_request(),
-            },
-        }
-
-
-activity_stream_view = ActivityStreamView.as_view()
-
-
-class ActivitySearchView(SearchMixin, BaseActivityStreamView):
-    template_name = "activities/search.html"
-    search_optional = False
-
-    def get_ordering(self):
-        return ("-rank", "-created") if self.search_query else None
-
-    def filter_queryset(self, queryset):
-        if self.search_query:
-            return (
-                super()
-                .filter_queryset(queryset)
-                .exclude_blocked(self.request.user)
-                .published_or_owner(self.request.user)
-                .search(self.search_query)
-            )
-        return queryset.none()
-
-
-activity_search_view = ActivitySearchView.as_view()
-
-
-class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
-    template_name = "activities/timeline.html"
-    paginate_by = settings.LONG_PAGE_SIZE
-    month_format = "%B"
-
-    @property
-    def uses_datetime_field(self):
-        """
-        Always return True, as we're using an explicit field not
-        specific to a single model.
-        """
-        return True
-
-    @cached_property
-    def sort_order(self):
-        return self.request.GET.get("order", "desc")
-
-    @cached_property
-    def sort_by_ascending(self):
-        return self.sort_order == "asc"
-
-    @cached_property
-    def current_year(self):
-        date = self.get_current_year()
-        if date:
-            return date.year
-        return None
-
-    @cached_property
-    def current_month(self):
-        date = self.get_current_month()
-        if date:
-            return date.month
-        return None
-
-    @cached_property
-    def date_kwargs(self):
-        date = self.get_current_month()
-        if date:
-            return self.make_date_lookup_kwargs(
-                self._make_date_lookup_arg(date),
-                self._make_date_lookup_arg(self._get_next_month(date)),
-            )
-
-        date = self.get_current_year()
-        if date:
-            return self.make_date_lookup_kwargs(
-                self._make_date_lookup_arg(date),
-                self._make_date_lookup_arg(self._get_next_year(date)),
-            )
-
-        return None
-
-    def get_current_year(self):
-        try:
-            return _date_from_string(
-                year=self.get_year(), year_format=self.get_year_format()
-            )
-        except Http404:
-            return None
-
-    def get_current_month(self):
-        try:
-            return _date_from_string(
-                year=self.get_year(),
-                year_format=self.get_year_format(),
-                month=self.get_month(),
-                month_format="%m",
-            )
-        except Http404:
-            return None
-
-    def make_date_lookup_kwargs(self, since, until):
-        return {"published__gte": since, "published__lt": until}
-
-    def filter_queryset(self, queryset, with_date_kwargs=True):
-        qs = (
-            super()
-            .filter_queryset(queryset)
-            .published()
-            .exclude_blocked(self.request.user)
-        )
-        if with_date_kwargs and self.date_kwargs:
-            return qs.filter(**self.date_kwargs)
-        return qs
-
-    def get_months(self, dates):
-        """
-        Get months for *current* year as list of tuples of (order, name)
-        """
-
-        return [
-            (date.strftime("%-m"), date.strftime(self.get_month_format()))
-            for date in dates
-            if self.current_year is None or date.year == self.current_year
-        ]
-
-    def get_years(self, dates):
-        """
-        Return list of years in numerical format.
-        """
-        return sorted(set([date.year for date in dates]))
-
-    def get_ordering(self):
-        return "published" if self.sort_by_ascending else "-published"
-
-    def get_dates(self):
-        """
-        Calling dates() on a UNION queryset just returns list of PKs
-        (Django bug?) so we need to build this separately for each
-        queryset.
-        """
-        _, querysets = get_activity_querysets(
-            lambda model: self.filter_queryset(
-                self.get_queryset_for_model(model), with_date_kwargs=False
-            )
-        )
-        querysets = [
-            qs.only("pk", "published").select_related(None).dates("published", "month")
-            for qs in querysets
-        ]
-        return sorted(set(itertools.chain.from_iterable(querysets)))
-
-    def get_reverse_sort_url(self):
-        """
-        Get all params and switch the current order parameter.
-        """
-        params = self.request.GET.copy()
-        params["order"] = "desc" if self.sort_by_ascending else "asc"
-        # reset pagination
-        if "page" in params:
-            params.pop("page")
-        return f"{self.request.path}?{params.urlencode()}"
-
-    def get_selected_dates(self, dates):
-        """
-        Returns range of dates as selected in the URL.
-
-        If no specific dates selected just returns all dates.
-        """
-        if not self.date_kwargs:
-            return dates
-
-        selected_dates = [date for date in dates if date.year == self.current_year]
-        current_month = self.get_current_month()
-
-        if current_month is None:
-            return selected_dates
-
-        return [date for date in selected_dates if date.month == current_month.month]
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        for object in data["object_list"]:
-            object["month"] = date_format(object["published"], "F Y")
-
-        dates = self.get_dates()
-        selected_dates = self.get_selected_dates(dates)
-
-        return {
-            **data,
-            **{
-                "dates": dates,
-                "selected_dates": selected_dates,
-                "current_month": self.current_month,
-                "current_year": self.current_year,
-                "months": self.get_months(dates),
-                "years": self.get_years(dates),
-                "selected_months": self.get_months(selected_dates),
-                "selected_years": self.get_years(selected_dates),
-                "reverse_sort_url": self.get_reverse_sort_url(),
-                "order": self.sort_order,
-                "date_filters": self.date_kwargs,
-            },
-        }
-
-
-timeline_view = TimelineView.as_view()
-
-
-class PrivateView(LoginRequiredMixin, SearchMixin, BaseActivityStreamView):
-    """Activities that are only visible to owner (published NULL)."""
-
-    template_name = "activities/private.html"
-
-    def get_ordering(self):
-        if self.search_query:
-            return ("-rank", "-created")
-        return "-created"
-
-    def filter_queryset(self, queryset):
-        qs = super().filter_queryset(queryset).private(self.request.user)
-        if self.search_query:
-            qs = qs.search(self.search_query)
-        return qs
-
-
-private_view = PrivateView.as_view()

@@ -71,7 +71,7 @@
 
 </form>
 
-{% if search or view.search_optional and view.search_query|default:search %}
+{% if search %}
 <a href="{{ non_search_path|default:request.path }}"
    class="btn btn-block bg-white mb-3">
   {% trans "Clear Search" %}
