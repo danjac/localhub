@@ -3,7 +3,7 @@
 
 {% load i18n %}
 {% load pagination %}
-{% if is_paginated %}
+{% if is_paginated or page_obj.has_next or page_obj.has_previous %}
 <div class="text-sm flex justify-between {{ css_class|default:"mt-2" }}">
   <a {% if page_obj.has_previous %}
      class="block text-indigo-900 hover:text-indigo-700"

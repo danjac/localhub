@@ -29,7 +29,7 @@
            data-search-target="input"
            data-action="keyup->search#toggleSelector"
            placeholder="{% trans "Search..." %}"
-           value="{{ view.search_query|default:"" }}">
+           value="{% if search %}{{ search }}{% else %}{{ view.search_query|default:"" }}{% endif %}">
   </div>
   {% if selector %}
   <div class="relative mb-3">
@@ -71,8 +71,8 @@
 
 </form>
 
-{% if view.search_optional and view.search_query %}
-<a href="{{ non_search_path }}"
+{% if search or view.search_optional and view.search_query|default:search %}
+<a href="{{ non_search_path|default:request.path }}"
    class="btn btn-block bg-white mb-3">
   {% trans "Clear Search" %}
 </a>

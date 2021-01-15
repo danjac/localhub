@@ -8,11 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, ListView
 
 # Third Party Libraries
@@ -22,7 +23,7 @@ from turbo_response import TemplateFormResponse, TurboFrame, redirect_303
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
-from localhub.common.mixins import SearchMixin, SuccessHeaderMixin
+from localhub.common.mixins import SuccessHeaderMixin
 from localhub.common.views import ActionView
 from localhub.communities.decorators import community_required
 from localhub.flags.views import BaseFlagCreateView
@@ -33,6 +34,28 @@ from localhub.users.utils import has_perm_or_403
 from .forms import CommentForm
 from .mixins import CommentQuerySetMixin
 from .models import Comment
+
+
+@community_required
+def comment_list_view(request):
+    comments = (
+        Comment.objects.for_community(request.community)
+        .with_common_annotations(request.user, request.community)
+        .exclude_blocked_users(request.user)
+        .exclude_deleted()
+        .with_common_related()
+    )
+
+    if search := request.GET.get("q", None):
+        comments = comments.search(search).order_by("-rank", "-created")
+    else:
+        comments = comments.order_by("-created")
+
+    return TemplateResponse(
+        request,
+        "comments/comment_list.html",
+        {"comments": comments, "search": search,},
+    )
 
 
 @community_required
@@ -147,85 +170,69 @@ def comment_reply_view(request, pk):
     )
 
 
-class BaseCommentListView(CommentQuerySetMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .with_common_annotations(self.request.user, self.request.community)
-            .exclude_blocked_users(self.request.user)
-            .exclude_deleted()
-            .with_common_related()
-        )
-
-
-class CommentListView(SearchMixin, BaseCommentListView):
-
-    template_name = "comments/comment_list.html"
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        if self.search_query:
-            return qs.search(self.search_query).order_by("-rank", "-created")
-        return qs.order_by("-created")
-
-
-comment_list_view = CommentListView.as_view()
-
-
 class BaseCommentActionView(
     PermissionRequiredMixin, CommentQuerySetMixin, SuccessHeaderMixin, ActionView
 ):
     ...
 
 
-class BaseCommentBookmarkView(BaseCommentActionView):
-    permission_required = "comments.bookmark_comment"
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def comment_bookmark_view(request, pk):
+    comment = get_object_or_404(
+        Comment.objects.for_community(request.community).select_related(
+            "owner", "community"
+        ),
+        pk=pk,
+    )
 
-    def render_to_response(self, has_bookmarked):
-        if self.request.accept_turbo_stream:
-            return (
-                TurboFrame(f"comment-bookmark-{self.object.id}")
-                .template(
-                    "comments/includes/bookmark.html",
-                    {"object": self.object, "has_bookmarked": has_bookmarked},
-                )
-                .response(self.request)
-            )
-        return HttpResponseRedirect(self.get_success_url())
+    has_perm_or_403(request.user, "comments.bookmark_comment", comment)
 
-
-class CommentBookmarkView(BaseCommentBookmarkView):
-    success_message = _("You have bookmarked this comment")
-
-    def post(self, request, *args, **kwargs):
-        try:
-            Bookmark.objects.create(
-                user=request.user,
-                community=request.community,
-                content_object=self.object,
-            )
-        except IntegrityError:
-            pass
-        return self.render_success_message(self.render_to_response(has_bookmarked=True))
-
-
-comment_bookmark_view = CommentBookmarkView.as_view()
-
-
-class CommentRemoveBookmarkView(BaseCommentBookmarkView):
-    success_message = _("You have removed this comment from your bookmarks")
-
-    def post(self, request, *args, **kwargs):
-        Bookmark.objects.filter(user=request.user, comment=self.object).delete()
-        return self.render_success_message(
-            self.render_to_response(has_bookmarked=False)
+    try:
+        Bookmark.objects.create(
+            user=request.user, community=request.community, content_object=comment,
         )
+    except IntegrityError:
+        pass
+
+    messages.success(request, _("You have bookmarked this comment"))
+    return comment_bookmark_response(request, comment, has_bookmarked=True)
 
 
-comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def comment_remove_bookmark_view(request, pk):
+    comment = get_object_or_404(
+        Comment.objects.for_community(request.community).select_related(
+            "owner", "community"
+        ),
+        pk=pk,
+    )
+
+    has_perm_or_403(request.user, "comments.bookmark_comment", comment)
+
+    Bookmark.objects.filter(user=request.user, comment=comment).delete()
+
+    messages.info(request, _("You have removed this bookmark"))
+    return comment_bookmark_response(request, comment, has_bookmarked=False)
+
+
+def comment_bookmark_response(request, comment, has_bookmarked):
+
+    if request.accept_turbo_stream:
+        return (
+            TurboFrame(f"comment-bookmark-{comment.id}")
+            .template(
+                "comments/includes/bookmark.html",
+                {"object": comment, "has_bookmarked": has_bookmarked},
+            )
+            .response(request)
+        )
+    return redirect(comment)
 
 
 class BaseCommentLikeView(BaseCommentActionView):
@@ -329,3 +336,17 @@ class CommentFlagView(
 
 
 comment_flag_view = CommentFlagView.as_view()
+
+
+class BaseCommentListView(CommentQuerySetMixin, ListView):
+    paginate_by = settings.DEFAULT_PAGE_SIZE
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .with_common_annotations(self.request.user, self.request.community)
+            .exclude_blocked_users(self.request.user)
+            .exclude_deleted()
+            .with_common_related()
+        )

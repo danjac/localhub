@@ -48,7 +48,7 @@ export default class extends ApplicationController {
     this.messageTarget.innerText = message;
     // ensure any previous class is removed
     if (this.hasTypeValue) {
-      this.element.classList.remove(this.typeValue);
+      this.containerTarget.classList.remove(this.typeValue);
     }
     this.containerTarget.classList.add(type);
     this.typeValue = type;

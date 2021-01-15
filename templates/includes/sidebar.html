@@ -52,7 +52,7 @@
     <li class="mb-1">
       {% active_link 'comments:list' as link %}
       <a href="{{ link.url }}"
-         class="sidebar-menu-item{% if link.match %} active{% endif %}">{% trans "Comments" %}</a>
+         class="sidebar-menu-item{% if link.exact %} active{% endif %}">{% trans "Comments" %}</a>
     </li>
     {% if is_member %}
     <li class="mb-1">

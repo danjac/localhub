@@ -4,7 +4,16 @@
 # Django
 from django import template
 
+# Local
+from . import paginate as _paginate
+
 register = template.Library()
+
+
+@register.simple_tag(takes_context=True)
+def paginate(context, object_list, **pagination_kwargs):
+    """Creates paginated object"""
+    return _paginate(context["request"], object_list, **pagination_kwargs)
 
 
 @register.simple_tag(takes_context=True)
