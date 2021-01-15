@@ -24,7 +24,6 @@ from turbo_response import TemplateFormResponse, TurboFrame, redirect_303
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
 from localhub.common.mixins import SuccessHeaderMixin
-from localhub.common.views import ActionView
 from localhub.communities.decorators import community_required
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
@@ -170,17 +169,11 @@ def comment_reply_view(request, pk):
     )
 
 
-class BaseCommentActionView(
-    PermissionRequiredMixin, CommentQuerySetMixin, SuccessHeaderMixin, ActionView
-):
-    ...
-
-
 @community_required
 @login_required
 @add_messages_to_response_header
 @require_POST
-def comment_bookmark_view(request, pk):
+def comment_bookmark_view(request, pk, remove=False):
     comment = get_object_or_404(
         Comment.objects.for_community(request.community).select_related(
             "owner", "community"
@@ -190,98 +183,72 @@ def comment_bookmark_view(request, pk):
 
     has_perm_or_403(request.user, "comments.bookmark_comment", comment)
 
-    try:
-        Bookmark.objects.create(
-            user=request.user, community=request.community, content_object=comment,
-        )
-    except IntegrityError:
-        pass
-
-    messages.success(request, _("You have bookmarked this comment"))
-    return comment_bookmark_response(request, comment, has_bookmarked=True)
-
-
-@community_required
-@login_required
-@add_messages_to_response_header
-@require_POST
-def comment_remove_bookmark_view(request, pk):
-    comment = get_object_or_404(
-        Comment.objects.for_community(request.community).select_related(
-            "owner", "community"
-        ),
-        pk=pk,
-    )
-
-    has_perm_or_403(request.user, "comments.bookmark_comment", comment)
-
-    Bookmark.objects.filter(user=request.user, comment=comment).delete()
-
-    messages.info(request, _("You have removed this bookmark"))
-    return comment_bookmark_response(request, comment, has_bookmarked=False)
-
-
-def comment_bookmark_response(request, comment, has_bookmarked):
+    if remove:
+        Bookmark.objects.filter(user=request.user, comment=comment).delete()
+        messages.info(request, _("You have removed this bookmark"))
+    else:
+        try:
+            Bookmark.objects.create(
+                user=request.user, community=request.community, content_object=comment,
+            )
+            messages.success(request, _("You have bookmarked this comment"))
+        except IntegrityError:
+            pass
 
     if request.accept_turbo_stream:
         return (
             TurboFrame(f"comment-bookmark-{comment.id}")
             .template(
                 "comments/includes/bookmark.html",
-                {"object": comment, "has_bookmarked": has_bookmarked},
+                {"object": comment, "has_bookmarked": not (remove)},
             )
             .response(request)
         )
     return redirect(comment)
 
 
-class BaseCommentLikeView(BaseCommentActionView):
-    permission_required = "comments.like_comment"
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def comment_like_view(request, pk, remove=False):
+    comment = get_object_or_404(
+        Comment.objects.for_community(request.community).select_related(
+            "owner", "community"
+        ),
+        pk=pk,
+    )
 
-    def render_to_response(self, has_liked):
-        if self.request.accept_turbo_stream:
-            return (
-                TurboFrame(f"comment-like-{self.object.id}")
-                .template(
-                    "comments/includes/like.html",
-                    {"object": self.object, "has_liked": has_liked},
-                )
-                .response(self.request)
-            )
-        return HttpResponseRedirect(self.get_success_url())
+    has_perm_or_403(request.user, "comments.like_comment", comment)
 
+    if remove:
+        Like.objects.filter(user=request.user, comment=comment).delete()
+        messages.info(request, _("You have stopped liking this comment"))
+    else:
 
-class CommentLikeView(BaseCommentLikeView):
-    success_message = _("You have liked this comment")
-
-    def post(self, request, *args, **kwargs):
         try:
             Like.objects.create(
                 user=request.user,
                 community=request.community,
-                recipient=self.object.owner,
-                content_object=self.object,
+                recipient=comment.owner,
+                content_object=comment,
             ).notify()
+
+            messages.success(request, _("You have liked this comment"))
+
         except IntegrityError:
             pass
-        return self.render_to_response(has_liked=True)
 
-
-comment_like_view = CommentLikeView.as_view()
-
-
-class CommentDislikeView(BaseCommentLikeView):
-    success_message = _("You have stopped liking this comment")
-
-    def post(self, request, *args, **kwargs):
-        Like.objects.filter(user=request.user, comment=self.object).delete()
-        return self.render_to_response(has_liked=False)
-
-    def delete(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
-
-
-comment_dislike_view = CommentDislikeView.as_view()
+    if request.accept_turbo_stream:
+        return (
+            TurboFrame(f"comment-like-{comment.id}")
+            .template(
+                "comments/includes/like.html",
+                {"object": comment, "has_liked": not (remove)},
+            )
+            .response(request)
+        )
+    return redirect(comment)
 
 
 class CommentDeleteView(

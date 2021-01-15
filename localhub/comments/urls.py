@@ -15,14 +15,20 @@ urlpatterns = [
     path("<int:pk>/", views.comment_detail_view, name="detail"),
     path("<int:pk>/~update/", views.comment_update_view, name="update"),
     path("<int:pk>/~delete/", views.comment_delete_view, name="delete"),
-    path("<int:pk>/~like/", views.comment_like_view, name="like"),
     path("<int:pk>/~bookmark/", views.comment_bookmark_view, name="bookmark"),
     path(
         "<int:pk>/~bookmark/remove/",
-        views.comment_remove_bookmark_view,
+        views.comment_bookmark_view,
         name="remove_bookmark",
+        kwargs={"remove": True},
     ),
-    path("<int:pk>/~dislike/", views.comment_dislike_view, name="dislike"),
+    path("<int:pk>/~like/", views.comment_like_view, name="like"),
+    path(
+        "<int:pk>/~dislike/",
+        views.comment_like_view,
+        name="dislike",
+        kwargs={"remove": True},
+    ),
     path("<int:pk>/~flag/", views.comment_flag_view, name="flag"),
     path("<int:pk>/~reply/", views.comment_reply_view, name="reply"),
 ]
