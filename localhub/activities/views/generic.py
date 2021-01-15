@@ -17,12 +17,12 @@ from django.views.generic import DeleteView, DetailView, ListView
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import HttpResponseSeeOther, TurboFrame, TurboStream
-from turbo_response.views import TurboCreateView, TurboFormView, TurboUpdateView
+from turbo_response.views import TurboCreateView, TurboUpdateView
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
-from localhub.common.mixins import ParentObjectMixin, SearchMixin, SuccessHeaderMixin
+from localhub.common.mixins import SearchMixin, SuccessHeaderMixin
 from localhub.common.pagination import PresetCountPaginator
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import ActionView
@@ -150,41 +150,6 @@ def create_comment_view(request, pk, model):
         )
         .response(request)
     )
-
-
-class ActivityCommentCreateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, ParentObjectMixin, TurboFormView,
-):
-    form_class = CommentForm
-    template_name = "comments/comment_form.html"
-    permission_required = "activities.create_comment"
-    success_message = _("Your comment has been posted")
-
-    parent_context_object_name = "content_object"
-
-    def get_permission_object(self):
-        return self.parent
-
-    def get_parent_queryset(self):
-        return self.get_queryset()
-
-    def get_success_url(self):
-        return self.parent.get_absolute_url()
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.content_object = self.parent
-        self.object.community = self.request.community
-        self.object.owner = self.request.user
-        self.object.save()
-
-        self.object.notify_on_create()
-
-        messages.success(
-            self.request, self.success_message,
-        )
-
-        return HttpResponseSeeOther(self.get_success_url())
 
 
 class ActivityUpdateView(

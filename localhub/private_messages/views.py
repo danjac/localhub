@@ -5,9 +5,11 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.db.models import F
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -21,9 +23,12 @@ from turbo_response.views import TurboFormView
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
+from localhub.common.decorators import add_messages_to_response_header
 from localhub.common.mixins import ParentObjectMixin, SearchMixin, SuccessHeaderMixin
 from localhub.common.views import ActionView
+from localhub.communities.decorators import community_required
 from localhub.communities.mixins import CommunityRequiredMixin
+from localhub.users.utils import has_perm_or_403
 
 # Local
 from .forms import MessageForm, MessageRecipientForm
@@ -120,6 +125,53 @@ class MessageFollowUpView(SenderQuerySetMixin, BaseReplyFormView):
 message_follow_up_view = MessageFollowUpView.as_view()
 
 
+@community_required
+@login_required
+@add_messages_to_response_header
+def message_recipient_create_view(request, username):
+
+    has_perm_or_403(request.user, "private_messages.create_message", request.community)
+
+    recipient = get_object_or_404(
+        get_user_model()
+        .objects.exclude(pk=request.user.id)
+        .for_community(request.community)
+        .exclude_blocking(request.user),
+        username__iexact=username,
+    )
+
+    form = MessageForm(request.POST if request.method == "POST" else None)
+
+    form["message"].label = _(
+        "Send message to %(recipient)s" % {"recipient": recipient.get_display_name()}
+    )
+
+    frame = TurboFrame("modal")
+
+    if request.method == "POST" and form.is_valid():
+
+        message = form.save(commit=False)
+        message.community = request.community
+        message.sender = request.user
+        message.recipient = recipient
+        message.save()
+
+        message.notify_on_send()
+
+        messages.success(
+            request,
+            _("Your message has been sent to %(recipient)s")
+            % {"recipient": recipient.get_display_name()},
+        )
+
+        return frame.response()
+
+    return frame.template(
+        "private_messages/includes/modal_message_form.html",
+        {"form": form, "recipient": recipient},
+    ).response(request)
+
+
 class MessageRecipientCreateView(
     CommunityRequiredMixin,
     ParentObjectMixin,
@@ -176,9 +228,6 @@ class MessageRecipientCreateView(
         return self.render_success_message(
             TurboFrame(self.get_turbo_frame_dom_id()).response()
         )
-
-
-message_recipient_create_view = MessageRecipientCreateView.as_view()
 
 
 class MessageCreateView(
