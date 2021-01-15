@@ -10,27 +10,22 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 
-def community_required(allow_non_members=False,):
-    def decorator(fn):
-        @functools.wrap(fn)
-        def wrapper(request, *args, **kwargs):
-            if not request.community.active:
-                return handle_community_not_found(request)
+def community_required(view, *, allow_non_members=False):
+    @functools.wraps(view)
+    def wrapper(request, *args, **kwargs):
+        if not request.community.active:
+            return handle_community_not_found(request)
 
-            if (
-                not request.user.has_perm(
-                    "communities.view_community", request.community
-                )
-                and not allow_non_members
-                and not request.community.public
-            ):
-                return handle_community_access_denied(request)
+        if (
+            not request.user.has_perm("communities.view_community", request.community)
+            and not allow_non_members
+            and not request.community.public
+        ):
+            return handle_community_access_denied(request)
 
-            return fn(request, *args, **kwargs)
+        return view(request, *args, **kwargs)
 
-        return wrapper
-
-    return decorator
+    return wrapper
 
 
 def handle_community_access_denied(request):
