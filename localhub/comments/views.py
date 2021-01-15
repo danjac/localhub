@@ -7,14 +7,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import DeleteView, ListView
+from django.views.generic import ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -23,7 +21,6 @@ from turbo_response import TemplateFormResponse, TurboFrame, redirect_303
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
-from localhub.common.mixins import SuccessHeaderMixin
 from localhub.communities.decorators import community_required
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
@@ -251,34 +248,28 @@ def comment_like_view(request, pk, remove=False):
     return redirect(comment)
 
 
-class CommentDeleteView(
-    PermissionRequiredMixin, CommentQuerySetMixin, SuccessHeaderMixin, DeleteView,
-):
-    permission_required = "comments.delete_comment"
-    template_name = "comments/comment_confirm_delete.html"
-    success_message = _("You have deleted this comment")
-    model = Comment
+@community_required
+@login_required
+@require_POST
+def comment_delete_view(request, pk):
+    comment = get_object_or_404(
+        Comment.objects.for_community(request.community).select_related(
+            "owner", "community"
+        ),
+        pk=pk,
+    )
 
-    def get_success_url(self):
-        obj = self.object.get_content_object()
-        if obj:
-            return obj.get_absolute_url()
-        return reverse("comments:list")
+    has_perm_or_403(request.user, "comments.delete_comment", comment)
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.request.user != self.object.owner:
-            self.object.soft_delete()
-            self.object.notify_on_delete(self.request.user)
-        else:
-            self.object.delete()
+    if request.user == comment.owner:
+        comment.delete()
+    else:
+        comment.soft_delete()
+        comment.notify_on_delete(request.user)
 
-        messages.success(request, self.success_message)
+    messages.info(request, _("You have deleted this comment"))
 
-        return HttpResponseRedirect(self.get_success_url())
-
-
-comment_delete_view = CommentDeleteView.as_view()
+    return redirect(comment.get_content_object() or "comments:list")
 
 
 class CommentFlagView(
