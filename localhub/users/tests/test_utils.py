@@ -1,9 +1,29 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
+from django.core.exceptions import PermissionDenied
+
+# Third Party Libraries
+import pytest
 
 # Local
-from ..utils import extract_mentions, linkify_mentions, user_display
+from ..utils import extract_mentions, has_perm_or_403, linkify_mentions, user_display
+
+pytestmark = pytest.mark.django_db
+
+
+class TestHasPermOr403:
+    def test_has_permission(self, user):
+        has_perm_or_403(user, "users.change_user", obj=user)
+
+    def test_does_not_have_permission(self, user):
+        with pytest.raises(PermissionDenied):
+            has_perm_or_403(user, "users.follow_user", obj=user)
+
+    def test_anonymous_has_permission(self, anonymous_user, user):
+        with pytest.raises(PermissionDenied):
+            has_perm_or_403(anonymous_user, "users.follow_user", obj=user)
 
 
 class TestUserDisplay:
