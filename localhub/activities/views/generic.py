@@ -4,11 +4,14 @@
 # Django
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
@@ -23,9 +26,11 @@ from localhub.common.mixins import ParentObjectMixin, SearchMixin, SuccessHeader
 from localhub.common.pagination import PresetCountPaginator
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import ActionView
+from localhub.communities.decorators import community_required
 from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
+from localhub.users.utils import has_perm_or_403
 
 # Local
 from ..forms import ActivityTagsForm
@@ -108,6 +113,43 @@ class ActivityFlagView(
 
 
 activity_flag_view = ActivityFlagView.as_view()
+
+
+@community_required
+@login_required
+@require_POST
+def create_comment_view(request, pk, model):
+
+    obj = get_object_or_404(
+        model.objects.for_community(request.community).select_related(
+            "owner", "community"
+        ),
+        pk=pk,
+    )
+    has_perm_or_403(request.user, "activities.create_comment", obj)
+
+    form = CommentForm(request.POST)
+    if form.is_valid():
+
+        comment = form.save(commit=False)
+        comment.content_object = obj
+        comment.community = request.community
+        comment.owner = request.user
+        comment.save()
+
+        comment.notify_on_create()
+
+        messages.success(request, _("Your comment has been posted"))
+
+        return redirect(obj)
+
+    return (
+        TurboStream("comment-form")
+        .replace.template(
+            "activities/includes/comment_form.html", {"form": form, "object": obj}
+        )
+        .response(request)
+    )
 
 
 class ActivityCommentCreateView(

@@ -166,14 +166,6 @@ class TestPostUpdateTagsView:
 
 
 class TestPostCommentCreateView:
-    def test_get(self, client, member):
-        post = PostFactory(
-            community=member.community,
-            owner=MembershipFactory(community=member.community).member,
-        )
-        response = client.get(reverse("posts:comment", args=[post.id]))
-        assert response.status_code == http.HTTPStatus.OK
-
     def test_post(self, client, member, send_webpush_mock):
         owner = UserFactory()
         MembershipFactory(member=owner, community=member.community)

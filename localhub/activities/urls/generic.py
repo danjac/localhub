@@ -26,7 +26,7 @@ def create_activity_urls(
     bookmark_view_class=generic.ActivityBookmarkView,
     remove_bookmark_view_class=generic.ActivityRemoveBookmarkView,
     update_tags_view_class=generic.ActivityUpdateTagsView,
-    create_comment_view_class=generic.ActivityCommentCreateView,
+    create_comment_view=generic.create_comment_view,
 ):
     """
     Generates default URL patterns for activity subclasses.
@@ -51,8 +51,9 @@ def create_activity_urls(
         ),
         path(
             "<int:pk>/~comment/",
-            create_comment_view_class.as_view(model=model),
+            create_comment_view,
             name="comment",
+            kwargs={"model": model,},
         ),
         path(
             "<int:pk>/~delete/", delete_view_class.as_view(model=model), name="delete",
