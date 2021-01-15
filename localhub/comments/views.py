@@ -4,26 +4,30 @@
 # Django
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, DetailView, ListView, UpdateView
+from django.views.generic import DeleteView, ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
-from turbo_response import HttpResponseSeeOther, TurboFrame
-from turbo_response.views import TurboCreateView
+from turbo_response import TemplateFormResponse, TurboFrame, redirect_303
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
-from localhub.common.mixins import ParentObjectMixin, SearchMixin, SuccessHeaderMixin
+from localhub.common.decorators import add_messages_to_response_header
+from localhub.common.mixins import SearchMixin, SuccessHeaderMixin
 from localhub.common.views import ActionView
+from localhub.communities.decorators import community_required
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
+from localhub.users.utils import has_perm_or_403
 
 # Local
 from .forms import CommentForm
@@ -31,131 +35,116 @@ from .mixins import CommentQuerySetMixin
 from .models import Comment
 
 
-class CommentUpdateView(
-    SuccessHeaderMixin, PermissionRequiredMixin, CommentQuerySetMixin, UpdateView,
-):
-    form_class = CommentForm
-    model = Comment
-    permission_required = "comments.change_comment"
-    success_message = _("Your %(model)s has been updated")
-    template_name = "comments/includes/comment_form.html"
+@community_required
+def comment_detail_view(request, pk):
+    qs = (
+        Comment.objects.for_community(request.community)
+        .with_common_annotations(request.user, request.community)
+        .exclude_deleted(request.user)
+        .with_common_related()
+    )
 
-    def get_turbo_frame_dom_id(self):
-        return f"comment-{self.object.id}-content"
+    comment = get_object_or_404(qs, pk=pk)
 
-    def render_turbo_frame(self, template_name, context, **kwargs):
-        return (
-            TurboFrame(self.get_turbo_frame_dom_id())
-            .template(template_name, context)
-            .response(self.request, **kwargs)
+    if request.user.is_authenticated:
+        comment.get_notifications().for_recipient(request.user).unread().update(
+            is_read=True
         )
 
-    def render_to_response(self, context, **kwargs):
-        return self.render_turbo_frame(self.template_name, context, **kwargs)
+    context = {"comment": comment, "content_object": comment.get_content_object()}
 
-    def get_context_data(self, **kwargs):
-        return {
-            **super().get_context_data(**kwargs),
-            "comment": self.object,
-            "show_content": True,
-            "is_detail": True,
-            "parent": self.object.get_parent,
-            "content_object": self.object.get_content_object(),
-        }
+    if request.user.has_perm("communities.moderate_community", request.community):
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.editor = self.request.user
-        self.object.edited = timezone.now()
-        self.object.save()
-
-        self.object.notify_on_update()
-
-        # return normal response inside frame
-
-        return self.render_success_message(
-            self.render_turbo_frame(
-                "comments/includes/content.html", self.get_context_data(),
-            )
+        context["flags"] = (
+            comment.get_flags()
+            .select_related("user", "community")
+            .prefetch_related("content_object")
+            .order_by("-created")
         )
 
+    context["replies"] = (
+        Comment.objects.none()
+        if comment.deleted
+        else qs.filter(parent=comment).order_by("created")
+    )
 
-comment_update_view = CommentUpdateView.as_view()
-
-
-class CommentFlagView(
-    SuccessMessageMixin,
-    PermissionRequiredMixin,
-    CommentQuerySetMixin,
-    BaseFlagCreateView,
-):
-    permission_required = "comments.flag_comment"
-    success_message = _("This comment has been flagged to the moderators")
-
-    def get_parent_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .with_has_flagged(self.request.user)
-            .exclude(has_flagged=True)
-        )
-
-    def get_permission_object(self):
-        return self.parent
+    return TemplateResponse(request, "comments/comment_detail.html", context)
 
 
-comment_flag_view = CommentFlagView.as_view()
+@login_required
+@community_required
+@add_messages_to_response_header
+def comment_update_view(request, pk):
+    comment = get_object_or_404(
+        Comment.objects.for_community(request.community).select_related(
+            "owner", "community"
+        ),
+        pk=pk,
+    )
+
+    has_perm_or_403(request.user, "comments.change_comment", comment)
+
+    form = CommentForm(
+        request.POST if request.method == "POST" else None, instance=comment,
+    )
+
+    frame = TurboFrame(f"comment-{comment.id}-content")
+
+    if request.method == "POST" and form.is_valid():
+
+        comment = form.save(commit=False)
+        comment.editor = request.user
+        comment.edited = timezone.now()
+        comment.save()
+
+        comment.notify_on_update()
+
+        messages.success(request, _("Your comment has been updated"))
+
+        return frame.template(
+            "comments/includes/content.html", {"comment": comment}
+        ).response(request)
+
+    return frame.template(
+        "comments/includes/comment_form.html", {"form": form, "comment": comment}
+    ).response(request)
 
 
-class CommentReplyView(
-    SuccessMessageMixin,
-    CommentQuerySetMixin,
-    PermissionRequiredMixin,
-    ParentObjectMixin,
-    TurboCreateView,
-):
-    permission_required = "comments.reply_to_comment"
-    model = Comment
-    form_class = CommentForm
-    success_message = _("You have replied to this %(model)s")
+@community_required
+@login_required
+def comment_reply_view(request, pk):
+    parent = get_object_or_404(
+        Comment.objects.for_community(request.community).select_related(
+            "owner", "community", "parent"
+        ),
+        pk=pk,
+    )
 
-    def get_permission_object(self):
-        return self.parent
+    has_perm_or_403(request.user, "comments.reply_to_comment", parent)
 
-    def get_parent_queryset(self):
-        return self.get_queryset()
+    form = CommentForm(request.POST if request.method == "POST" else None,)
 
-    @cached_property
-    def content_object(self):
-        return self.parent.get_content_object()
+    form.fields["content"].label = _("Reply")
 
-    def get_success_url(self):
-        return self.content_object.get_absolute_url()
+    if request.method == "POST" and form.is_valid():
+        reply = form.save(commit=False)
+        reply.parent = parent
+        reply.content_object = parent.content_object
+        reply.owner = request.user
+        reply.community = request.community
+        reply.save()
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["content"].label = _("Reply")
-        return form
+        reply.notify_on_create()
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["content_object"] = self.content_object
-        return data
+        messages.success(request, _("You have replied to this comment"))
+        return redirect_303(parent.content_object)
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.parent = self.parent
-        self.object.content_object = self.content_object
-        self.object.owner = self.request.user
-        self.object.community = self.request.community
-        self.object.save()
-
-        self.object.notify_on_create()
-
-        return HttpResponseSeeOther(self.get_success_url())
-
-
-comment_reply_view = CommentReplyView.as_view()
+    return TemplateFormResponse(
+        request,
+        form,
+        "comments/comment_form.html",
+        {"content_object": parent.content_object, "parent": parent},
+    )
 
 
 class BaseCommentListView(CommentQuerySetMixin, ListView):
@@ -184,58 +173,6 @@ class CommentListView(SearchMixin, BaseCommentListView):
 
 
 comment_list_view = CommentListView.as_view()
-
-
-class CommentDetailView(CommentQuerySetMixin, DetailView):
-    model = Comment
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .with_common_annotations(self.request.user, self.request.community)
-            .exclude_deleted(self.request.user)
-            .with_common_related()
-        )
-
-    def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        if request.user.is_authenticated:
-            self.object.get_notifications().for_recipient(
-                self.request.user
-            ).unread().update(is_read=True)
-        return response
-
-    def get_flags(self):
-        return (
-            self.object.get_flags()
-            .select_related("user", "community")
-            .prefetch_related("content_object")
-            .order_by("-created")
-        )
-
-    def get_replies(self):
-        if self.object.deleted:
-            return self.get_queryset().none()
-        return self.get_queryset().filter(parent=self.object).order_by("created")
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if self.request.user.has_perm(
-            "communities.moderate_community", self.request.community
-        ):
-
-            data["flags"] = self.get_flags()
-        data.update(
-            {
-                "replies": self.get_replies(),
-                "content_object": self.object.get_content_object(),
-            }
-        )
-        return data
-
-
-comment_detail_view = CommentDetailView.as_view()
 
 
 class BaseCommentActionView(
@@ -368,3 +305,27 @@ class CommentDeleteView(
 
 
 comment_delete_view = CommentDeleteView.as_view()
+
+
+class CommentFlagView(
+    SuccessMessageMixin,
+    PermissionRequiredMixin,
+    CommentQuerySetMixin,
+    BaseFlagCreateView,
+):
+    permission_required = "comments.flag_comment"
+    success_message = _("This comment has been flagged to the moderators")
+
+    def get_parent_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .with_has_flagged(self.request.user)
+            .exclude(has_flagged=True)
+        )
+
+    def get_permission_object(self):
+        return self.parent
+
+
+comment_flag_view = CommentFlagView.as_view()

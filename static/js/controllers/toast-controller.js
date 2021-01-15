@@ -31,6 +31,12 @@ export default class extends ApplicationController {
     if (!headers) {
       return;
     }
+
+    const messages = headers.get('X-Messages');
+    if (messages) {
+      JSON.parse(messages).forEach((msg) => this.showMessage(msg.tags, msg.message));
+    }
+
     const msg = headers.get('X-Message');
     const type = headers.get('X-Message-Type');
     if (msg && type) {

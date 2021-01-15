@@ -1,0 +1,24 @@
+# Copyright (c) 2020 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Standard Library
+import functools
+import json
+
+# Django
+from django.contrib.messages.api import get_messages
+
+
+def add_messages_to_response_header(view):
+    """Takes messages added to request, moves them to JSON in http header"""
+
+    @functools.wraps(view)
+    def wrapper(request, *args, **kwargs):
+        response = view(request, *args, **kwargs)
+        messages = [
+            {"message": str(message), "tags": message.tags}
+            for message in get_messages(request)
+        ]
+        response["X-Messages"] = json.dumps(messages)
+        return response
+
+    return wrapper
