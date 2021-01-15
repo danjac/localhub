@@ -3,16 +3,19 @@
 
 {% extends "private_messages/message_list_base.html" %}
 
-{% load i18n %}
+{% load i18n pagination %}
 
-{% block subtitle %}{{ block.super }} / {% trans "Inbox" %}{% endblock %}
+
+{% block subtitle %}{{ block.super }} / {% translate "Inbox" %}{% endblock %}
 
 {% block message_list %}
-{% if paginator.count or view.search_query %}
+{% paginate private_messages as page_obj %}
+
+{% if page_obj.paginator.count or search %}
 {% include "includes/forms/search_form.html" with selector=True %}
 {% endif %}
 
 {% include "private_messages/includes/email_settings.html" %}
-{% trans "You have not received any messages" as t_empty_message %}
-{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message %}
+{% translate "You have not received any messages" as t_empty_message %}
+{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
 {% endblock message_list %}

@@ -8,120 +8,80 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.db.models import F
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.urls import reverse
-from django.utils.functional import cached_property
+from django.shortcuts import get_object_or_404, redirect
+from django.template.response import TemplateResponse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, DetailView, ListView, View
+from django.views.decorators.http import require_POST
+from django.views.generic import ListView
 
 # Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
-from turbo_response import HttpResponseSeeOther, TurboFrame, TurboStream
-from turbo_response.views import TurboFormView
+from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redirect_303
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
-from localhub.common.mixins import ParentObjectMixin, SearchMixin, SuccessHeaderMixin
-from localhub.common.views import ActionView
+from localhub.common.mixins import SearchMixin
 from localhub.communities.decorators import community_required
-from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.users.utils import has_perm_or_403
 
 # Local
 from .forms import MessageForm, MessageRecipientForm
-from .mixins import (
-    RecipientQuerySetMixin,
-    SenderOrRecipientQuerySetMixin,
-    SenderQuerySetMixin,
-)
 from .models import Message
 
 
-class BaseMessageFormView(PermissionRequiredMixin, TurboFormView):
+@community_required
+@login_required
+def message_reply_view(request, pk, is_follow_up=False):
 
-    permission_required = "private_messages.create_message"
-    template_name = "private_messages/message_form.html"
-    form_class = MessageForm
+    has_perm_or_403(request.user, "private_messages.create_message", request.community)
 
-    def get_permission_object(self):
-        return self.request.community
+    qs = (
+        Message.objects.for_community(request.community)
+        .exclude_blocked(request.user)
+        .common_select_related()
+    )
 
-    def get_success_message(self):
-        return _("Your message has been sent to %(recipient)s") % {
-            "recipient": self.object.recipient.get_display_name()
-        }
+    if is_follow_up:
+        qs = qs.for_sender(request.user)
+    else:
+        qs = qs.for_recipient(request.user)
 
-    def get_success_url(self):
-        return self.object.get_absolute_url()
+    parent = get_object_or_404(qs, pk=pk)
+    recipient = parent.get_other_user(request.user)
 
-    def get_success_response(self):
-        if success_message := self.get_success_message():
-            messages.success(self.request, success_message)
-        return HttpResponseSeeOther(self.get_success_url())
+    form = MessageForm(request.POST if request.method == "POST" else None)
 
+    form["message"].label = (
+        _("Send follow-up to %(recipient)s")
+        if is_follow_up
+        else _("Send reply to %(recipient)s")
+    ) % {"recipient": recipient.get_display_name()}
 
-class BaseReplyFormView(ParentObjectMixin, BaseMessageFormView):
-    @cached_property
-    def recipient(self):
-        return self.parent.get_other_user(self.request.user)
+    if request.method == "POST" and form.is_valid():
 
-    def get_parent_queryset(self):
-        return self.get_queryset()
+        message = form.save(commit=False)
+        message.community = request.community
+        message.sender = request.user
+        message.recipient = recipient
+        message.parent = parent
+        message.save()
 
-    def notify(self):
-        """Handle any notifications to recipient here"""
-        ...
+        message.notify_on_reply()
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.community = self.request.community
-        self.object.sender = self.request.user
-        self.object.recipient = self.recipient
-        self.object.parent = self.parent
-        self.object.save()
-
-        self.notify()
-
-        return self.get_success_response()
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["recipient"] = self.recipient
-        return data
-
-
-class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
-    def notify(self):
-        self.object.notify_on_reply()
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form["message"].label = _(
-            "Send reply to %(recipient)s"
-            % {"recipient": self.recipient.get_display_name()}
+        messages.success(
+            request,
+            _("Your message has been sent to %(recipient)s")
+            % {"recipient": recipient.get_display_name()},
         )
-        return form
 
+        return redirect_303(message)
 
-message_reply_view = MessageReplyView.as_view()
-
-
-class MessageFollowUpView(SenderQuerySetMixin, BaseReplyFormView):
-    def notify(self):
-        self.object.notify_on_follow_up()
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form["message"].label = _(
-            "Send follow-up to %(recipient)s"
-            % {"recipient": self.recipient.get_display_name()}
-        )
-        return form
-
-
-message_follow_up_view = MessageFollowUpView.as_view()
+    return TemplateFormResponse(
+        request,
+        form,
+        "private_messages/message_form.html",
+        {"recipient": recipient, "parent": parent},
+    )
 
 
 @community_required
@@ -171,199 +131,195 @@ def message_recipient_create_view(request, username):
     ).response(request)
 
 
-class MessageCreateView(
-    CommunityRequiredMixin, BaseMessageFormView,
-):
-    """
-    Send message to any individual recipient
-    """
+@community_required
+@login_required
+def message_create_view(request):
 
-    form_class = MessageRecipientForm
+    form = MessageRecipientForm(
+        request.POST if request.method == "POST" else None,
+        community=request.community,
+        sender=request.user,
+    )
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.community = self.request.community
-        self.object.sender = self.request.user
-        self.object.save()
+    if request.method == "POST" and form.is_valid():
+        message = form.save(commit=False)
+        message.community = request.community
+        message.sender = request.user
+        message.save()
+        message.notify_on_send()
 
-        self.object.notify_on_send()
+        messages.success(
+            request,
+            _("Your message has been sent to %(recipient)s")
+            % {"recipient": message.recipient.get_display_name()},
+        )
 
-        return self.get_success_response()
+        return redirect_303(message)
 
-    def get_form_kwargs(self):
-        return {
-            **super().get_form_kwargs(),
-            **{"community": self.request.community, "sender": self.request.user},
-        }
+    return TemplateFormResponse(request, form, "private_messages/message_form.html",)
 
 
-message_create_view = MessageCreateView.as_view()
+@community_required
+@login_required
+def inbox_view(request):
+    messages = (
+        Message.objects.for_community(community=request.community)
+        .with_has_bookmarked(request.user)
+        .for_recipient(request.user)
+        .exclude_blocked(request.user)
+        .common_select_related()
+    )
+    if search := request.GET.get("q"):
+        messages = messages.search(search).order_by("-rank", "-created")
+    else:
+        messages = messages.order_by(F("read").desc(nulls_first=True), "-created")
+
+    return TemplateResponse(
+        request,
+        "private_messages/inbox.html",
+        {"private_messages": messages, "search": search},
+    )
+
+
+@community_required
+@login_required
+def outbox_view(request):
+    messages = (
+        Message.objects.for_community(community=request.community)
+        .with_has_bookmarked(request.user)
+        .for_sender(request.user)
+        .exclude_blocked(request.user)
+        .common_select_related()
+    )
+    if search := request.GET.get("q"):
+        messages = messages.search(search).order_by("-rank", "-created")
+    else:
+        messages = messages.order_by("-created")
+
+    return TemplateResponse(
+        request,
+        "private_messages/outbox.html",
+        {"private_messages": messages, "search": search},
+    )
+
+
+@community_required
+@login_required
+def message_detail_view(request, pk):
+    message = get_object_or_404(
+        Message.objects.for_community(request.community)
+        .for_sender_or_recipient(request.user)
+        .exclude_blocked(request.user)
+        .with_has_bookmarked(request.user)
+        .common_select_related(),
+        pk=pk,
+    )
+
+    if message.recipient == request.user:
+        message.mark_read(mark_replies=True)
+
+    return TemplateResponse(
+        request,
+        "private_messages/message_detail.html",
+        {
+            "message": message,
+            "parent": message.get_parent(request.user),
+            "other_user": message.get_other_user(request.user),
+            "replies": (
+                message.get_all_replies()
+                .for_sender_or_recipient(request.user)
+                .common_select_related()
+                .order_by("created")
+                .distinct()
+            ),
+        },
+    )
+
+
+@community_required
+@login_required
+def message_mark_all_read_view(request):
+    Message.objects.for_community(request.community).for_recipient(
+        request.user
+    ).unread().mark_read()
+    return redirect("private_messages:inbox")
+
+
+@community_required
+@login_required
+def message_mark_read_view(request, pk):
+
+    message = get_object_or_404(
+        Message.objects.for_community(request.community)
+        .for_recipient(request.user)
+        .unread(),
+        pk=pk,
+    )
+    message.mark_read()
+
+    return TurboStream(f"message-{message.id}-mark-read").remove.response()
+
+
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def message_bookmark_view(request, pk, remove=False):
+    message = get_object_or_404(
+        Message.objects.for_community(request.community).for_sender_or_recipient(
+            request.user
+        ),
+        pk=pk,
+    )
+    if remove:
+        Bookmark.objects.filter(user=request.user, message=message).delete()
+        messages.info(request, _("Your bookmark has been removed"))
+    else:
+
+        try:
+            Bookmark.objects.create(
+                user=request.user, community=request.community, content_object=message,
+            )
+            messages.success(request, _("You have bookmarked this message"))
+        except IntegrityError:
+            pass
+
+    return (
+        TurboFrame(f"message-{message.id}-bookmark")
+        .template(
+            "private_messages/includes/bookmark.html",
+            {"object": message, "has_bookmarked": not (remove)},
+        )
+        .response(request)
+    )
+
+
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def message_delete_view(request, pk):
+
+    message = get_object_or_404(
+        Message.objects.for_community(request.community).for_sender_or_recipient(
+            request.user
+        ),
+        pk=pk,
+    )
+
+    message.soft_delete(request.user)
+
+    messages.info(request, _("Message has been deleted"))
+
+    if "redirect" in request.POST:
+        return redirect(
+            "private_messages:inbox"
+            if message.recipient == request.user
+            else "private_messages:outbox"
+        )
+
+    return TurboStream(f"message-{pk}").remove.response()
 
 
 class BaseMessageListView(SearchMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
-
-
-class InboxView(RecipientQuerySetMixin, BaseMessageListView):
-    """
-    Messages received by current user
-    oere we should show the sender, timestamp...
-    """
-
-    template_name = "private_messages/inbox.html"
-
-    def get_queryset(self):
-        qs = super().get_queryset().with_has_bookmarked(self.request.user)
-        if self.search_query:
-            return qs.search(self.search_query).order_by("-rank", "-created")
-        return qs.order_by(F("read").desc(nulls_first=True), "-created")
-
-
-inbox_view = InboxView.as_view()
-
-
-class OutboxView(SenderQuerySetMixin, BaseMessageListView):
-    """
-    Messages sent by current user
-    """
-
-    template_name = "private_messages/outbox.html"
-
-    def get_queryset(self):
-        qs = super().get_queryset().with_has_bookmarked(self.request.user)
-        if self.search_query:
-            return qs.search(self.search_query).order_by("-rank", "-created")
-        return qs.order_by("-created")
-
-
-outbox_view = OutboxView.as_view()
-
-
-class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
-
-    model = Message
-
-    def get_queryset(self):
-        return super().get_queryset().with_has_bookmarked(self.request.user)
-
-    def get_object(self):
-        obj = super().get_object()
-        if obj.recipient == self.request.user:
-            obj.mark_read(mark_replies=True)
-        return obj
-
-    def get_replies(self):
-        return (
-            self.object.get_all_replies()
-            .for_sender_or_recipient(self.request.user)
-            .common_select_related()
-            .order_by("created")
-            .distinct()
-        )
-
-    def get_context_data(self, **kwargs):
-        return {
-            **super().get_context_data(**kwargs),
-            **{
-                "replies": self.get_replies(),
-                "parent": self.object.get_parent(self.request.user),
-                "other_user": self.object.get_other_user(self.request.user),
-            },
-        }
-
-
-message_detail_view = MessageDetailView.as_view()
-
-
-class MessageMarkAllReadView(RecipientQuerySetMixin, View):
-    def get_queryset(self):
-        return super().get_queryset().unread()
-
-    def post(self, request, *args, **kwargs):
-        self.get_queryset().for_recipient(self.request.user).mark_read()
-        return HttpResponseRedirect(reverse("private_messages:inbox"))
-
-
-message_mark_all_read_view = MessageMarkAllReadView.as_view()
-
-
-class MessageMarkReadView(RecipientQuerySetMixin, ActionView):
-    def get_queryset(self):
-        return super().get_queryset().unread()
-
-    def post(self, request, *args, **kwargs):
-        self.object.mark_read()
-        return TurboStream(f"message-{self.object.id}-mark-read").remove.response()
-
-
-message_mark_read_view = MessageMarkReadView.as_view()
-
-
-class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, ActionView):
-    def render_to_response(self, has_bookmarked):
-        return (
-            TurboFrame(f"message-{self.object.id}-bookmark")
-            .template(
-                "private_messages/includes/bookmark.html",
-                {"object": self.object, "has_bookmarked": has_bookmarked},
-            )
-            .response(self.request)
-        )
-
-
-class MessageBookmarkView(BaseMessageBookmarkView):
-    def post(self, request, *args, **kwargs):
-        try:
-            Bookmark.objects.create(
-                user=request.user,
-                community=request.community,
-                content_object=self.object,
-            )
-        except IntegrityError:
-            pass
-        return self.render_to_response(has_bookmarked=True)
-
-
-message_bookmark_view = MessageBookmarkView.as_view()
-
-
-class MessageRemoveBookmarkView(BaseMessageBookmarkView):
-    def post(self, request, *args, **kwargs):
-        Bookmark.objects.filter(user=request.user, message=self.object).delete()
-        return self.render_to_response(has_bookmarked=False)
-
-
-message_remove_bookmark_view = MessageRemoveBookmarkView.as_view()
-
-
-class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessHeaderMixin, DeleteView):
-    """
-    Does a "soft delete" which sets sender/recipient deleted flag
-    accordingly.
-
-    If both sender and recipient have soft-deleted, then the message
-    is "hard" deleted.
-    """
-
-    model = Message
-    success_message = _("You have deleted this message")
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.soft_delete(request.user)
-
-        if "redirect" in request.POST:
-            messages.success(request, self.success_message)
-            return HttpResponseRedirect(self.get_success_url())
-
-        return self.render_success_message(
-            TurboStream(f"message-{self.kwargs['pk']}").remove.response()
-        )
-
-    def get_success_url(self):
-        if self.request.user == self.object.recipient:
-            return reverse("private_messages:inbox")
-        return reverse("private_messages:outbox")
-
-
-message_delete_view = MessageDeleteView.as_view()

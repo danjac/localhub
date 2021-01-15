@@ -99,16 +99,6 @@ class TestMessageDeleteView:
         assert response.url == reverse("private_messages:inbox")
         assert not Message.objects.count()
 
-    def test_get(self, client, member):
-        recipient = MembershipFactory(community=member.community).member
-        message = MessageFactory(
-            community=member.community, sender=member.member, recipient=recipient,
-        )
-        response = client.get(
-            reverse("private_messages:message_delete", args=[message.id])
-        )
-        assert response.status_code == http.HTTPStatus.OK
-
 
 class TestMessageMarkReadView:
     def test_post(self, client, member):
