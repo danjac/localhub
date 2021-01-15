@@ -66,6 +66,22 @@ class TestCommunityRequired:
         resp = my_view(req)
         assert resp.url == reverse("community_welcome")
 
+    def test_community_required_non_public_non_member_non_members_allowed(
+        self, rf, community, user
+    ):
+
+        community.public = False
+
+        @community_required(allow_non_members=True)
+        def my_view(request):
+            return HttpResponse()
+
+        req = rf.get("/")
+        req.user = user
+        req.community = community
+        resp = my_view(req)
+        assert resp.status_code == http.HTTPStatus.OK
+
     def test_community_required_non_public_non_member_ajax(self, rf, community, user):
 
         community.public = False
