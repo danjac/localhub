@@ -3,6 +3,7 @@
 
 
 # Django
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse
 
 # Localhub
@@ -10,6 +11,11 @@ from localhub.common.utils.text import slugify_unicode
 
 # Local
 from .app_settings import MENTIONS_RE
+
+
+def has_perm_or_403(user, perm, obj=None):
+    if not user.has_perm(perm, obj):
+        raise PermissionDenied
 
 
 def user_display(user):

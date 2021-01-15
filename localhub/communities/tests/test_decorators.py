@@ -16,6 +16,34 @@ pytestmark = pytest.mark.django_db
 
 
 class TestCommunityRequired:
+    def test_community_inactive_member(self, rf, member):
+
+        member.community.active = False
+
+        @community_required
+        def my_view(request):
+            return HttpResponse()
+
+        req = rf.get("/")
+        req.user = member.member
+        req.community = member.community
+        resp = my_view(req)
+        assert resp.url == reverse("community_not_found")
+
+    def test_community_inactive_non_member(self, rf, user, community):
+
+        community.active = False
+
+        @community_required
+        def my_view(request):
+            return HttpResponse()
+
+        req = rf.get("/")
+        req.user = user
+        req.community = community
+        resp = my_view(req)
+        assert resp.url == reverse("community_not_found")
+
     def test_community_required_public_member(self, rf, member):
         @community_required
         def my_view(request):
