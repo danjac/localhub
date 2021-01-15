@@ -324,7 +324,7 @@ class ActivityReshareView(BaseActivityActionView):
         return self.render_to_response()
 
 
-class ActivityPublishView(BaseActivityActionView):
+class ActivityPublishView(SuccessHeaderMixin, BaseActivityActionView):
     permission_required = "activities.change_activity"
     success_message = _("Your %(model)s has been published")
 
@@ -335,7 +335,7 @@ class ActivityPublishView(BaseActivityActionView):
         self.object.published = timezone.now()
         self.object.save(update_fields=["published"])
         self.object.notify_on_publish()
-        return self.render_to_response()
+        return self.render_success_message(self.render_to_response())
 
 
 activity_publish_view = ActivityPublishView.as_view()
