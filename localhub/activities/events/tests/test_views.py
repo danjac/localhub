@@ -63,7 +63,7 @@ class TestEventListView:
         )
         response = client.get(reverse("events:list"))
         assert response.status_code == http.HTTPStatus.OK
-        assert len(dict(response.context or {})["object_list"]) == 3
+        assert len(dict(response.context_data or {})["object_list"]) == 3
 
 
 class TestEventUpdateView:
@@ -180,7 +180,7 @@ class TestEventCalendarView:
         )
         assert response.status_code == http.HTTPStatus.OK
         assert "current_date" not in response.context
-        assert len(response.context["object_list"]) == 1
+        assert len(response.context["events"]) == 1
 
     def test_get_calendar_view_this_month(self, client, member):
         now = timezone.now()
@@ -208,7 +208,7 @@ class TestEventCalendarView:
         )
         assert response.status_code == http.HTTPStatus.OK
         assert "current_date" in response.context
-        assert len(response.context["object_list"]) == 1
+        assert len(response.context["events"]) == 1
 
     def test_get_date_view_with_invalid_date(self, client, event, member):
         response = client.get(

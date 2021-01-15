@@ -22,7 +22,7 @@ urlpatterns = create_activity_urls(
     create_view_class=views.EventCreateView,
     update_view_class=views.EventUpdateView,
     detail_view_class=views.EventDetailView,
-    list_view_class=views.EventListView,
+    list_view=views.event_list_view,
 )
 
 urlpatterns += [

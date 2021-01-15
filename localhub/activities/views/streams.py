@@ -155,9 +155,9 @@ def timeline_view(request):
         for qs in querysets
     ]
 
-    sort_order = request.GET.get("order", "desc")
-
     dates = sorted(set(itertools.chain.from_iterable(querysets)))
+
+    sort_order = request.GET.get("order", "desc")
 
     params = request.GET.copy()
     params["order"] = "desc" if sort_order == "asc" else "asc"

@@ -11,7 +11,7 @@ from ..views import generic
 def create_activity_urls(
     model,
     form_class=None,
-    list_view_class=generic.ActivityListView,
+    list_view=generic.activity_list_view,
     create_view_class=generic.ActivityCreateView,
     update_view_class=generic.ActivityUpdateView,
     detail_view_class=generic.ActivityDetailView,
@@ -27,6 +27,7 @@ def create_activity_urls(
     remove_bookmark_view_class=generic.ActivityRemoveBookmarkView,
     update_tags_view_class=generic.ActivityUpdateTagsView,
     create_comment_view=generic.create_comment_view,
+    list_view_class=None,
 ):
     """
     Generates default URL patterns for activity subclasses.
@@ -35,8 +36,18 @@ def create_activity_urls(
 
     urlpatterns = create_activity_urls(Post)
     """
+
+    base_template_name = "/".join((model._meta.app_label, model._meta.model_name))
+
     return [
-        path("", list_view_class.as_view(model=model), name="list"),
+        path(
+            "",
+            list_view,
+            kwargs={"model": model, "template_name": base_template_name + "_list.html"},
+            name="list",
+        )
+        if list_view
+        else path(list_view_class.as_view(model=model), name="list"),
         path(
             "~create",
             create_view_class.as_view(model=model, form_class=form_class),

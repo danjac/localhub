@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
+from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -196,6 +197,40 @@ class ActivityUpdateTagsView(ActivityUpdateView):
 
     def get_queryset(self):
         return super().get_queryset().published()
+
+
+def activity_list_view(
+    request,
+    model,
+    template_name,
+    ordering=("-created", "-published"),
+    extra_context=None,
+):
+
+    qs = (
+        model.objects.for_community(request.community)
+        .published_or_owner(request.user)
+        .with_common_annotations(request.user, request.community)
+        .exclude_blocked(request.user)
+    )
+    if search := request.GET.get("q"):
+        qs = qs.search(search)
+
+    if isinstance(ordering, str):
+        ordering = [ordering]
+    else:
+        ordering = list(ordering)
+
+    if search:
+        ordering = ["-rank"] + ordering
+
+    qs = qs.order_by(*ordering)
+
+    return TemplateResponse(
+        request,
+        template_name,
+        {"object_list": qs, "model": model, **(extra_context or {})},
+    )
 
 
 class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListView):

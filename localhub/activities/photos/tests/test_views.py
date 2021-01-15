@@ -124,4 +124,4 @@ class TestGalleryView:
         PhotoFactory.create_batch(3, community=member.community, owner=member.member)
         response = client.get(reverse("photos:gallery"))
         assert response.status_code == http.HTTPStatus.OK
-        assert len(response.context["object_list"]) == 3
+        assert len(response.context["photos"]) == 3

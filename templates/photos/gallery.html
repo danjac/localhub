@@ -2,9 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "activities/base.html" %}
-{% load i18n %}
-{% load rules %}
-{% load thumbnail %}
+{% load i18n rules thumbnail pagination %}
 
 {% block subtitle %} / {% trans "Photos" %} / {% trans "Gallery" %}{% endblock %}
 
@@ -26,13 +24,16 @@
   </div>
 </div>
 
+{% paginate photos as page_obj %}
+
 {% if page_obj.number > 1 %}
+
 {% include "includes/pagination.html" with css_class="mt-1 mb-3" %}
 {% endif %}
 
-{% if object_list %}
+{% if page_obj.object_list %}
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-3">
-  {% for photo in object_list %}
+  {% for photo in page_obj.object_list %}
   <div class="mb-3">
     <a href="{{ photo.get_absolute_url }}"
        title="{{ photo.title }}">
