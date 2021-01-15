@@ -10,7 +10,12 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 
-def community_required(view, *, allow_non_members=False):
+def community_required(view=None, *, allow_non_members=False):
+    if view is None:
+        return functools.partial(
+            community_required, allow_non_members=allow_non_members
+        )
+
     @functools.wraps(view)
     def wrapper(request, *args, **kwargs):
         if not request.community.active:
