@@ -12,7 +12,6 @@ from django.template.response import TemplateResponse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -30,7 +29,7 @@ from localhub.users.utils import has_perm_or_403
 
 # Local
 from ..forms import ActivityTagsForm
-from ..mixins import ActivityQuerySetMixin, ActivityTemplateMixin
+from ..mixins import ActivityQuerySetMixin
 from ..utils import get_activity_models
 
 
@@ -556,11 +555,6 @@ def model_translation_string(value, model, capitalize=False):
     if capitalize:
         model_name = model_name.capitalize()
     return value % {"model": model_name}
-
-
-class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListView):
-    allow_empty = True
-    paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
 class ActivityFlagView(
