@@ -36,8 +36,7 @@ def activity_stream_view(request):
     Default "Home Page" of community.
     """
     qs_filter = (
-        lambda qs: qs.for_community(request.community)
-        .published()
+        lambda qs: qs.published()
         .with_activity_stream_filters(request.user)
         .exclude_blocked(request.user)
     )
@@ -77,8 +76,7 @@ def activity_search_view(request):
     def _filter_queryset(qs):
         if search:
             return (
-                qs.for_community(request.community)
-                .exclude_blocked(request.user)
+                qs.exclude_blocked(request.user)
                 .published_or_owner(request.user)
                 .search(search)
             )
@@ -132,11 +130,7 @@ def timeline_view(request):
     )
 
     def _filter_queryset(qs, with_date_kwargs=True):
-        qs = (
-            qs.for_community(request.community)
-            .published()
-            .exclude_blocked(request.user)
-        )
+        qs = qs.published().exclude_blocked(request.user)
         if with_date_kwargs and date_kwargs:
             return qs.filter(**date_kwargs)
         return qs
@@ -207,7 +201,7 @@ def private_view(request):
     search = request.GET.get("q", None)
 
     def _filter_queryset(qs):
-        qs = qs.for_community(request.community).private(request.user)
+        qs = qs.private(request.user)
         if search:
             qs = qs.search(search)
         return qs
@@ -237,15 +231,17 @@ def render_activity_stream(
 
     qs, querysets = get_activity_querysets(
         lambda model: queryset_filter(
-            model.objects.for_activity_stream(
-                request.user, request.community
-            ).distinct()
+            model.objects.for_community(request.community)
+            .for_activity_stream(request.user, request.community)
+            .distinct()
         ),
         ordering=ordering,
     )
 
     count = get_activity_queryset_count(
-        lambda model: queryset_filter(model.objects.distinct())
+        lambda model: queryset_filter(
+            model.objects.for_community(request.community).distinct()
+        )
     )
 
     page = PresetCountPaginator(

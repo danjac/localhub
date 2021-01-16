@@ -20,8 +20,7 @@ def bookmarks_stream_view(request):
 
     def _filter_queryset(qs):
         qs = (
-            qs.for_community(request.community)
-            .published_or_owner(request.user)
+            qs.published_or_owner(request.user)
             .bookmarked(request.user)
             .with_bookmarked_timestamp(request.user)
         )

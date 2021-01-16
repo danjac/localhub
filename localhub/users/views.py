@@ -24,10 +24,7 @@ from turbo_response import TemplateFormResponse, TurboFrame, TurboStream
 
 # Localhub
 from localhub.activities.utils import get_activity_models
-from localhub.activities.views.streams import (
-    BaseActivityStreamView,
-    render_activity_stream,
-)
+from localhub.activities.views.streams import render_activity_stream
 from localhub.comments.models import Comment
 from localhub.comments.views import get_comment_queryset
 from localhub.communities.decorators import community_required
@@ -38,12 +35,7 @@ from localhub.private_messages.models import Message
 
 # Local
 from .forms import UserForm
-from .mixins import SingleUserMixin
 from .utils import has_perm_or_403
-
-
-class BaseUserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
-    ...
 
 
 @community_required
@@ -117,34 +109,26 @@ def user_message_list_view(request, username):
     )
 
 
-class UserActivityLikesView(BaseUserActivityStreamView):
+@community_required
+def user_activity_likes_view(request, username):
     """Liked activities published by this user."""
+    user = get_user_or_404(request, username)
+    num_likes = (
+        Like.objects.for_models(*get_activity_models())
+        .filter(recipient=user, community=request.community)
+        .count()
+    )
 
-    template_name = "users/likes/activities.html"
-    ordering = ("-num_likes", "-published")
-
-    exclude_blocking_users = True
-
-    def filter_queryset(self, queryset):
-        return (
-            super()
-            .filter_queryset(queryset)
-            .with_num_likes()
-            .published()
-            .filter(owner=self.user_obj, num_likes__gt=0)
-        )
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["num_likes"] = (
-            Like.objects.for_models(*get_activity_models())
-            .filter(recipient=self.user_obj, community=self.request.community)
-            .count()
-        )
-        return data
-
-
-user_activity_likes_view = UserActivityLikesView.as_view()
+    return render_activity_stream(
+        request,
+        lambda qs: qs.with_num_likes().published().filter(owner=user, num_likes__gt=0),
+        "users/likes/activities.html",
+        ordering=("-num_likes", "-published"),
+        extra_context={
+            **get_user_detail_context(request, user),
+            "num_likes": num_likes,
+        },
+    )
 
 
 @community_required
@@ -205,26 +189,20 @@ def user_comment_mentions_view(request, username):
     )
 
 
-class UserActivityMentionsView(BaseUserActivityStreamView):
+@community_required
+def user_activity_mentions_view(request, username):
     """Activities where the user has an @mention (only
     published activities were user is not the owner)
     """
+    user = get_user_or_404(request, username)
 
-    template_name = "users/mentions/activities.html"
-
-    exclude_blocking_users = True
-
-    def filter_queryset(self, queryset):
-        return (
-            super()
-            .filter_queryset(queryset)
-            .published()
-            .exclude(owner=self.user_obj)
-            .search(f"@{self.user_obj.username}")
-        )
-
-
-user_activity_mentions_view = UserActivityMentionsView.as_view()
+    return render_activity_stream(
+        request,
+        lambda qs: qs.published().exclude(owner=user).search(f"@{user.username}"),
+        "users/mentions/activities.html",
+        ordering="-published",
+        extra_context=get_user_detail_context(request, user),
+    )
 
 
 @community_required
