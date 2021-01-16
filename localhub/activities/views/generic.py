@@ -486,7 +486,9 @@ def render_activity_create_form(
     submit_actions = [
         (
             resolve_url(activity_model, view_name),
-            model_translation_string(_("Submit %(model)s"), model, capitalize=True),
+            model_translation_string(
+                _("Submit %(model)s"), activity_model, capitalize=True
+            ),
         )
         for activity_model in get_activity_models()
         if activity_model != model
