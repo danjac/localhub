@@ -3,11 +3,11 @@
 
 # Django
 from django.contrib.auth.decorators import login_required
-from django.template.response import TemplateResponse
 
 # Localhub
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import get_comment_queryset
+from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 
 
@@ -40,4 +40,4 @@ def liked_comment_list_view(request):
         .with_liked_timestamp(request.user)
         .order_by("-liked", "-created")
     )
-    return TemplateResponse(request, "likes/comments.html", {"comments": comments})
+    return render_paginated_queryset(request, comments, "likes/comments.html")

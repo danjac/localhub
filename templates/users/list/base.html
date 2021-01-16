@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "base.html" %}
-{% load i18n rules pagination %}
+{% load i18n rules %}
 
 {% block subtitle %} / {% trans "People" %}{% endblock %}
 
@@ -33,7 +33,6 @@
 
 {% block user_list %}
 
-{% paginate members as page_obj %}
 {% with object_list=page_obj.object_list %}
 
 {% if object_list %}

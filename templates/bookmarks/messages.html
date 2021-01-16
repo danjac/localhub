@@ -3,12 +3,11 @@
 
 {% extends "bookmarks/base.html" %}
 
-{% load i18n pagination %}
+{% load i18n %}
 
 {% block subtitle %}{{ block.super }} / {% translate "Messages" %}{% endblock %}
 
 {% block bookmarks_content %}
-{% paginate private_messages as page_obj %}
 
 {% if page_obj.paginator.count or view.search_query or search %}
 {% include "includes/forms/search_form.html" with selector=True %}

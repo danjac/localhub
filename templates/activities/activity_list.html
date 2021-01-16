@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "activities/base.html" %}
-{% load i18n activities pagination %}
+{% load i18n activities %}
 
 {% block subtitle %} / {{ view.model|default:model|verbose_name_plural|title }}{% endblock %}
 
@@ -17,14 +17,12 @@
   {% endblock %}
 </div>
 
-{% paginate object_list as page_obj %}
-
 {% if page_obj.number == 1 %}
 {% block activity_list_header %}{% endblock %}
 {% endif %}
 
 
-{% if page_obj.paginator.count or view.search_query or search %}
+{% if paginator.count or view.search_query or search %}
 {% include "includes/forms/search_form.html" with selector=True %}
 {% endif %}
 
@@ -33,7 +31,7 @@
 {% endif %}
 
 {% block object_list %}
-{% for object in page_obj.object_list %}
+{% for object in object_list %}
 {% render_activity request user object css_class="mt-3" %}
 {% empty %}
 {% include "includes/empty.html" %}

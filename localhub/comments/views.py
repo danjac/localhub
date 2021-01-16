@@ -17,6 +17,7 @@ from turbo_response import TemplateFormResponse, TurboFrame, redirect_303
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
+from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.flags.views import handle_flag_create
 from localhub.likes.models import Like
@@ -36,10 +37,8 @@ def comment_list_view(request):
     else:
         comments = comments.order_by("-created")
 
-    return TemplateResponse(
-        request,
-        "comments/comment_list.html",
-        {"comments": comments, "search": search,},
+    return render_paginated_queryset(
+        request, comments, "comments/comment_list.html", {"search": search},
     )
 
 

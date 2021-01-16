@@ -27,6 +27,7 @@ from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import render_activity_stream
 from localhub.comments.models import Comment
 from localhub.comments.views import get_comment_queryset
+from localhub.common.pagination import get_pagination_context, render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.communities.models import Membership
 from localhub.communities.rules import is_member
@@ -102,9 +103,9 @@ def user_message_list_view(request, username):
         user,
         "users/detail/messages.html",
         {
-            "private_messages": messages,
             "sent_messages": sent_messages,
             "received_messages": received_messages,
+            **get_pagination_context(request, messages),
         },
     )
 
@@ -152,7 +153,7 @@ def user_comment_likes_view(request, username):
         request,
         user,
         "users/likes/comments.html",
-        {"comments": comments, "num_likes": num_likes},
+        {"num_likes": num_likes, **get_pagination_context(request, comments)},
     )
 
 
@@ -171,7 +172,7 @@ def user_comment_list_view(request, username):
         request,
         user,
         "users/detail/comments.html",
-        {"comments": comments, "num_likes": num_likes,},
+        {"num_likes": num_likes, **get_pagination_context(request, comments)},
     )
 
 
@@ -185,7 +186,10 @@ def user_comment_mentions_view(request, username):
         .order_by("-created")
     )
     return render_user_detail(
-        request, user, "users/mentions/comments.html", {"comments": comments,},
+        request,
+        user,
+        "users/mentions/comments.html",
+        get_pagination_context(request, comments),
     )
 
 
@@ -213,50 +217,45 @@ def member_list_view(request):
         qs = qs.search(search).order_by("-rank")
     else:
         qs = qs.order_by("name", "username")
-    return TemplateResponse(
-        request, "users/list/members.html", {"members": qs, "search": search}
+
+    return render_paginated_queryset(
+        request, qs, "users/list/members.html", {"search": search}
     )
 
 
 @community_required
 @login_required
 def follower_user_list_view(request):
-    return TemplateResponse(
+    return render_paginated_queryset(
         request,
+        get_member_queryset(request)
+        .filter(following=request.user)
+        .order_by("name", "username"),
         "users/list/following.html",
-        {
-            "members": get_member_queryset(request)
-            .filter(following=request.user)
-            .order_by("name", "username")
-        },
     )
 
 
 @community_required
 @login_required
 def following_user_list_view(request):
-    return TemplateResponse(
+    return render_paginated_queryset(
         request,
+        get_member_queryset(request)
+        .filter(followers=request.user)
+        .order_by("name", "username"),
         "users/list/following.html",
-        {
-            "members": get_member_queryset(request)
-            .filter(followers=request.user)
-            .order_by("name", "username")
-        },
     )
 
 
 @community_required
 @login_required
 def blocked_user_list_view(request):
-    return TemplateResponse(
+    return render_paginated_queryset(
         request,
+        get_member_queryset(request, exclude_blocking_users=False)
+        .filter(blockers=request.user)
+        .order_by("name", "username"),
         "users/list/blocked.html",
-        {
-            "members": get_member_queryset(request, exclude_blocking_users=False)
-            .filter(blockers=request.user)
-            .order_by("name", "username")
-        },
     )
 
 

@@ -2,12 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "flags/base.html" %}
-{% load i18n pagination %}
+{% load i18n %}
 {% block subtitle %} / {% trans "Flags" %}{% endblock %}
 
 {% block content %}
 <h1 class="page-header mb-3">{% trans "Flags" %}</h1>
-{% paginate flags as page_obj %}
 
 {% with object_list=page_obj.object_list %}
 {% if object_list %}

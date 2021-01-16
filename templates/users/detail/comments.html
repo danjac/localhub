@@ -2,13 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "users/detail/base.html" %}
-{% load i18n pagination %}
+{% load i18n %}
 
 {% block subtitle %}{{ block.super }} / {% trans "Comments" %}{% endblock %}
 
 {% block user_content %}
-
-{% paginate comments as page_obj %}
 
 {% with paginator=page_obj.paginator object_list=page_obj.object_list %}
 

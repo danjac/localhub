@@ -21,6 +21,7 @@ from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redire
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
 from localhub.common.mixins import SearchMixin
+from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.users.utils import has_perm_or_403
 
@@ -174,10 +175,8 @@ def inbox_view(request):
     else:
         messages = messages.order_by(F("read").desc(nulls_first=True), "-created")
 
-    return TemplateResponse(
-        request,
-        "private_messages/inbox.html",
-        {"private_messages": messages, "search": search},
+    return render_paginated_queryset(
+        request, messages, "private_messages/inbox.html", {"search": search},
     )
 
 
@@ -196,10 +195,8 @@ def outbox_view(request):
     else:
         messages = messages.order_by("-created")
 
-    return TemplateResponse(
-        request,
-        "private_messages/outbox.html",
-        {"private_messages": messages, "search": search},
+    return render_paginated_queryset(
+        request, messages, "private_messages/outbox.html", {"search": search},
     )
 
 

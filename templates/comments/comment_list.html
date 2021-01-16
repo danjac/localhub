@@ -2,18 +2,15 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "comments/base.html" %}
-{% load i18n pagination %}
-
+{% load i18n %}
 
 {% block content %}
 
-{% paginate comments as page_obj %}
-
 <h1 class="page-header">{% trans "Comments" %}</h1>
 
-{% if page_obj.paginator.count or search %}
+{% if paginator.count or search %}
 {% include "includes/forms/search_form.html" with selector=True %}
 {% endif %}
 
-{% include "comments/includes/comment_list.html" with object_list=page_obj.object_list %}
+{% include "comments/includes/comment_list.html" %}
 {% endblock content %}

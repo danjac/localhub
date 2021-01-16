@@ -2,13 +2,12 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "bookmarks/base.html" %}
-{% load i18n pagination %}
+{% load i18n %}
 
 {% block subtitle %}{{ block.super }} / {% translate "Activities" %}{% endblock %}
 
 {% block bookmarks_content %}
 {% translate "You have not bookmarked any activities." as t_empty_message %}
 
-{% paginate object_list as page_obj %}
 {% include "activities/includes/activity_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
 {% endblock bookmarks_content %}

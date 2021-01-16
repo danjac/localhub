@@ -2,12 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "likes/base.html" %}
-{% load i18n pagination %}
+{% load i18n %}
 
 {% block subtitle %}{{ block.super }} / {% trans "Comments" %}{% endblock %}
 
 {% block likes_content %}
-{% paginate comments as page_obj %}
 {% trans "You have not liked any comments." as t_empty_message %}
-{% include "comments/includes/comment_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
+{% include "comments/includes/comment_list.html" with empty_message=t_empty_message %}
 {% endblock likes_content %}

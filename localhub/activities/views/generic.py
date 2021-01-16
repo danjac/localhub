@@ -20,6 +20,7 @@ from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redire
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
 from localhub.common.decorators import add_messages_to_response_header
+from localhub.common.pagination import get_pagination_context, render_paginated_queryset
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.communities.decorators import community_required
 from localhub.flags.views import handle_flag_create
@@ -374,10 +375,11 @@ def render_activity_list(
 
     queryset = queryset.order_by(*ordering)
 
-    return TemplateResponse(
+    return render_paginated_queryset(
         request,
+        queryset,
         template_name,
-        {"object_list": queryset, "model": queryset.model, **(extra_context or {})},
+        {"model": queryset.model, **(extra_context or {}),},
     )
 
 
@@ -545,8 +547,8 @@ def render_activity_detail(request, obj, template_name, *, extra_context=None):
 
     context = {
         "object": obj,
-        "comments": comments,
         "reshares": reshares,
+        **get_pagination_context(request, comments),
     }
 
     if request.user.has_perm("communities.moderate_community", request.community):

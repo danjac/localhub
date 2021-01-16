@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "activities/base.html" %}
-{% load i18n rules thumbnail pagination %}
+{% load i18n rules thumbnail %}
 
 {% block subtitle %} / {% trans "Photos" %} / {% trans "Gallery" %}{% endblock %}
 
@@ -23,8 +23,6 @@
        href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
   </div>
 </div>
-
-{% paginate photos as page_obj %}
 
 {% if page_obj.number > 1 %}
 

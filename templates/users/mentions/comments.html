@@ -2,14 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "users/mentions/base.html" %}
-{% load i18n pagination %}
+{% load i18n %}
 
 {% block subtitle %}{{ block.super }} / {% trans "Comments" %}{% endblock %}
 
 {% block mentions_content %}
-{% paginate comments as page_obj %}
-{% with paginator=page_obj.paginator object_list=page_obj.object_list %}
-
 {% if paginator.count %}
 <div class="notification font-bold mb-3">
   {% if is_current_user %}
@@ -38,5 +35,4 @@
 
 {% include "comments/includes/comment_list.html" with empty_message=t_empty_message %}
 
-{% endwith %}
 {% endblock mentions_content %}

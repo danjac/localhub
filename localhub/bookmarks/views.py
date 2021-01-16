@@ -8,6 +8,7 @@ from django.template.response import TemplateResponse
 # Localhub
 from localhub.activities.views.streams import render_activity_stream
 from localhub.comments.models import Comment
+from localhub.common.pagination import paginate
 from localhub.communities.decorators import community_required
 from localhub.private_messages.models import Message
 
@@ -61,7 +62,7 @@ def bookmarks_message_list_view(request):
     return TemplateResponse(
         request,
         "bookmarks/messages.html",
-        {"private_messages": messages, "search": search,},
+        {"page_obj": paginate(request, messages), "search": search,},
     )
 
 
@@ -86,5 +87,7 @@ def bookmarks_comment_list_view(request):
     comments = comments.order_by(*ordering)
 
     return TemplateResponse(
-        request, "bookmarks/comments.html", {"comments": comments, "search": search,},
+        request,
+        "bookmarks/comments.html",
+        {"page_obj": paginate(request, comments), "search": search,},
     )

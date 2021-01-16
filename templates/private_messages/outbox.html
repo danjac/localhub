@@ -3,13 +3,11 @@
 
 {% extends "private_messages/message_list_base.html" %}
 
-{% load i18n pagination %}
+{% load i18n %}
 
 {% block subtitle %}{{ block.super }} / {% translate "Outbox" %}{% endblock %}
 
 {% block message_list %}
-
-{% paginate private_messages as page_obj %}
 
 {% if page_obj.paginator.count or search %}
 {% include "includes/forms/search_form.html" with selector=True %}

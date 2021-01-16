@@ -7,7 +7,6 @@
 {% load rules %}
 {% load activities %}
 {% load comments %}
-{% load pagination %}
 
 {% block subtitle %} / {{ object|verbose_name_plural|title }} / {{ object.title }}{% endblock %}
 
@@ -46,8 +45,6 @@
   {% endif %}
 </div>
 
-{% paginate comments as page_obj %}
-
 {% if page_obj.number == 1 %}
 {% if object.deleted %}
 <p class="toast text-center my-3">
@@ -66,7 +63,7 @@
 {% if object.published %}
 <div class="comments mt-2"
      id="comments">
-  {% if page_obj.paginator.count %}
+  {% if paginator.count %}
   {% if page_obj.number == 1  %}
   <div class="divider text-center"
        data-content="{% trans "Comments" %}"></div>
@@ -75,12 +72,12 @@
   {% endif %}
   {% endif %}
 
-  {% for comment in page_obj.object_list %}
+  {% for comment in object_list %}
   {% render_comment request user comment include_content_object=False css_class="mb-3" %}
   {% endfor %}
 
   {% if page_obj.number == 1 and page_obj.paginator.num_pages > 1 %}
-  {% include "includes/pagination.html" with css_class="my-2" page_obj=comments is_paginated=True %}
+  {% include "includes/pagination.html" with css_class="my-2" is_paginated=True %}
   {% endif %}
 
   {% if comment_form %}
