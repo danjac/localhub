@@ -151,8 +151,7 @@ def activity_reshare_view(request, pk, model):
     reshare.notify_on_publish()
 
     messages.success(
-        request,
-        _("You have reshared this %(model)s") % {"model": obj._meta.verbose_name},
+        request, model_translation_string(_("You have reshared this %(model)s"), obj)
     )
     return redirect(reshare)
 
@@ -173,8 +172,7 @@ def activity_publish_view(request, pk, model):
     obj.notify_on_publish()
 
     messages.success(
-        request,
-        _("Your %(model)s has been published") % {"model": obj._meta.verbose_name},
+        request, model_translation_string(_("Your %(model)s has been published"), obj)
     )
 
     return redirect(obj)
@@ -201,8 +199,9 @@ def activity_pin_view(request, pk, model, remove=False):
 
     messages.success(
         request,
-        "The %(model)s has been pinned to the top of the activity stream"
-        % {"model": obj._meta.verbose_name},
+        model_translation_string(
+            _("The %(model)s has been pinned to the top of the activity stream"), obj
+        ),
     )
 
     return redirect(settings.HOME_PAGE_URL)
@@ -227,8 +226,7 @@ def activity_bookmark_view(request, pk, model, remove=False):
             )
             messages.success(
                 request,
-                _("You have bookmarked this %(model)s")
-                % {"model": obj._meta.verbose_name},
+                model_translation_string(_("You have bookmarked this %(model)s"), obj),
             )
         except IntegrityError:
             pass
@@ -256,8 +254,7 @@ def activity_like_view(request, pk, model, remove=False):
         obj.get_likes().filter(user=request.user).delete()
         messages.info(
             request,
-            _("You have stopped liking this %(model)s")
-            % {"model": obj._meta.verbose_name},
+            model_translation_string(_("You have stopped liking this %(model)s"), obj),
         )
     else:
 
@@ -271,7 +268,7 @@ def activity_like_view(request, pk, model, remove=False):
 
             messages.success(
                 request,
-                _("You have liked this %(model)s") % {"model": obj._meta.verbose_name},
+                model_translation_string(_("You have liked this %(model)s"), obj),
             )
 
         except IntegrityError:
@@ -305,7 +302,7 @@ def activity_delete_view(request, pk, model):
         obj.delete()
 
     messages.success(
-        request, _("%(model)s has been deleted") % {"model": obj._meta.verbose_name}
+        request, model_translation_string(_("%(model)s has been deleted"), obj)
     )
     target = request.POST.get("target", None)
 
@@ -436,9 +433,9 @@ def process_activity_create_form(request, model, form, *, is_private=False):
             _("Your %(model)s has been published")
             if obj.published
             else _("Your %(model)s has been saved to your Private Stash")
-        ) % {"model": model._meta.verbose_name}
+        )
 
-        messages.success(request, success_message)
+        messages.success(request, model_translation_string(success_message, obj))
 
         return obj, True
 
@@ -458,9 +455,9 @@ def process_activity_update_form(request, obj, form):
         if obj.published:
             obj.notify_on_update()
 
-        success_message = _("Your %(model)s has been updated") % {
-            "model": obj._meta.verbose_name
-        }
+        success_message = model_translation_string(
+            _("Your %(model)s has been updated"), obj
+        )
 
         messages.success(request, success_message)
 
@@ -477,8 +474,7 @@ def render_activity_create_form(
     submit_actions = [
         (
             resolve_url(activity_model, view_name),
-            _("Submit %(model)s")
-            % {"model": activity_model._meta.verbose_name.capitalize()},
+            model_translation_string(_("Submit %(model)s"), model, capitalize=True),
         )
         for activity_model in get_activity_models()
         if activity_model != model
@@ -553,6 +549,13 @@ def render_activity_detail(request, obj, template_name, *, extra_context=None):
     return TemplateResponse(
         request, template_name, {**context, **(extra_context or {})}
     )
+
+
+def model_translation_string(value, model, capitalize=False):
+    model_name = model._meta.verbose_name
+    if capitalize:
+        model_name = model_name.capitalize()
+    return value % {"model": model_name}
 
 
 class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListView):
