@@ -2,12 +2,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Localhub
-from localhub.activities.views.streams import BaseActivityStreamView
+from localhub.activities.views.streams import render_activity_stream
 from localhub.comments.views import BaseCommentListView
 from localhub.common.mixins import SearchMixin
+from localhub.communities.decorators import community_required
 from localhub.private_messages.mixins import SenderOrRecipientQuerySetMixin
 from localhub.private_messages.views import BaseMessageListView
 
@@ -15,26 +17,31 @@ from localhub.private_messages.views import BaseMessageListView
 from .mixins import BookmarksPermissionMixin
 
 
-class BookmarksStreamView(
-    BookmarksPermissionMixin, LoginRequiredMixin, SearchMixin, BaseActivityStreamView
-):
-    template_name = "bookmarks/activities.html"
-    ordering = ("-bookmarked", "-created")
+@community_required
+@login_required
+def bookmarks_stream_view(request):
 
-    def filter_queryset(self, queryset):
+    search = request.GET.get("search", None)
+
+    def _filter_queryset(qs):
         qs = (
-            super()
-            .filter_queryset(queryset)
-            .published_or_owner(self.request.user)
-            .bookmarked(self.request.user)
-            .with_bookmarked_timestamp(self.request.user)
+            qs.for_community(request.community)
+            .published_or_owner(request.user)
+            .bookmarked(request.user)
+            .with_bookmarked_timestamp(request.user)
         )
-        if self.search_query:
-            qs = qs.search(self.search_query)
+
+        if search:
+            qs = qs.search(qs)
         return qs
 
-
-bookmarks_stream_view = BookmarksStreamView.as_view()
+    return render_activity_stream(
+        request,
+        _filter_queryset,
+        "bookmarks/activities.html",
+        ordering=("-rank", "-bookmarked") if search else ("-bookmarked", "-created"),
+        extra_context={"search": search},
+    )
 
 
 class BookmarksMessageListView(
