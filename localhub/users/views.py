@@ -9,21 +9,25 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
+from django.http import Http404
+from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView
 
 # Third Party Libraries
 from turbo_response import TemplateFormResponse, TurboFrame, TurboStream
 
 # Localhub
 from localhub.activities.utils import get_activity_models
-from localhub.activities.views.streams import BaseActivityStreamView
+from localhub.activities.views.streams import (
+    BaseActivityStreamView,
+    render_activity_stream,
+)
 from localhub.comments.models import Comment
 from localhub.comments.views import get_comment_queryset
 from localhub.communities.decorators import community_required
@@ -42,84 +46,75 @@ class BaseUserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
     ...
 
 
-class UserStreamView(BaseUserActivityStreamView):
+@community_required
+def user_stream_view(request, username):
+    user = get_user_or_404(request, username)
 
-    template_name = "users/detail/activities.html"
+    is_current_user = user == request.user
 
-    def get_ordering(self):
-        if self.is_current_user:
-            return ("-created", "-published")
-        return "-published"
-
-    def filter_queryset(self, queryset):
-        qs = (
-            super()
-            .filter_queryset(queryset)
-            .exclude_blocked_tags(self.request.user)
-            .filter(owner=self.user_obj)
+    if request.user.is_authenticated and not is_current_user:
+        user.get_notifications().for_recipient(request.user).unread().update(
+            is_read=True
         )
-        if self.is_current_user:
-            return qs.published_or_owner(self.request.user)
+
+    def _filter_queryset(qs):
+        qs = qs.exclude_blocked_tags(request.user).filter(owner=user)
+        if is_current_user:
+            return qs.published_or_owner(request.user)
         return qs.published()
 
-    def get_context_data(self, **kwargs):
-        return {
-            **super().get_context_data(**kwargs),
-            **{
-                "num_likes": (
-                    Like.objects.for_models(*get_activity_models())
-                    .filter(recipient=self.user_obj, community=self.request.community)
-                    .count()
-                )
-            },
-        }
+    num_likes = (
+        Like.objects.for_models(*get_activity_models())
+        .filter(recipient=user, community=request.community)
+        .count()
+    )
+
+    return render_activity_stream(
+        request,
+        _filter_queryset,
+        "users/detail/activities.html",
+        ordering=("-created", "-published") if is_current_user else "-published",
+        extra_context={
+            **get_user_detail_context(request, user),
+            "num_likes": num_likes,
+        },
+    )
 
 
-user_stream_view = UserStreamView.as_view()
-
-
-class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
+@community_required
+@login_required
+def user_message_list_view(request, username):
     """
     Renders thread of all private messages between this user
     and the current user.
     """
 
-    template_name = "users/detail/messages.html"
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    user = get_user_or_404(request, username)
+    messages = (
+        Message.objects.for_community(request.community)
+        .common_select_related()
+        .order_by("-created")
+        .distinct()
+    )
 
-    def get_queryset(self):
-        if self.is_blocked:
-            return Message.objects.none()
-        qs = (
-            Message.objects.for_community(self.request.community)
-            .common_select_related()
-            .order_by("-created")
-            .distinct()
-        )
+    if user == request.user:
+        messages = messages.for_sender_or_recipient(request.user)
+    else:
+        messages = messages.between(request.user, user)
 
-        if self.is_current_user:
-            qs = qs.for_sender_or_recipient(self.request.user)
-        else:
-            qs = qs.between(self.request.user, self.user_obj)
-        return qs
+    sent_messages = messages.filter(sender=request.user).count()
+    received_messages = messages.filter(recipient=request.user).count()
 
-    def get_num_messages_sent(self):
-        return self.get_queryset().filter(sender=self.request.user).count()
-
-    def get_num_messages_received(self):
-        return self.get_queryset().filter(recipient=self.request.user).count()
-
-    def get_context_data(self, **kwargs):
-        return {
-            **super().get_context_data(**kwargs),
-            **{
-                "sent_messages": self.get_num_messages_sent(),
-                "received_messages": self.get_num_messages_received(),
-            },
-        }
-
-
-user_message_list_view = UserMessageListView.as_view()
+    return render_user_detail(
+        request,
+        user,
+        "users/detail/messages.html",
+        {
+            "private_messages": messages,
+            "sent_messages": sent_messages,
+            "received_messages": received_messages,
+        },
+    )
 
 
 class UserActivityLikesView(BaseUserActivityStreamView):
@@ -401,9 +396,16 @@ def accept_cookies(request):
 
 
 def get_user_or_404(request, username, *, queryset=None, permission=None):
-    user = get_object_or_404(
-        queryset or get_user_queryset(request), username__iexact=username
-    )
+    try:
+        queryset = queryset or get_user_queryset(request)
+        user = queryset.get(username__iexact=username)
+    except ObjectDoesNotExist:
+        raise Http404(
+            render_to_string(
+                "users/detail/not_found.html", {"username": username}, request=request
+            )
+        )
+
     if permission:
         has_perm_or_403(request.user, permission, user)
     return user
@@ -428,8 +430,7 @@ def get_member_queryset(request, **kwargs):
     )
 
 
-def render_user_detail(request, user, template_name, extra_context=None):
-
+def get_user_detail_context(request, user):
     is_current_user = user == request.user
 
     if request.user.is_authenticated and not is_current_user:
@@ -456,7 +457,7 @@ def render_user_detail(request, user, template_name, extra_context=None):
         member=user, community=request.community
     ).first()
 
-    context = {
+    return {
         "display_name": user.get_display_name(),
         "is_blocker": is_blocker,
         "is_blocking": is_blocking,
@@ -468,6 +469,10 @@ def render_user_detail(request, user, template_name, extra_context=None):
         "user_obj": user,
     }
 
+
+def render_user_detail(request, user, template_name, extra_context=None):
     return TemplateResponse(
-        request, template_name, {**context, **(extra_context or {})}
+        request,
+        template_name,
+        {**get_user_detail_context(request, user), **(extra_context or {})},
     )

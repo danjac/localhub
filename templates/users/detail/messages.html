@@ -3,11 +3,7 @@
 
 {% extends "users/detail/base.html" %}
 
-{% load i18n %}
-{% load account %}
-{% load rules %}
-{% load private_messages %}
-{% load users %}
+{% load i18n account rules private_messages users pagination %}
 
 {% block subtitle %}{{ block.super }} / {% trans "Messages" %}{% endblock %}
 
@@ -53,6 +49,7 @@ You have not exchanged any messages with {{ display_name }}.
 {% endblocktrans %}
 {% endif %}
 
-{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message %}
+{% paginate private_messages as page_obj %}
+{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
 
 {% endblock user_content %}
