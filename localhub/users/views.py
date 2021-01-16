@@ -7,13 +7,13 @@ import datetime
 # Django
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.http import Http404
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.urls import resolve
 from django.utils import timezone
@@ -34,6 +34,7 @@ from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
 from localhub.common.mixins import SearchMixin
 from localhub.common.views import ActionView
+from localhub.communities.decorators import community_required
 from localhub.communities.rules import is_member
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
@@ -46,6 +47,7 @@ from .mixins import (
     SingleUserMixin,
     UserQuerySetMixin,
 )
+from .utils import has_perm_or_403
 
 
 class BaseUserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
@@ -456,39 +458,25 @@ class UserUnfollowView(BaseFollowUserView):
 user_unfollow_view = UserUnfollowView.as_view()
 
 
-class BaseUserBlockView(BaseUserActionView):
-    permission_required = "users.block_user"
-    success_message = None
+@community_required
+@login_required
+@require_POST
+def user_block_view(request, username, remove=False):
+    user = get_user_or_404(
+        request,
+        username,
+        queryset=get_user_queryset(request, exclude=None),
+        permission="users.block_user",
+    )
 
-    def render_to_response(self):
-        if self.success_message:
-            messages.success(
-                self.request, self.success_message % {"object": self.object}
-            )
+    if remove:
+        request.user.blocked.remove(user)
+        messages.info(request, _("You are no longer blocking this user"))
+    else:
+        request.user.block_user(user)
+        messages.success(request, _("You are now blocking this user"))
 
-        return super().render_to_response()
-
-
-class UserBlockView(BaseUserBlockView):
-    success_message = _("You are now blocking %(object)s")
-
-    def post(self, request, *args, **kwargs):
-        self.request.user.block_user(self.object)
-        return self.render_to_response()
-
-
-user_block_view = UserBlockView.as_view()
-
-
-class UserUnblockView(BaseUserBlockView):
-    success_message = _("You are no longer blocking %(object)s")
-
-    def post(self, request, *args, **kwargs):
-        self.request.user.blocked.remove(self.object)
-        return self.render_to_response()
-
-
-user_unblock_view = UserUnblockView.as_view()
+    return redirect(user)
 
 
 @login_required
@@ -517,3 +505,27 @@ def accept_cookies(request):
         samesite="Lax",
     )
     return response
+
+
+def get_user_or_404(request, username, *, queryset=None, permission=None):
+    user = get_object_or_404(
+        queryset or get_user_queryset(request), username__iexact=username
+    )
+    if permission:
+        has_perm_or_403(request.user, permission, user)
+    return user
+
+
+def get_user_queryset(request, exclude="blocking"):
+    qs = get_user_model().objects.for_community(request.community)
+
+    if exclude == "blocking":
+        qs = qs.exclude_blocking(request.user)
+
+    elif exclude == "blocked":
+        qs = qs.exclude_blocked(request.user)
+
+    elif exclude == "blockers":
+        qs = qs.exclude_blockers(request.user)
+
+    return qs

@@ -347,8 +347,8 @@ class TestUserUnblockView:
         user = MembershipFactory(community=member.community).member
         member.member.blocked.add(user)
         response = client.post(reverse("users:unblock", args=[user.username]))
-        assert user not in member.member.blocked.all()
         assert response.url == user.get_absolute_url()
+        assert user not in member.member.blocked.all()
 
 
 class TestUserAutocompleteListView:

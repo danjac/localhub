@@ -38,7 +38,9 @@ urlpatterns = [
     user_re_path(r"follow/$", views.user_follow_view, name="follow"),
     user_re_path(r"unfollow/$", views.user_unfollow_view, name="unfollow"),
     user_re_path(r"block/$", views.user_block_view, name="block"),
-    user_re_path(r"unblock/$", views.user_unblock_view, name="unblock"),
+    user_re_path(
+        r"unblock/$", views.user_block_view, name="unblock", kwargs={"remove": True}
+    ),
     user_re_path(r"comments/$", views.user_comment_list_view, name="comments"),
     user_re_path(r"messages/$", views.user_message_list_view, name="messages"),
     user_re_path(r"$", views.user_stream_view, name="activities"),
