@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -11,7 +10,6 @@ from django.template.response import TemplateResponse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView
 
 # Third Party Libraries
 from turbo_response import TemplateFormResponse, TurboFrame, redirect_303
@@ -26,19 +24,12 @@ from localhub.users.utils import has_perm_or_403
 
 # Local
 from .forms import CommentForm
-from .mixins import CommentQuerySetMixin
 from .models import Comment
 
 
 @community_required
 def comment_list_view(request):
-    comments = (
-        Comment.objects.for_community(request.community)
-        .with_common_annotations(request.user, request.community)
-        .exclude_blocked_users(request.user)
-        .exclude_deleted()
-        .with_common_related()
-    )
+    comments = get_comment_queryset(request)
 
     if search := request.GET.get("q", None):
         comments = comments.search(search).order_by("-rank", "-created")
@@ -54,14 +45,7 @@ def comment_list_view(request):
 
 @community_required
 def comment_detail_view(request, pk):
-    qs = (
-        Comment.objects.for_community(request.community)
-        .with_common_annotations(request.user, request.community)
-        .exclude_deleted(request.user)
-        .with_common_related()
-    )
-
-    comment = get_object_or_404(qs, pk=pk)
+    comment = get_comment_or_404(request, pk)
 
     if request.user.is_authenticated:
         comment.get_notifications().for_recipient(request.user).unread().update(
@@ -82,7 +66,7 @@ def comment_detail_view(request, pk):
     context["replies"] = (
         Comment.objects.none()
         if comment.deleted
-        else qs.filter(parent=comment).order_by("created")
+        else get_comment_queryset(request).filter(parent=comment).order_by("created")
     )
 
     return TemplateResponse(request, "comments/comment_detail.html", context)
@@ -251,28 +235,19 @@ def comment_flag_view(request, pk):
 
 def get_comment_or_404(request, pk, *, queryset=None, permission=None):
 
-    comment = get_object_or_404(
-        queryset
-        or Comment.objects.for_community(request.community).select_related(
-            "owner", "community"
-        ),
-        pk=pk,
-    )
+    comment = get_object_or_404(queryset or get_comment_queryset(request), pk=pk,)
 
     if permission:
         has_perm_or_403(request.user, permission, comment)
     return comment
 
 
-class BaseCommentListView(CommentQuerySetMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+def get_comment_queryset(request):
 
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .with_common_annotations(self.request.user, self.request.community)
-            .exclude_blocked_users(self.request.user)
-            .exclude_deleted()
-            .with_common_related()
-        )
+    return (
+        Comment.objects.for_community(request.community)
+        .with_common_annotations(request.user, request.community)
+        .exclude_blocked_users(request.user)
+        .exclude_deleted()
+        .with_common_related()
+    )

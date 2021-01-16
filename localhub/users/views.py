@@ -25,8 +25,9 @@ from turbo_response import TemplateFormResponse, TurboFrame, TurboStream
 from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.models import Comment
-from localhub.comments.views import BaseCommentListView
+from localhub.comments.views import get_comment_queryset
 from localhub.communities.decorators import community_required
+from localhub.communities.models import Membership
 from localhub.communities.rules import is_member
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
@@ -38,10 +39,6 @@ from .utils import has_perm_or_403
 
 
 class BaseUserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
-    ...
-
-
-class BaseUserCommentListView(SingleUserMixin, BaseCommentListView):
     ...
 
 
@@ -79,28 +76,6 @@ class UserStreamView(BaseUserActivityStreamView):
 
 
 user_stream_view = UserStreamView.as_view()
-
-
-class UserCommentListView(BaseUserCommentListView):
-    template_name = "users/detail/comments.html"
-
-    def get_queryset(self):
-        return super().get_queryset().filter(owner=self.user_obj).order_by("-created")
-
-    def get_context_data(self, **kwargs):
-        return {
-            **super().get_context_data(**kwargs),
-            **{
-                "num_likes": (
-                    Like.objects.for_models(Comment)
-                    .filter(recipient=self.user_obj, community=self.request.community)
-                    .count()
-                )
-            },
-        }
-
-
-user_comment_list_view = UserCommentListView.as_view()
 
 
 class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
@@ -177,32 +152,62 @@ class UserActivityLikesView(BaseUserActivityStreamView):
 user_activity_likes_view = UserActivityLikesView.as_view()
 
 
-class UserCommentLikesView(BaseUserCommentListView):
+@community_required
+def user_comment_likes_view(request, username):
     """Liked comments submitted by this user."""
+    user = get_user_or_404(request, username)
 
-    template_name = "users/likes/comments.html"
+    comments = (
+        get_comment_queryset(request)
+        .filter(owner=user, num_likes__gt=0)
+        .order_by("-num_likes", "-created")
+    )
 
-    exclude_blocking_users = True
+    num_likes = (
+        Like.objects.for_models(Comment)
+        .filter(recipient=user, community=request.community)
+        .count()
+    )
 
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(owner=self.user_obj, num_likes__gt=0)
-            .order_by("-num_likes", "-created")
-        )
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["num_likes"] = (
-            Like.objects.for_models(Comment)
-            .filter(recipient=self.user_obj, community=self.request.community)
-            .count()
-        )
-        return data
+    return render_user_detail(
+        request,
+        user,
+        "users/likes/comments.html",
+        {"comments": comments, "num_likes": num_likes},
+    )
 
 
-user_comment_likes_view = UserCommentLikesView.as_view()
+@community_required
+def user_comment_list_view(request, username):
+    user = get_user_or_404(request, username)
+    comments = get_comment_queryset(request).filter(owner=user).order_by("-created")
+
+    num_likes = (
+        Like.objects.for_models(Comment)
+        .filter(recipient=user, community=request.community)
+        .count()
+    )
+
+    return render_user_detail(
+        request,
+        user,
+        "users/detail/comments.html",
+        {"comments": comments, "num_likes": num_likes,},
+    )
+
+
+@community_required
+def user_comment_mentions_view(request, username):
+    user = get_user_or_404(request, username)
+    comments = (
+        get_comment_queryset(request)
+        .exclude(owner=user)
+        .search(f"@{user.username}")
+        .order_by("-created")
+    )
+    return render_user_detail(
+        request, user, "users/mentions/comments.html", {"comments": comments,},
+    )
 
 
 class UserActivityMentionsView(BaseUserActivityStreamView):
@@ -225,25 +230,6 @@ class UserActivityMentionsView(BaseUserActivityStreamView):
 
 
 user_activity_mentions_view = UserActivityMentionsView.as_view()
-
-
-class UserCommentMentionsView(BaseUserCommentListView):
-
-    template_name = "users/mentions/comments.html"
-
-    exclude_blocking_users = True
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .exclude(owner=self.user_obj)
-            .search(f"@{self.user_obj.username}")
-            .order_by("-created")
-        )
-
-
-user_comment_mentions_view = UserCommentMentionsView.as_view()
 
 
 @community_required
@@ -439,4 +425,49 @@ def get_member_queryset(request, **kwargs):
         .with_num_unread_messages(request.user, request.community)
         .with_role(request.community)
         .with_joined(request.community)
+    )
+
+
+def render_user_detail(request, user, template_name, extra_context=None):
+
+    is_current_user = user == request.user
+
+    if request.user.is_authenticated and not is_current_user:
+        is_blocker = request.user.blockers.filter(pk=user.id).exists()
+        is_blocking = request.user.blocked.filter(pk=user.id).exists()
+        is_follower = request.user.followers.filter(pk=user.id).exists()
+        is_following = request.user.following.filter(pk=user.id).exists()
+
+        unread_messages = (
+            Message.objects.for_community(request.community)
+            .from_sender_to_recipient(user, request.user)
+            .unread()
+            .count()
+        )
+
+    else:
+        is_blocker = False
+        is_blocking = False
+        is_follower = False
+        is_following = False
+        unread_messages = 0
+
+    membership = Membership.objects.filter(
+        member=user, community=request.community
+    ).first()
+
+    context = {
+        "display_name": user.get_display_name(),
+        "is_blocker": is_blocker,
+        "is_blocking": is_blocking,
+        "is_current_user": is_current_user,
+        "is_follower": is_follower,
+        "is_following": is_following,
+        "membership": membership,
+        "unread_messages": unread_messages,
+        "user_obj": user,
+    }
+
+    return TemplateResponse(
+        request, template_name, {**context, **(extra_context or {})}
     )

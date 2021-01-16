@@ -99,7 +99,7 @@ class TestCommentLikesView:
         )
         response = client.get(reverse("users:comment_likes", args=["danjac"]))
         assert response.status_code == http.HTTPStatus.OK
-        assert response.context["object_list"][0] == comment
+        assert response.context["comments"][0] == comment
         assert response.context["num_likes"] == 1
 
 

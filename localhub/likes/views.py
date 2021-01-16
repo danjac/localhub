@@ -1,9 +1,14 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
+from django.contrib.auth.decorators import login_required
+from django.template.response import TemplateResponse
+
 # Localhub
 from localhub.activities.views.streams import BaseActivityStreamView
-from localhub.comments.views import BaseCommentListView
+from localhub.comments.views import get_comment_queryset
+from localhub.communities.decorators import community_required
 
 
 class LikedStreamView(BaseActivityStreamView):
@@ -25,18 +30,14 @@ class LikedStreamView(BaseActivityStreamView):
 liked_stream_view = LikedStreamView.as_view()
 
 
-class LikedCommentListView(BaseCommentListView):
-    template_name = "likes/comments.html"
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .liked(self.request.user)
-            .with_common_annotations(self.request.user, self.request.community)
-            .with_liked_timestamp(self.request.user)
-            .order_by("-liked", "-created")
-        )
-
-
-liked_comment_list_view = LikedCommentListView.as_view()
+@community_required
+@login_required
+def liked_comment_list_view(request):
+    comments = (
+        get_comment_queryset(request)
+        .liked(request.user)
+        .with_common_annotations(request.user, request.community)
+        .with_liked_timestamp(request.user)
+        .order_by("-liked", "-created")
+    )
+    return TemplateResponse(request, "likes/comments.html", {"comments": comments})
