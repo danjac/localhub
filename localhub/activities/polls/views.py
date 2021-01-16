@@ -17,6 +17,7 @@ from turbo_response import TurboFrame, redirect_303
 # Localhub
 from localhub.activities.views.generic import (
     get_activity_for_update,
+    get_activity_queryset,
     process_activity_create_form,
     process_activity_update_form,
     render_activity_create_form,
@@ -32,20 +33,9 @@ from localhub.users.utils import has_perm_or_403
 from .models import Answer, Poll
 
 
-class PollQuerySetMixin:
-    def get_queryset(self):
-        return super().get_queryset().with_answers()
-
-
 @community_required
 def poll_list_view(request, model, template_name):
-    qs = (
-        model.objects.for_community(request.community)
-        .published_or_owner(request.user)
-        .with_common_annotations(request.user, request.community)
-        .exclude_blocked(request.user)
-        .with_answers()
-    )
+    qs = get_activity_queryset(request, model).with_answers()
 
     return render_activity_list(request, qs, template_name)
 
@@ -174,12 +164,5 @@ def poll_update_view(request, pk, model, form_class, template_name):
 
 @community_required
 def poll_detail_view(request, pk, model, template_name, slug=None):
-    obj = get_object_or_404(
-        model.objects.for_community(request.community)
-        .select_related("owner", "community", "parent", "parent__owner", "editor")
-        .published_or_owner(request.user)
-        .with_common_annotations(request.user, request.community)
-        .with_answers(),
-        pk=pk,
-    )
+    obj = get_object_or_404(get_activity_queryset(request, model).with_answers(), pk=pk)
     return render_activity_detail(request, obj, template_name)

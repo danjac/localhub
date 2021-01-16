@@ -144,30 +144,18 @@ def activity_list_view(
     ordering=("-created", "-published"),
     extra_context=None,
 ):
-    qs = (
-        model.objects.for_community(request.community)
-        .published_or_owner(request.user)
-        .with_common_annotations(request.user, request.community)
-        .exclude_blocked(request.user)
+    return render_activity_list(
+        request,
+        get_activity_queryset(request, model),
+        template_name,
+        ordering,
+        extra_context,
     )
-
-    return render_activity_list(request, qs, template_name, ordering, extra_context)
-
-
-class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListView):
-    allow_empty = True
-    paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
 @community_required
 def activity_detail_view(request, pk, model, template_name, slug=None):
-    obj = get_object_or_404(
-        model.objects.for_community(request.community)
-        .select_related("owner", "community", "parent", "parent__owner", "editor")
-        .published_or_owner(request.user)
-        .with_common_annotations(request.user, request.community),
-        pk=pk,
-    )
+    obj = get_object_or_404(get_activity_queryset(request, model), pk=pk,)
     return render_activity_detail(request, obj, template_name)
 
 
@@ -415,6 +403,15 @@ class ActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
+def get_activity_queryset(request, model):
+    return (
+        model.objects.for_community(request.community)
+        .select_related("owner", "community", "parent", "parent__owner", "editor")
+        .published_or_owner(request.user)
+        .with_common_annotations(request.user, request.community)
+    )
+
+
 def render_activity_list(
     request,
     queryset,
@@ -591,3 +588,8 @@ def render_activity_update_form(
         template_name,
         {"object": obj, "model": obj, "is_new": False, **(extra_context or {}),},
     )
+
+
+class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListView):
+    allow_empty = True
+    paginate_by = settings.DEFAULT_PAGE_SIZE

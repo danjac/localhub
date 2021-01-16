@@ -27,6 +27,7 @@ from localhub.activities.views.generic import (
     BaseActivityActionView,
     activity_detail_view,
     activity_update_view,
+    get_activity_queryset,
     handle_activity_create,
     render_activity_list,
 )
@@ -150,14 +151,7 @@ event_detail_view = override_timezone(activity_detail_view)
 @community_required
 @override_timezone
 def event_list_view(request, model, template_name):
-    qs = (
-        model.objects.for_community(request.community)
-        .published_or_owner(request.user)
-        .with_common_annotations(request.user, request.community)
-        .exclude_blocked(request.user)
-        .with_relevance()
-        .with_timedelta()
-    )
+    qs = get_activity_queryset(request, model).with_relevance().with_timedelta()
     return render_activity_list(
         request, qs, template_name, ordering=("-relevance", "timedelta")
     )
