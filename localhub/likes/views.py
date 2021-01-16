@@ -5,29 +5,21 @@
 from django.contrib.auth.decorators import login_required
 
 # Localhub
-from localhub.activities.views.streams import BaseActivityStreamView
+from localhub.activities.views.streams import render_activity_stream
 from localhub.comments.views import get_comment_queryset
 from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 
 
-class LikedStreamView(BaseActivityStreamView):
-    template_name = "likes/activities.html"
-    ordering = ("-liked", "-created")
-
-    def get_count_queryset_for_model(self, model):
-        return self.filter_queryset(model.objects.liked(self.request.user))
-
-    def filter_queryset(self, queryset):
-        return (
-            super()
-            .filter_queryset(queryset)
-            .liked(self.request.user)
-            .with_liked_timestamp(self.request.user)
-        )
-
-
-liked_stream_view = LikedStreamView.as_view()
+@community_required
+@login_required
+def liked_stream_view(request):
+    return render_activity_stream(
+        request,
+        lambda qs: qs.liked(request.user).with_liked_timestamp(request.user),
+        "likes/activities.html",
+        ordering=("-liked", "-created"),
+    )
 
 
 @community_required

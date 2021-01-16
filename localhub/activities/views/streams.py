@@ -255,7 +255,7 @@ def render_activity_stream(
         "paginator": page.paginator,
         "object_list": page.object_list,
         "is_paginated": page.has_other_pages(),
-        **(extra_context or None),
+        **(extra_context or {}),
     }
 
     return TemplateResponse(request, template_name, context)
