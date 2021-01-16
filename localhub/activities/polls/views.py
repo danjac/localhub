@@ -35,8 +35,9 @@ from .models import Answer, Poll
 
 @community_required
 def poll_list_view(request, model, template_name):
-    qs = get_activity_queryset(request, model).with_answers()
-
+    qs = get_activity_queryset(
+        request, model, with_common_annotations=True
+    ).with_answers()
     return render_activity_list(request, qs, template_name)
 
 
@@ -164,5 +165,10 @@ def poll_update_view(request, pk, model, form_class, template_name):
 
 @community_required
 def poll_detail_view(request, pk, model, template_name, slug=None):
-    obj = get_object_or_404(get_activity_queryset(request, model).with_answers(), pk=pk)
+    obj = get_object_or_404(
+        get_activity_queryset(
+            request, model, with_common_annotations=True
+        ).with_answers(),
+        pk=pk,
+    )
     return render_activity_detail(request, obj, template_name)

@@ -151,7 +151,11 @@ event_detail_view = override_timezone(activity_detail_view)
 @community_required
 @override_timezone
 def event_list_view(request, model, template_name):
-    qs = get_activity_queryset(request, model).with_relevance().with_timedelta()
+    qs = (
+        get_activity_queryset(request, model, with_common_annotations=True)
+        .with_relevance()
+        .with_timedelta()
+    )
     return render_activity_list(
         request, qs, template_name, ordering=("-relevance", "timedelta")
     )

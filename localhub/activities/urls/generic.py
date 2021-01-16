@@ -8,36 +8,23 @@ from django.urls import path
 from ..views import generic
 
 
-def resolve_template_names(model, suffix):
-
-    base_template_name = "/".join((model._meta.app_label, model._meta.model_name))
-
-    return [
-        f"{base_template_name}{suffix}.html",
-        f"activities/activity{suffix}.html",
-    ]
-
-
 def create_activity_urls(
     model,
     form_class=None,
-    list_view=generic.activity_list_view,
-    create_view=generic.activity_create_view,
-    update_view=generic.activity_update_view,
-    detail_view=generic.activity_detail_view,
-    delete_view_class=generic.ActivityDeleteView,
-    flag_view_class=generic.ActivityFlagView,
-    like_view_class=generic.ActivityLikeView,
-    dislike_view_class=generic.ActivityDislikeView,
-    reshare_view_class=generic.ActivityReshareView,
-    publish_view_class=generic.ActivityPublishView,
-    pin_view_class=generic.ActivityPinView,
-    unpin_view_class=generic.ActivityUnpinView,
-    bookmark_view_class=generic.ActivityBookmarkView,
-    remove_bookmark_view_class=generic.ActivityRemoveBookmarkView,
-    update_tags_view=generic.activity_update_tags_view,
+    *,
+    bookmark_view=generic.activity_bookmark_view,
     create_comment_view=generic.create_comment_view,
-    create_view_class=None,
+    create_view=generic.activity_create_view,
+    delete_view_class=generic.ActivityDeleteView,
+    detail_view=generic.activity_detail_view,
+    flag_view_class=generic.ActivityFlagView,
+    like_view=generic.activity_like_view,
+    list_view=generic.activity_list_view,
+    pin_view=generic.activity_pin_view,
+    publish_view=generic.activity_publish_view,
+    reshare_view=generic.activity_reshare_view,
+    update_tags_view=generic.activity_update_tags_view,
+    update_view=generic.activity_update_view,
 ):
     """
     Generates default URL patterns for activity subclasses.
@@ -90,34 +77,44 @@ def create_activity_urls(
         path(
             "<int:pk>/~delete/", delete_view_class.as_view(model=model), name="delete",
         ),
+        path("<int:pk>/~like/", like_view, name="like", kwargs={"model": model,},),
         path(
             "<int:pk>/~dislike/",
-            dislike_view_class.as_view(model=model),
+            like_view,
             name="dislike",
+            kwargs={"model": model, "remove": True,},
         ),
         path("<int:pk>/~flag/", flag_view_class.as_view(model=model), name="flag",),
-        path("<int:pk>/~like/", like_view_class.as_view(model=model), name="like",),
-        path("<int:pk>/~pin/", pin_view_class.as_view(model=model), name="pin",),
-        path("<int:pk>/~unpin/", unpin_view_class.as_view(model=model), name="unpin",),
+        path("<int:pk>/~pin/", pin_view, name="pin", kwargs={"model": model,},),
+        path(
+            "<int:pk>/~unpin/",
+            pin_view,
+            name="unpin",
+            kwargs={"model": model, "remove": True,},
+        ),
         path(
             "<int:pk>/~reshare/",
-            reshare_view_class.as_view(model=model),
+            reshare_view,
             name="reshare",
+            kwargs={"model": model,},
         ),
         path(
             "<int:pk>/~bookmark/",
-            bookmark_view_class.as_view(model=model),
+            bookmark_view,
             name="bookmark",
+            kwargs={"model": model,},
         ),
         path(
             "<int:pk>/~bookmark/remove/",
-            remove_bookmark_view_class.as_view(model=model),
+            bookmark_view,
             name="remove_bookmark",
+            kwargs={"model": model, "remove": True,},
         ),
         path(
             "<int:pk>/~publish/",
-            publish_view_class.as_view(model=model),
+            publish_view,
             name="publish",
+            kwargs={"model": model,},
         ),
         path(
             "<int:pk>/~update/",
@@ -147,4 +144,14 @@ def create_activity_urls(
             name="detail_no_slug",
             kwargs={"model": model, "template_name": detail_template_name,},
         ),
+    ]
+
+
+def resolve_template_names(model, suffix):
+
+    base_template_name = "/".join((model._meta.app_label, model._meta.model_name))
+
+    return [
+        f"{base_template_name}{suffix}.html",
+        f"activities/activity{suffix}.html",
     ]

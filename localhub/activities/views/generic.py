@@ -22,6 +22,7 @@ from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redire
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
+from localhub.common.decorators import add_messages_to_response_header
 from localhub.common.mixins import SuccessHeaderMixin
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import ActionView
@@ -59,38 +60,12 @@ def activity_create_view(
     )
 
 
-class ActivityFlagView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, BaseFlagCreateView
-):
-    permission_required = "activities.flag_activity"
-    success_message = _("This %(model)s has been flagged to the moderators")
-
-    def get_parent_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .with_has_flagged(self.request.user)
-            .exclude(has_flagged=True)
-        )
-
-    def get_permission_object(self):
-        return self.parent
-
-
-activity_flag_view = ActivityFlagView.as_view()
-
-
 @community_required
 @login_required
 @require_POST
 def create_comment_view(request, pk, model):
 
-    obj = get_object_or_404(
-        model.objects.for_community(request.community).select_related(
-            "owner", "community"
-        ),
-        pk=pk,
-    )
+    obj = get_object_or_404(get_activity_queryset(request, model), pk=pk,)
     has_perm_or_403(request.user, "activities.create_comment", obj)
 
     form = CommentForm(request.POST)
@@ -155,216 +130,160 @@ def activity_list_view(
 
 @community_required
 def activity_detail_view(request, pk, model, template_name, slug=None):
-    obj = get_object_or_404(get_activity_queryset(request, model), pk=pk,)
+    obj = get_object_or_404(
+        get_activity_queryset(request, model, with_common_annotations=True), pk=pk,
+    )
     return render_activity_detail(request, obj, template_name)
 
 
-def render_activity_detail(request, obj, template_name, *, extra_context=None):
+@community_required
+@login_required
+@require_POST
+def activity_reshare_view(request, pk, model):
+    obj = get_object_or_404(
+        get_activity_queryset(request, model).unreshared(request.user), pk=pk
+    )
+    has_perm_or_403(request.user, "activities.reshare_activity", obj)
+    reshare = obj.reshare(request.user)
 
-    if request.user.is_authenticated:
-        obj.get_notifications().for_recipient(request.user).unread().update(
-            is_read=True
-        )
+    reshare.notify_on_publish()
 
-    comments = (
-        obj.get_comments()
-        .for_community(request.community)
-        .with_common_annotations(request.user, request.community)
-        .exclude_deleted()
-        .with_common_related()
-        .order_by("created")
+    messages.success(
+        request,
+        _("You have reshared this %(model)s") % {"model": obj._meta.verbose_name},
+    )
+    return redirect(reshare)
+
+
+@community_required
+@login_required
+@require_POST
+def activity_publish_view(request, pk, model):
+    obj = get_object_or_404(
+        get_activity_queryset(request, model).filter(published__isnull=True), pk=pk
+    )
+    has_perm_or_403(request.user, "activities.change_activity", obj)
+
+    obj.published = timezone.now()
+    obj.save(update_fields=["published"])
+    obj.notify_on_publish()
+
+    messages.success(
+        request,
+        _("Your %(model)s has been published") % {"model": obj._meta.verbose_name},
     )
 
-    reshares = (
-        obj.reshares.for_community(request.community)
-        .exclude_blocked_users(request.user)
-        .select_related("owner")
-        .order_by("-created")
-    )
-
-    context = {
-        "object": obj,
-        "comments": comments,
-        "reshares": reshares,
-    }
-
-    if request.user.has_perm("communities.moderate_community", request.community):
-        context["flags"] = (
-            obj.get_flags()
-            .select_related("user")
-            .prefetch_related("content_object")
-            .order_by("-created")
-        )
-
-    if request.user.has_perm("activities.create_comment", obj):
-        context["comment_form"] = CommentForm()
-
-    return TemplateResponse(
-        request, template_name, {**context, **(extra_context or {})}
-    )
+    return redirect(obj)
 
 
-class BaseActivityActionView(ActivityQuerySetMixin, ActionView):
-    ...
+@community_required
+@login_required
+@require_POST
+def activity_pin_view(request, pk, model, remove=False):
 
+    obj = get_object_or_404(get_activity_queryset(request, model), pk=pk)
+    has_perm_or_403(request.user, "activities.pin_activity", obj)
 
-class ActivityReshareView(BaseActivityActionView):
-    permission_required = "activities.reshare_activity"
-    success_message = _("You have reshared this %(model)s")
-
-    def get_queryset(self):
-        """
-        Make sure user has only reshared once.
-        """
-        return super().get_queryset().unreshared(self.request.user)
-
-    def get_success_url(self):
-        return self.reshare.get_absolute_url()
-
-    def post(self, request, *args, **kwargs):
-        self.reshare = self.object.reshare(self.request.user)
-
-        self.reshare.notify_on_publish()
-
-        messages.success(
-            request, self.success_message % {"model": self.object._meta.verbose_name}
-        )
-
-        return self.render_to_response()
-
-
-class ActivityPublishView(SuccessHeaderMixin, BaseActivityActionView):
-    permission_required = "activities.change_activity"
-    success_message = _("Your %(model)s has been published")
-
-    def get_queryset(self):
-        return super().get_queryset().filter(published__isnull=True)
-
-    def post(self, request, *args, **kwargs):
-        self.object.published = timezone.now()
-        self.object.save(update_fields=["published"])
-        self.object.notify_on_publish()
-        return self.render_success_message(self.render_to_response())
-
-
-activity_publish_view = ActivityPublishView.as_view()
-
-
-class ActivityPinView(BaseActivityActionView):
-    permission_required = "activities.pin_activity"
-    success_url = settings.HOME_PAGE_URL
-    success_message = _(
-        "The %(model)s has been pinned to the top of the activity stream"
-    )
-
-    def get_success_url(self):
-        return self.success_url
-
-    def post(self, request, *args, **kwargs):
+    if remove:
+        obj.is_pinned = False
+    else:
         for model in get_activity_models():
             model.objects.for_community(community=request.community).update(
                 is_pinned=False
             )
 
-        self.object.is_pinned = True
-        self.object.save()
+        obj.is_pinned = True
 
-        messages.success(
-            request, self.success_message % {"model": self.object._meta.verbose_name}
-        )
-        return self.render_to_response()
+    obj.save()
 
-
-class ActivityUnpinView(BaseActivityActionView):
-    permission_required = "activities.pin_activity"
-    success_url = settings.HOME_PAGE_URL
-    success_message = _(
-        "The %(model)s has been unpinned from the top of the activity stream"
+    messages.success(
+        request,
+        "The %(model)s has been pinned to the top of the activity stream"
+        % {"model": obj._meta.verbose_name},
     )
 
-    def get_success_url(self):
-        return self.success_url
-
-    def post(self, request, *args, **kwargs):
-        self.object.is_pinned = False
-        self.object.save()
-        messages.success(
-            request, self.success_message % {"model": self.object._meta.verbose_name}
-        )
-        return self.render_to_response()
+    return redirect(settings.HOME_PAGE_URL)
 
 
-class BaseActivityBookmarkView(BaseActivityActionView):
-    permission_required = "activities.bookmark_activity"
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def activity_bookmark_view(request, pk, model, remove=False):
+    obj = get_object_or_404(get_activity_queryset(request, model), pk=pk)
+    has_perm_or_403(request.user, "activities.bookmark_activity", obj)
 
-    def render_to_response(self, has_bookmarked):
-        return (
-            TurboFrame(self.object.get_dom_id() + "-bookmark")
-            .template(
-                "activities/includes/bookmark.html",
-                {"object": self.object, "has_bookmarked": has_bookmarked},
-            )
-            .response(self.request)
-        )
-
-
-class ActivityBookmarkView(BaseActivityBookmarkView):
-    def post(self, request, *args, **kwargs):
+    if remove:
+        obj.get_bookmarks().filter(user=request.user).delete()
+        messages.info(request, _("You have removed this bookmark"))
+    else:
         try:
             Bookmark.objects.create(
-                user=request.user,
-                community=request.community,
-                content_object=self.object,
+                user=request.user, community=request.community, content_object=obj,
+            )
+            messages.success(
+                request,
+                _("You have bookmarked this %(model)s")
+                % {"model": obj._meta.verbose_name},
             )
         except IntegrityError:
-            # dupe, ignore
             pass
-        return self.render_to_response(has_bookmarked=True)
 
-
-class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
-    def post(self, request, *args, **kwargs):
-        self.object.get_bookmarks().filter(user=request.user).delete()
-        return self.render_to_response(has_bookmarked=False)
-
-
-class BaseActivityLikeView(BaseActivityActionView):
-    permission_required = "activities.like_activity"
-
-    def render_to_response(self, has_liked):
+    if request.accept_turbo_stream:
         return (
-            TurboFrame(self.object.get_dom_id() + "-like")
+            TurboFrame(f"{obj.get_dom_id()}-bookmark")
             .template(
-                "activities/includes/like.html",
-                {"object": self.object, "has_liked": has_liked},
+                "activities/includes/bookmark.html",
+                {"object": obj, "has_bookmarked": not (remove)},
             )
-            .response(self.request)
+            .response(request)
         )
+    return redirect(obj)
 
 
-class ActivityLikeView(BaseActivityLikeView):
-    def post(self, request, *args, **kwargs):
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def activity_like_view(request, pk, model, remove=False):
+    obj = get_object_or_404(get_activity_queryset(request, model), pk=pk)
+    has_perm_or_403(request.user, "activities.like_activity", obj)
+
+    if remove:
+        obj.get_likes().filter(user=request.user).delete()
+        messages.info(
+            request,
+            _("You have stopped liking this %(model)s")
+            % {"model": obj._meta.verbose_name},
+        )
+    else:
+
         try:
             Like.objects.create(
                 user=request.user,
                 community=request.community,
-                recipient=self.object.owner,
-                content_object=self.object,
+                recipient=obj.owner,
+                content_object=obj,
             ).notify()
 
+            messages.success(
+                request,
+                _("You have liked this %(model)s") % {"model": obj._meta.verbose_name},
+            )
+
         except IntegrityError:
-            # dupe, ignore
             pass
-        return self.render_to_response(has_liked=True)
 
-
-class ActivityDislikeView(BaseActivityLikeView):
-    def post(self, request, *args, **kwargs):
-        self.object.get_likes().filter(user=request.user).delete()
-        return self.render_to_response(has_liked=False)
-
-    def delete(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
+    if request.accept_turbo_stream:
+        return (
+            TurboFrame(f"{obj.get_dom_id()}-like")
+            .template(
+                "activities/includes/like.html",
+                {"object": obj, "has_liked": not (remove)},
+            )
+            .response(request)
+        )
+    return redirect(obj)
 
 
 class ActivityDeleteView(
@@ -403,13 +322,18 @@ class ActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-def get_activity_queryset(request, model):
-    return (
+def get_activity_queryset(request, model, with_common_annotations=False):
+
+    qs = (
         model.objects.for_community(request.community)
         .select_related("owner", "community", "parent", "parent__owner", "editor")
         .published_or_owner(request.user)
         .with_common_annotations(request.user, request.community)
     )
+
+    if with_common_annotations:
+        qs = qs.with_common_annotations(request.user, request.community)
+    return qs
 
 
 def render_activity_list(
@@ -484,12 +408,7 @@ def handle_activity_update(
 def get_activity_for_update(
     request, model, pk, permission="activities.change_activity"
 ):
-    obj = get_object_or_404(
-        model.objects.for_community(request.community).select_related(
-            "owner", "community"
-        ),
-        pk=pk,
-    )
+    obj = get_object_or_404(get_activity_queryset(request, model), pk=pk,)
     has_perm_or_403(request.user, permission, obj)
     return obj
 
@@ -590,6 +509,76 @@ def render_activity_update_form(
     )
 
 
+def render_activity_detail(request, obj, template_name, *, extra_context=None):
+
+    if request.user.is_authenticated:
+        obj.get_notifications().for_recipient(request.user).unread().update(
+            is_read=True
+        )
+
+    comments = (
+        obj.get_comments()
+        .for_community(request.community)
+        .with_common_annotations(request.user, request.community)
+        .exclude_deleted()
+        .with_common_related()
+        .order_by("created")
+    )
+
+    reshares = (
+        obj.reshares.for_community(request.community)
+        .exclude_blocked_users(request.user)
+        .select_related("owner")
+        .order_by("-created")
+    )
+
+    context = {
+        "object": obj,
+        "comments": comments,
+        "reshares": reshares,
+    }
+
+    if request.user.has_perm("communities.moderate_community", request.community):
+        context["flags"] = (
+            obj.get_flags()
+            .select_related("user")
+            .prefetch_related("content_object")
+            .order_by("-created")
+        )
+
+    if request.user.has_perm("activities.create_comment", obj):
+        context["comment_form"] = CommentForm()
+
+    return TemplateResponse(
+        request, template_name, {**context, **(extra_context or {})}
+    )
+
+
 class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListView):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
+
+
+class ActivityFlagView(
+    PermissionRequiredMixin, ActivityQuerySetMixin, BaseFlagCreateView
+):
+    permission_required = "activities.flag_activity"
+    success_message = _("This %(model)s has been flagged to the moderators")
+
+    def get_parent_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .with_has_flagged(self.request.user)
+            .exclude(has_flagged=True)
+        )
+
+    def get_permission_object(self):
+        return self.parent
+
+
+activity_flag_view = ActivityFlagView.as_view()
+
+
+class BaseActivityActionView(ActivityQuerySetMixin, ActionView):
+    ...

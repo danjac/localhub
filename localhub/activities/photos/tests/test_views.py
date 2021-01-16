@@ -88,7 +88,7 @@ class TestPhotoLikeView:
             owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(reverse("photos:like", args=[photo.id]))
-        assert response.status_code == http.HTTPStatus.OK
+        assert response.url == photo.get_absolute_url()
         like = Like.objects.get()
         assert like.user == member.member
         assert like.recipient == photo.owner
@@ -107,7 +107,7 @@ class TestPhotoDislikeView:
             recipient=photo.owner,
         )
         response = client.post(reverse("photos:dislike", args=[photo.id]))
-        assert response.status_code == http.HTTPStatus.OK
+        assert response.url == photo.get_absolute_url()
         assert Like.objects.count() == 0
 
 
