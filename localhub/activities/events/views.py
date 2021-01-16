@@ -23,9 +23,9 @@ from turbo_response import TurboFrame
 
 # Localhub
 from localhub.activities.views.generic import (
-    ActivityDetailView,
     ActivityQuerySetMixin,
     BaseActivityActionView,
+    activity_detail_view,
     activity_update_view,
     handle_activity_create,
     render_activity_list,
@@ -144,8 +144,7 @@ def event_create_view(request, model, form_class, **kwargs):
 event_update_view = override_timezone(activity_update_view)
 
 
-class EventDetailView(TimezoneOverrideMixin, ActivityDetailView):
-    ...
+event_detail_view = override_timezone(activity_detail_view)
 
 
 @community_required

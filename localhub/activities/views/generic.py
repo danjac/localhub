@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import DeleteView, DetailView, ListView
+from django.views.generic import DeleteView, ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -23,7 +23,6 @@ from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redire
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
 from localhub.common.mixins import SuccessHeaderMixin
-from localhub.common.pagination import PresetCountPaginator
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import ActionView
 from localhub.communities.decorators import community_required
@@ -160,75 +159,53 @@ class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListVie
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
-class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailView):
-    paginator_class = PresetCountPaginator
-    paginate_by = settings.DEFAULT_PAGE_SIZE
-    page_kwarg = "page"
+@community_required
+def activity_detail_view(request, pk, model, template_name, slug=None):
+    obj = get_object_or_404(
+        model.objects.for_community(request.community)
+        .select_related("owner", "community", "parent", "parent__owner", "editor")
+        .published_or_owner(request.user)
+        .with_common_annotations(request.user, request.community),
+        pk=pk,
+    )
+    return render_activity_detail(request, obj, template_name)
 
-    def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        if request.user.is_authenticated:
-            self.object.get_notifications().for_recipient(
-                self.request.user
-            ).unread().update(is_read=True)
-        return response
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if self.request.user.has_perm(
-            "communities.moderate_community", self.request.community
-        ):
-            data["flags"] = self.get_flags()
+def render_activity_detail(request, obj, template_name, *, extra_context=None):
 
-        data["comments"] = self.get_comments_page(self.get_comments())
-        if self.request.user.has_perm("activities.create_comment", self.object):
-            data["comment_form"] = CommentForm()
-
-        data["reshares"] = self.get_reshares()
-        return data
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .select_related("editor")
-            .published_or_owner(self.request.user)
-            .with_common_annotations(self.request.user, self.request.community)
+    if request.user.is_authenticated:
+        obj.get_notifications().for_recipient(request.user).unread().update(
+            is_read=True
         )
 
-    def get_flags(self):
-        return (
-            self.object.get_flags()
+    context = {
+        "object": obj,
+        "comments": obj.get_comments()
+        .for_community(request.community)
+        .with_common_annotations(request.user, request.community)
+        .exclude_deleted()
+        .with_common_related()
+        .order_by("created"),
+        "reshares": obj.reshares.for_community(request.community)
+        .exclude_blocked_users(request.user)
+        .select_related("owner")
+        .order_by("-created"),
+    }
+
+    if request.user.has_perm("communities.moderate_community", request.community):
+        context["flags"] = (
+            obj.get_flags()
             .select_related("user")
             .prefetch_related("content_object")
             .order_by("-created")
         )
 
-    def get_reshares(self):
-        return (
-            self.object.reshares.for_community(self.request.community)
-            .exclude_blocked_users(self.request.user)
-            .select_related("owner")
-            .order_by("-created")
-        )
+    if request.user.has_perm("activities.create_comment", obj):
+        context["comment_form"] = CommentForm()
 
-    def get_comments(self):
-        return (
-            self.object.get_comments()
-            .with_common_annotations(self.request.user, self.request.community)
-            .for_community(self.request.community)
-            .exclude_deleted()
-            .with_common_related()
-            .order_by("created")
-        )
-
-    def get_comments_page(self, comments):
-        return self.paginator_class(
-            object_list=comments,
-            count=self.object.num_comments or 0,
-            per_page=self.paginate_by,
-            allow_empty_first_page=True,
-        ).get_page(self.request.GET.get(self.page_kwarg, 1))
+    return TemplateResponse(
+        request, template_name, {**context, **(extra_context or {})}
+    )
 
 
 class BaseActivityActionView(ActivityQuerySetMixin, ActionView):

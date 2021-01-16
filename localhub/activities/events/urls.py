@@ -19,7 +19,7 @@ app_name = "events"
 urlpatterns = create_activity_urls(
     Event,
     EventForm,
-    detail_view_class=views.EventDetailView,
+    detail_view=views.event_detail_view,
     create_view=views.event_create_view,
     list_view=views.event_list_view,
     update_view=views.event_update_view,

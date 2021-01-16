@@ -16,11 +16,11 @@ from turbo_response import TurboFrame, redirect_303
 
 # Localhub
 from localhub.activities.views.generic import (
-    ActivityDetailView,
     get_activity_for_update,
     process_activity_create_form,
     process_activity_update_form,
     render_activity_create_form,
+    render_activity_detail,
     render_activity_list,
     render_activity_update_form,
 )
@@ -172,5 +172,14 @@ def poll_update_view(request, pk, model, form_class, template_name):
     )
 
 
-class PollDetailView(PollQuerySetMixin, ActivityDetailView):
-    ...
+@community_required
+def poll_detail_view(request, pk, model, template_name, slug=None):
+    obj = get_object_or_404(
+        model.objects.for_community(request.community)
+        .select_related("owner", "community", "parent", "parent__owner", "editor")
+        .published_or_owner(request.user)
+        .with_common_annotations(request.user, request.community)
+        .with_answers(),
+        pk=pk,
+    )
+    return render_activity_detail(request, obj, template_name)

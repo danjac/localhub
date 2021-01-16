@@ -18,7 +18,7 @@ app_name = "polls"
 urlpatterns = create_activity_urls(
     Poll,
     PollForm,
-    detail_view_class=views.PollDetailView,
+    detail_view=views.poll_detail_view,
     update_view=views.poll_update_view,
     create_view=views.poll_create_view,
     list_view=views.poll_list_view,

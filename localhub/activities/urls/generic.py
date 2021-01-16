@@ -24,7 +24,7 @@ def create_activity_urls(
     list_view=generic.activity_list_view,
     create_view=generic.activity_create_view,
     update_view=generic.activity_update_view,
-    detail_view_class=generic.ActivityDetailView,
+    detail_view=generic.activity_detail_view,
     delete_view_class=generic.ActivityDeleteView,
     flag_view_class=generic.ActivityFlagView,
     like_view_class=generic.ActivityLikeView,
@@ -47,6 +47,7 @@ def create_activity_urls(
     urlpatterns = create_activity_urls(Post)
     """
 
+    detail_template_name = resolve_template_names(model, "_detail")
     form_template_name = resolve_template_names(model, "_form")
 
     return [
@@ -136,10 +137,14 @@ def create_activity_urls(
         ),
         path(
             "<int:pk>/<slug:slug>/",
-            detail_view_class.as_view(model=model),
+            detail_view,
             name="detail",
+            kwargs={"model": model, "template_name": detail_template_name,},
         ),
         path(
-            "<int:pk>/", detail_view_class.as_view(model=model), name="detail_no_slug",
+            "<int:pk>/",
+            detail_view,
+            name="detail_no_slug",
+            kwargs={"model": model, "template_name": detail_template_name,},
         ),
     ]
