@@ -8,7 +8,6 @@
 {% block content %}
 <h1 class="page-header mb-3">{% trans "Flags" %}</h1>
 
-{% with object_list=page_obj.object_list %}
 {% if object_list %}
 <table class="table-auto-scroll text-sm">
   <thead>
@@ -42,5 +41,4 @@
 {% endif %}
 
 {% include "includes/pagination.html" %}
-{% endwith %}
 {% endblock %}

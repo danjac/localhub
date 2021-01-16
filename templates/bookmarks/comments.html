@@ -8,10 +8,10 @@
 
 {% block bookmarks_content %}
 
-{% if page_obj.paginator.count or search %}
+{% if paginator.count or search %}
 {% include "includes/forms/search_form.html" with selector=True %}
 {% endif %}
 
 {% translate "You have not bookmarked any comments." as t_empty_message %}
-{% include "comments/includes/comment_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
+{% include "comments/includes/comment_list.html" with empty_message=t_empty_message %}
 {% endblock bookmarks_content %}

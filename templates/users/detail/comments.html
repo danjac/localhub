@@ -8,8 +8,6 @@
 
 {% block user_content %}
 
-{% with paginator=page_obj.paginator object_list=page_obj.object_list %}
-
 {% if paginator.count %}
 <div class="notification font-bold mb-3">
   {% blocktrans count counter=paginator.count %}
@@ -40,5 +38,4 @@
 
 {% include "comments/includes/comment_list.html" with empty_message=t_empty_message %}
 
-{% endwith %}
 {% endblock user_content %}

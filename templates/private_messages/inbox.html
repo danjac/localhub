@@ -9,11 +9,11 @@
 
 {% block message_list %}
 
-{% if page_obj.paginator.count or search %}
+{% if paginator.count or search %}
 {% include "includes/forms/search_form.html" with selector=True %}
 {% endif %}
 
 {% include "private_messages/includes/email_settings.html" %}
 {% translate "You have not received any messages" as t_empty_message %}
-{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
+{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message %}
 {% endblock message_list %}

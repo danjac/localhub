@@ -9,5 +9,5 @@
 {% block bookmarks_content %}
 {% translate "You have not bookmarked any activities." as t_empty_message %}
 
-{% include "activities/includes/activity_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
+{% include "activities/includes/activity_list.html" with empty_message=t_empty_message %}
 {% endblock bookmarks_content %}
