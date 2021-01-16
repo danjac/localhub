@@ -322,25 +322,21 @@ class BlockedUserListView(LoginRequiredMixin, MemberQuerySetMixin, BaseUserListV
 blocked_user_list_view = BlockedUserListView.as_view()
 
 
-class UserAutocompleteListView(BaseUserListView):
-    template_name = "users/list/autocomplete.html"
+@community_required
+def user_autocomplete_list_view(request):
+    qs = get_user_queryset(request)
 
-    exclude_blocking_users = True
+    if request.user.is_authenticated:
+        qs = qs.exclude(pk=request.user.pk)
+    search_term = request.GET.get("q", "").strip()
+    if search_term:
+        qs = qs.filter(
+            Q(Q(username__icontains=search_term) | Q(name__icontains=search_term))
+        )[: settings.DEFAULT_PAGE_SIZE]
+    else:
+        qs = qs.none()
 
-    def get_queryset(self):
-        qs = super().get_queryset()
-        # exclude current user by default
-        if self.request.user.is_authenticated:
-            qs = qs.exclude(pk=self.request.user.pk)
-        search_term = self.request.GET.get("q", "").strip()
-        if search_term:
-            return qs.filter(
-                Q(Q(username__icontains=search_term) | Q(name__icontains=search_term))
-            )[: settings.DEFAULT_PAGE_SIZE]
-        return qs.none()
-
-
-user_autocomplete_list_view = UserAutocompleteListView.as_view()
+    return TemplateResponse(request, "users/list/autocomplete.html", {"users": qs})
 
 
 class UserUpdateView(

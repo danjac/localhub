@@ -332,7 +332,7 @@ class TestUserAutocompleteListView:
         ).member
 
         response = client.get(reverse("users:autocomplete_list"), {"q": "tester"})
-        object_list = response.context["object_list"]
+        object_list = response.context["users"]
         assert user in object_list
 
     def test_get(self, client, member, user):
@@ -347,7 +347,7 @@ class TestUserAutocompleteListView:
         blocker.blocked.add(member.member)
 
         response = client.get(reverse("users:autocomplete_list"), {"q": "tester"})
-        object_list = response.context["object_list"]
+        object_list = response.context["users"]
         assert other in object_list
         assert blocker not in object_list
 
