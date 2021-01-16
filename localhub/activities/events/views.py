@@ -7,6 +7,7 @@ import datetime
 
 # Django
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.template.response import TemplateResponse
 from django.utils import timezone
@@ -22,14 +23,15 @@ from turbo_response import TurboFrame
 
 # Localhub
 from localhub.activities.views.generic import (
-    ActivityCreateView,
     ActivityDetailView,
     ActivityQuerySetMixin,
-    ActivityUpdateView,
     BaseActivityActionView,
+    activity_update_view,
+    handle_activity_create,
     render_activity_list,
 )
 from localhub.communities.decorators import community_required
+from localhub.users.utils import has_perm_or_403
 
 # Local
 from .decorators import override_timezone
@@ -114,25 +116,32 @@ class EventDownloadView(
 event_download_view = EventDownloadView.as_view()
 
 
-class EventCreateView(TimezoneOverrideMixin, ActivityCreateView):
-    def get_initial(self):
-        initial = super().get_initial()
-        initial["timezone"] = self.request.user.default_timezone
-        initial["starts"] = self.get_start_date()
-        return initial
+@community_required
+@login_required
+@override_timezone
+def event_create_view(request, model, form_class, **kwargs):
 
-    def get_start_date(self):
+    has_perm_or_403(request.user, "activities.create_activity", request.community)
+
+    if request.method == "POST":
+        form = form_class(request.POST)
+    else:
         try:
             [day, month, year] = [
-                int(self.request.GET[param]) for param in ("day", "month", "year")
+                int(request.GET[param]) for param in ("day", "month", "year")
             ]
-            return datetime.datetime(day=day, month=month, year=year, hour=9)
+            starts = datetime.datetime(day=day, month=month, year=year, hour=9)
         except (KeyError, ValueError):
-            return None
+            starts = None
+
+        form = form_class(
+            initial={"timezone": request.user.default_timezone, "starts": starts}
+        )
+
+    return handle_activity_create(request, model, form, **kwargs)
 
 
-class EventUpdateView(TimezoneOverrideMixin, ActivityUpdateView):
-    ...
+event_update_view = override_timezone(activity_update_view)
 
 
 class EventDetailView(TimezoneOverrideMixin, ActivityDetailView):

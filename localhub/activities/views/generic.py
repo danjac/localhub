@@ -17,8 +17,7 @@ from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
-from turbo_response import HttpResponseSeeOther, TurboFrame, TurboStream
-from turbo_response.views import TurboCreateView, TurboUpdateView
+from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redirect_303
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
@@ -28,7 +27,6 @@ from localhub.common.pagination import PresetCountPaginator
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import ActionView
 from localhub.communities.decorators import community_required
-from localhub.communities.mixins import CommunityPermissionRequiredMixin
 from localhub.flags.views import BaseFlagCreateView
 from localhub.likes.models import Like
 from localhub.users.utils import has_perm_or_403
@@ -39,60 +37,27 @@ from ..mixins import ActivityQuerySetMixin, ActivityTemplateMixin
 from ..utils import get_activity_models
 
 
-class ActivityCreateView(
-    CommunityPermissionRequiredMixin, ActivityTemplateMixin, TurboCreateView,
+@community_required
+@login_required
+def activity_create_view(
+    request, model, form_class, template_name, is_private=False, extra_context=None,
 ):
-    permission_required = "activities.create_activity"
 
-    is_private = False
-    is_new = True
+    has_perm_or_403(request.user, "activities.create_activity", request.community)
 
-    def get_success_message(self):
-        return (
-            _("Your %(model)s has been published")
-            if self.object.published
-            else _("Your %(model)s has been saved to your Private Stash")
-        ) % {"model": self.model._meta.verbose_name}
+    if request.method == "POST":
+        form = form_class(request.POST, request.FILES)
+    else:
+        form = form_class()
 
-    def get_submit_actions(self):
-        view_name = "create_private" if self.is_private else "create"
-        return [
-            (
-                resolve_url(model, view_name),
-                _("Submit %(model)s")
-                % {"model": model._meta.verbose_name.capitalize()},
-            )
-            for model in get_activity_models()
-            if model != self.model
-        ]
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["submit_actions"] = self.get_submit_actions()
-        return data
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
-    def form_valid(self, form):
-
-        publish = self.is_private is False and "save_private" not in self.request.POST
-
-        self.object = form.save(commit=False)
-        self.object.owner = self.request.user
-        self.object.community = self.request.community
-
-        if publish:
-            self.object.published = timezone.now()
-
-        self.object.save()
-
-        if publish:
-            self.object.notify_on_publish()
-
-        messages.success(self.request, self.get_success_message())
-
-        return HttpResponseSeeOther(self.get_success_url())
+    return handle_activity_create(
+        request,
+        model,
+        form,
+        template_name,
+        is_private=is_private,
+        extra_context=extra_context,
+    )
 
 
 class ActivityFlagView(
@@ -153,50 +118,23 @@ def create_comment_view(request, pk, model):
     )
 
 
-class ActivityUpdateView(
-    PermissionRequiredMixin,
-    ActivityQuerySetMixin,
-    ActivityTemplateMixin,
-    TurboUpdateView,
-):
-    permission_required = "activities.change_activity"
-    success_message = _("Your %(model)s has been updated")
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
-    def form_valid(self, form):
-
-        self.object = form.save(commit=False)
-        self.object.editor = self.request.user
-        self.object.edited = timezone.now()
-        self.object.save()
-
-        self.object.update_reshares()
-
-        if self.object.published:
-            self.object.notify_on_update()
-
-        messages.success(
-            self.request,
-            self.success_message % {"model": self.object._meta.verbose_name},
-        )
-
-        return HttpResponseSeeOther(self.get_success_url())
+@community_required
+@login_required
+def activity_update_view(request, pk, model, form_class, template_name):
+    return handle_activity_update(request, pk, model, form_class, template_name)
 
 
-class ActivityUpdateTagsView(ActivityUpdateView):
-    """
-    Allows a moderator to update the tags on a view, e.g
-    to add a "content sensitive" tag.
-    """
-
-    form_class = ActivityTagsForm
-    permission_required = "activities.change_activity_tags"
-    success_message = _("Tags have been updated")
-
-    def get_queryset(self):
-        return super().get_queryset().published()
+@community_required
+@login_required
+def activity_update_tags_view(request, pk, model, template_name):
+    return handle_activity_update(
+        request,
+        pk,
+        model,
+        form_class=ActivityTagsForm,
+        template_name=template_name,
+        permission="activities.change_activity_tags",
+    )
 
 
 @community_required
@@ -516,4 +454,155 @@ def render_activity_list(
         request,
         template_name,
         {"object_list": queryset, "model": queryset.model, **(extra_context or {})},
+    )
+
+
+def handle_activity_create(
+    request, model, form, template_name, *, is_private=False, extra_context=None,
+):
+    obj, ok = process_activity_create_form(request, model, form, is_private=is_private)
+
+    if ok:
+        return redirect_303(obj)
+
+    return render_activity_create_form(
+        request,
+        model,
+        form,
+        template_name,
+        is_private=is_private,
+        extra_context=extra_context,
+    )
+
+
+def handle_activity_update(
+    request,
+    pk,
+    model,
+    form_class,
+    template_name,
+    *,
+    permission="activities.change_activity",
+    extra_context=None,
+):
+    obj = get_activity_for_update(request, model, pk, permission)
+    if request.method == "POST":
+        form = form_class(request.POST, request.FILES, instance=obj)
+    else:
+        form = form_class(instance=obj)
+    obj, ok = process_activity_update_form(request, obj, form)
+    if ok:
+        return redirect_303(obj)
+
+    return render_activity_update_form(
+        request, obj, form, template_name, extra_context=extra_context,
+    )
+
+
+def get_activity_for_update(
+    request, model, pk, permission="activities.change_activity"
+):
+    obj = get_object_or_404(
+        model.objects.for_community(request.community).select_related(
+            "owner", "community"
+        ),
+        pk=pk,
+    )
+    has_perm_or_403(request.user, permission, obj)
+    return obj
+
+
+def process_activity_create_form(request, model, form, *, is_private=False):
+
+    if request.method == "POST" and form.is_valid():
+
+        publish = is_private is False and "save_private" not in request.POST
+
+        obj = form.save(commit=False)
+        obj.owner = request.user
+        obj.community = request.community
+
+        if publish:
+            obj.published = timezone.now()
+
+        obj.save()
+
+        if publish:
+            obj.notify_on_publish()
+
+        success_message = (
+            _("Your %(model)s has been published")
+            if obj.published
+            else _("Your %(model)s has been saved to your Private Stash")
+        ) % {"model": model._meta.verbose_name}
+
+        messages.success(request, success_message)
+
+        return obj, True
+
+    return None, False
+
+
+def process_activity_update_form(request, obj, form):
+
+    if request.method == "POST" and form.is_valid():
+        obj = form.save(commit=False)
+        obj.editor = request.user
+        obj.edited = timezone.now()
+        obj.save()
+
+        obj.update_reshares()
+
+        if obj.published:
+            obj.notify_on_update()
+
+        success_message = _("Your %(model)s has been updated") % {
+            "model": obj._meta.verbose_name
+        }
+
+        messages.success(request, success_message)
+
+        return obj, True
+    return obj, False
+
+
+def render_activity_create_form(
+    request, model, form, template_name, *, is_private=False, extra_context=None
+):
+
+    view_name = "create_private" if is_private else "create"
+
+    submit_actions = [
+        (
+            resolve_url(activity_model, view_name),
+            _("Submit %(model)s")
+            % {"model": activity_model._meta.verbose_name.capitalize()},
+        )
+        for activity_model in get_activity_models()
+        if activity_model != model
+    ]
+
+    return TemplateFormResponse(
+        request,
+        form,
+        template_name,
+        {
+            "model": model,
+            "is_private": is_private,
+            "is_new": True,
+            "submit_actions": submit_actions,
+            **(extra_context or {}),
+        },
+    )
+
+
+def render_activity_update_form(
+    request, obj, form, template_name, *, extra_context=None
+):
+
+    return TemplateFormResponse(
+        request,
+        form,
+        template_name,
+        {"object": obj, "model": obj, "is_new": False, **(extra_context or {}),},
     )

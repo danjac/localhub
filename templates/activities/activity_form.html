@@ -5,7 +5,7 @@
 
 {% load i18n %}
 
-{% block subtitle %} / {{ view.model|verbose_name_plural|title }} /
+{% block subtitle %} / {{ view.model|default:model|verbose_name_plural|title }} /
 {% if object %}{{ object.title }} / {% trans "Edit" %}
 {% else %}{% trans "Submit" %}{% endif %}{% endblock %}
 
@@ -13,7 +13,7 @@
 
 <div class="flex-wrap lg:flex items-center lg:justify-between mb-3 w-full">
 
-  {% with list_url=view.model|resolve_url:"list" model_name_plural=view.model|verbose_name_plural|title model_name=view.model|verbose_name|title %}
+  {% with list_url=view.model|default:model|resolve_url:"list" model_name_plural=view.model|default:model|verbose_name_plural|title model_name=view.model|default:model|verbose_name|title %}
   <ul class="breadcrumbs">
 
     {% if object %}
@@ -38,7 +38,7 @@
 
     {% else %}
 
-    {% if view.is_private %}
+    {% if view.is_private or is_private %}
     <li class="breadcrumb-item">
       <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
     </li>

@@ -8,12 +8,22 @@ from django.urls import path
 from ..views import generic
 
 
+def resolve_template_names(model, suffix):
+
+    base_template_name = "/".join((model._meta.app_label, model._meta.model_name))
+
+    return [
+        f"{base_template_name}{suffix}.html",
+        f"activities/activity{suffix}.html",
+    ]
+
+
 def create_activity_urls(
     model,
     form_class=None,
     list_view=generic.activity_list_view,
-    create_view_class=generic.ActivityCreateView,
-    update_view_class=generic.ActivityUpdateView,
+    create_view=generic.activity_create_view,
+    update_view=generic.activity_update_view,
     detail_view_class=generic.ActivityDetailView,
     delete_view_class=generic.ActivityDeleteView,
     flag_view_class=generic.ActivityFlagView,
@@ -25,9 +35,9 @@ def create_activity_urls(
     unpin_view_class=generic.ActivityUnpinView,
     bookmark_view_class=generic.ActivityBookmarkView,
     remove_bookmark_view_class=generic.ActivityRemoveBookmarkView,
-    update_tags_view_class=generic.ActivityUpdateTagsView,
+    update_tags_view=generic.activity_update_tags_view,
     create_comment_view=generic.create_comment_view,
-    list_view_class=None,
+    create_view_class=None,
 ):
     """
     Generates default URL patterns for activity subclasses.
@@ -37,28 +47,38 @@ def create_activity_urls(
     urlpatterns = create_activity_urls(Post)
     """
 
-    base_template_name = "/".join((model._meta.app_label, model._meta.model_name))
+    form_template_name = resolve_template_names(model, "_form")
 
     return [
         path(
             "",
             list_view,
-            kwargs={"model": model, "template_name": base_template_name + "_list.html"},
+            kwargs={
+                "model": model,
+                "template_name": resolve_template_names(model, "_list"),
+            },
             name="list",
-        )
-        if list_view
-        else path(list_view_class.as_view(model=model), name="list"),
+        ),
         path(
             "~create",
-            create_view_class.as_view(model=model, form_class=form_class),
+            create_view,
             name="create",
+            kwargs={
+                "model": model,
+                "form_class": form_class,
+                "template_name": form_template_name,
+            },
         ),
         path(
             "~create-private",
-            create_view_class.as_view(
-                model=model, form_class=form_class, is_private=True
-            ),
+            create_view,
             name="create_private",
+            kwargs={
+                "model": model,
+                "form_class": form_class,
+                "template_name": form_template_name,
+                "is_private": True,
+            },
         ),
         path(
             "<int:pk>/~comment/",
@@ -100,13 +120,19 @@ def create_activity_urls(
         ),
         path(
             "<int:pk>/~update/",
-            update_view_class.as_view(model=model, form_class=form_class),
+            update_view,
             name="update",
+            kwargs={
+                "model": model,
+                "form_class": form_class,
+                "template_name": form_template_name,
+            },
         ),
         path(
             "<int:pk>/~update-tags/",
-            update_tags_view_class.as_view(model=model),
+            update_tags_view,
             name="update_tags",
+            kwargs={"model": model, "template_name": form_template_name,},
         ),
         path(
             "<int:pk>/<slug:slug>/",

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
@@ -11,17 +12,21 @@ from django.views.generic.detail import SingleObjectMixin
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
-from turbo_response import TurboFrame
+from turbo_response import TurboFrame, redirect_303
 
 # Localhub
 from localhub.activities.views.generic import (
-    ActivityCreateView,
     ActivityDetailView,
-    ActivityUpdateView,
+    get_activity_for_update,
+    process_activity_create_form,
+    process_activity_update_form,
+    render_activity_create_form,
     render_activity_list,
+    render_activity_update_form,
 )
 from localhub.communities.decorators import community_required
 from localhub.communities.mixins import CommunityRequiredMixin
+from localhub.users.utils import has_perm_or_403
 
 # Local
 from .models import Answer, Poll
@@ -102,49 +107,69 @@ class AnswerVoteView(
 answer_vote_view = AnswerVoteView.as_view()
 
 
-class AnswersFormSetMixin:
-    AnswersFormSet = inlineformset_factory(
-        Poll,
-        Answer,
-        fields=("description",),
-        extra=4,
-        max_num=4,
-        min_num=2,
-        labels={"description": ""},
+AnswersFormSet = inlineformset_factory(
+    Poll,
+    Answer,
+    fields=("description",),
+    extra=4,
+    max_num=4,
+    min_num=2,
+    labels={"description": ""},
+)
+
+
+@community_required
+@login_required
+def poll_create_view(request, model, form_class, template_name, is_private=False):
+
+    has_perm_or_403(request.user, "activities.create_activity", request.community)
+
+    if request.method == "POST":
+        form = form_class(request.POST)
+        formset = AnswersFormSet(request.POST)
+    else:
+        form = form_class()
+        formset = AnswersFormSet()
+
+    obj, ok = process_activity_create_form(request, model, form, is_private=is_private)
+
+    if ok and formset.is_valid():
+        formset.instance = obj
+        formset.save()
+        return redirect_303(obj)
+
+    return render_activity_create_form(
+        request,
+        model,
+        form,
+        template_name,
+        is_private=is_private,
+        extra_context={"answers_formset": formset},
     )
 
-    @cached_property
-    def answers_formset(self):
-        instance = getattr(self, "object", None)
-        if self.request.method == "POST":
-            return self.AnswersFormSet(self.request.POST, instance=instance)
-        return self.AnswersFormSet(instance=instance)
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["answers_formset"] = self.answers_formset
-        return data
+@community_required
+@login_required
+def poll_update_view(request, pk, model, form_class, template_name):
 
+    obj = get_activity_for_update(request, model, pk)
 
-class PollCreateView(AnswersFormSetMixin, ActivityCreateView):
-    model = Poll
+    if request.method == "POST":
+        form = form_class(request.POST, instance=obj)
+        formset = AnswersFormSet(request.POST, instance=obj)
+    else:
+        form = form_class(instance=obj)
+        formset = AnswersFormSet(instance=obj)
 
-    def form_valid(self, form):
-        if not self.answers_formset.is_valid():
-            return self.form_invalid(form)
-        response = super().form_valid(form)
-        self.answers_formset.instance = self.object
-        self.answers_formset.save()
-        return response
+    obj, ok = process_activity_update_form(request, obj, form)
 
+    if ok and formset.is_valid():
+        formset.save()
+        return redirect_303(obj)
 
-class PollUpdateView(AnswersFormSetMixin, ActivityUpdateView):
-    def form_valid(self, form):
-        if not self.answers_formset.is_valid():
-            return self.form_invalid(form)
-        response = super().form_valid(form)
-        self.answers_formset.save()
-        return response
+    return render_activity_update_form(
+        request, obj, form, template_name, extra_context={"answers_formset": formset},
+    )
 
 
 class PollDetailView(PollQuerySetMixin, ActivityDetailView):

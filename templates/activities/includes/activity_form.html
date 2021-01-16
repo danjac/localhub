@@ -7,8 +7,8 @@
 {% load users %}
 
 {% block form_buttons %}
-{% if view.is_new %}
-{% if view.is_private %}
+{% if view.is_new or is_new %}
+{% if view.is_private or is_private %}
 {{ block.super }}
 {% else %}
 <button type="submit"
