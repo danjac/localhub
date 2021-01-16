@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
@@ -307,9 +306,7 @@ def activity_delete_view(request, pk, model):
         return TurboStream(target).remove.response()
 
     return redirect(
-        settings.HOME_PAGE_URL
-        if obj.deleted or obj.published
-        else reverse("activities:private")
+        settings.HOME_PAGE_URL if obj.deleted or obj.published else "activities:private"
     )
 
 
@@ -319,7 +316,6 @@ def get_activity_queryset(request, model, with_common_annotations=False):
         model.objects.for_community(request.community)
         .select_related("owner", "community", "parent", "parent__owner", "editor")
         .published_or_owner(request.user)
-        .with_common_annotations(request.user, request.community)
     )
 
     if with_common_annotations:
