@@ -34,9 +34,10 @@ urlpatterns = [
         views.user_comment_mentions_view,
         name="comment_mentions",
     ),
-    user_re_path(r"preview/$", views.user_preview_view, name="preview"),
     user_re_path(r"follow/$", views.user_follow_view, name="follow"),
-    user_re_path(r"unfollow/$", views.user_unfollow_view, name="unfollow"),
+    user_re_path(
+        r"unfollow/$", views.user_follow_view, name="unfollow", kwargs={"remove": True}
+    ),
     user_re_path(r"block/$", views.user_block_view, name="block"),
     user_re_path(
         r"unblock/$", views.user_block_view, name="unblock", kwargs={"remove": True}

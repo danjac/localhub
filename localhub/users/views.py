@@ -12,15 +12,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
-from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
-from django.urls import resolve
 from django.utils import timezone
-from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, ListView
+from django.views.generic import ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -33,7 +30,6 @@ from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
 from localhub.common.mixins import SearchMixin
-from localhub.common.views import ActionView
 from localhub.communities.decorators import community_required
 from localhub.communities.rules import is_member
 from localhub.likes.models import Like
@@ -56,40 +52,6 @@ class BaseUserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
 
 class BaseUserCommentListView(SingleUserMixin, BaseCommentListView):
     ...
-
-
-class UserPreviewView(MemberQuerySetMixin, UserQuerySetMixin, DetailView):
-    template_name = "users/preview.html"
-    context_object_name = "user_obj"
-    slug_field = "username"
-    slug_url_kwarg = "username"
-
-    def render_to_response(self, context, **response_kwargs):
-        return (
-            TurboFrame(f"user-preview-{self.object.id}")
-            .template(self.template_name, context)
-            .response(self.request)
-        )
-
-    def get_object_url(self):
-        """Allow a different object url e.g. to message or comment tabs."""
-        url = self.request.GET.get("object_url")
-        if url and url_has_allowed_host_and_scheme(url, settings.ALLOWED_HOSTS):
-            try:
-                resolve(url)
-                return url
-            except Http404:
-                pass
-        return self.object.get_absolute_url()
-
-    def get_context_data(self, **kwargs):
-        return {
-            **super().get_context_data(**kwargs),
-            "object_url": self.get_object_url(),
-        }
-
-
-user_preview_view = UserPreviewView.as_view()
 
 
 class UserStreamView(BaseUserActivityStreamView):
@@ -410,52 +372,30 @@ class UserUpdateView(
 user_update_view = UserUpdateView.as_view()
 
 
-class BaseUserActionView(PermissionRequiredMixin, UserQuerySetMixin, ActionView):
-    slug_field = "username"
-    slug_url_kwarg = "username"
+@community_required
+@login_required
+@require_POST
+def user_follow_view(request, username, remove=False):
 
+    user = get_user_or_404(request, username, permission="users.follow_user")
+    if remove:
+        request.user.following.remove(user)
+        messages.info(request, _("You are no longer following this user"))
+    else:
+        request.user.following.add(user)
+        request.user.notify_on_follow(user, request.community)
+        messages.success(request, _("You are following this user"))
 
-class BaseFollowUserView(BaseUserActionView,):
-    permission_required = "users.follow_user"
-    exclude_blocking_users = True
+    is_detail = request.POST.get("is_detail", False)
 
-    def render_to_response(self, is_following):
-        is_detail = self.request.POST.get("is_detail", False)
-        return (
-            TurboFrame(f"user-{self.object.id}-follow")
-            .template(
-                "users/includes/follow.html",
-                {
-                    "object": self.object,
-                    "is_following": is_following,
-                    "is_detail": is_detail,
-                },
-            )
-            .response(self.request)
+    return (
+        TurboFrame(f"user-{user.id}-follow")
+        .template(
+            "users/includes/follow.html",
+            {"object": user, "is_following": not (remove), "is_detail": is_detail,},
         )
-
-
-class UserFollowView(BaseFollowUserView):
-    success_message = _("You are now following %(object)s")
-
-    def post(self, request, *args, **kwargs):
-        self.request.user.following.add(self.object)
-        self.request.user.notify_on_follow(self.object, self.request.community)
-        return self.render_to_response(is_following=True)
-
-
-user_follow_view = UserFollowView.as_view()
-
-
-class UserUnfollowView(BaseFollowUserView):
-    success_message = _("You are no longer following %(object)s")
-
-    def post(self, request, *args, **kwargs):
-        self.request.user.following.remove(self.object)
-        return self.render_to_response(is_following=False)
-
-
-user_unfollow_view = UserUnfollowView.as_view()
+        .response(request)
+    )
 
 
 @community_required

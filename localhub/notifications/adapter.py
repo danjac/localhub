@@ -6,7 +6,6 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template import loader
 from django.templatetags.static import static
-from django.urls import reverse
 from django.utils.encoding import force_text
 from django.utils.translation import override
 
@@ -17,8 +16,7 @@ celery_logger = get_logger(__name__)
 
 
 class TemplateRenderer:
-    """Renders notification to template.
-    """
+    """Renders notification to template."""
 
     def __init__(self, adapter, prefixes):
         """
@@ -292,11 +290,9 @@ class Adapter:
         """
         actor_url = self.actor.get_absolute_url()
         recipient_url = self.recipient.get_absolute_url()
-        actor_preview_url = reverse("users:preview", args=[self.actor.username])
 
         return {
             "actor_url": actor_url,
-            "actor_preview_url": actor_preview_url,
             "recipient_url": recipient_url,
             "notification": self.notification,
             "object": self.object,

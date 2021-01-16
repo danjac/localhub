@@ -27,33 +27,6 @@ from ..factories import UserFactory
 pytestmark = pytest.mark.django_db
 
 
-class TestUserPreviewView:
-    def test_get(self, client, member):
-        user = MembershipFactory(community=member.community).member
-        response = client.get(reverse("users:preview", args=[user.username]))
-        assert response.status_code == http.HTTPStatus.OK
-        assert response.context["object_url"] == user.get_absolute_url()
-
-    def test_get_with_object_url(self, client, member):
-        user = MembershipFactory(community=member.community).member
-        object_url = reverse("users:comments", args=[user.username])
-        response = client.get(
-            reverse("users:preview", args=[user.username]), {"object_url": object_url},
-        )
-        assert response.status_code == http.HTTPStatus.OK
-        assert response.context["object_url"] == object_url
-
-    def test_get_with_bad_object_url(self, client, member):
-        """If bad object URL, just use the user default"""
-        user = MembershipFactory(community=member.community).member
-        object_url = "/fubar"
-        response = client.get(
-            reverse("users:preview", args=[user.username]), {"object_url": object_url},
-        )
-        assert response.status_code == http.HTTPStatus.OK
-        assert response.context["object_url"] == user.get_absolute_url()
-
-
 class TestMemberListView:
     def test_get(self, client, member):
         user = MembershipFactory(community=member.community).member
