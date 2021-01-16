@@ -76,14 +76,11 @@ def answer_vote_view(request, pk):
     # reload to get with updated answers
     poll = get_object_or_404(Poll.objects.with_answers(), pk=answer.poll_id)
 
-    context = {
-        "object": poll,
-        "object_type": "poll",
-    }
-
     return (
         TurboFrame(f"poll-answers-{poll.id}")
-        .template("polls/includes/answers.html", context)
+        .template(
+            "polls/includes/answers.html", {"object": poll, "object_type": "poll",},
+        )
         .response(request)
     )
 
