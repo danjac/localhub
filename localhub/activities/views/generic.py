@@ -6,14 +6,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import DeleteView, ListView
+from django.views.generic import ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -23,7 +22,6 @@ from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redire
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
 from localhub.common.decorators import add_messages_to_response_header
-from localhub.common.mixins import SuccessHeaderMixin
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import ActionView
 from localhub.communities.decorators import community_required
@@ -286,40 +284,33 @@ def activity_like_view(request, pk, model, remove=False):
     return redirect(obj)
 
 
-class ActivityDeleteView(
-    PermissionRequiredMixin,
-    ActivityQuerySetMixin,
-    ActivityTemplateMixin,
-    SuccessHeaderMixin,
-    DeleteView,
-):
-    permission_required = "activities.delete_activity"
-    success_message = _("You have deleted this %(model)s")
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def activity_delete_view(request, pk, model):
+    obj = get_object_or_404(get_activity_queryset(request, model), pk=pk)
+    has_perm_or_403(request.user, "activities.delete_activity", obj)
 
-    def get_success_url(self):
-        if self.object.deleted or self.object.published:
-            return settings.HOME_PAGE_URL
-        return reverse("activities:private")
+    if request.user != obj.owner:
+        obj.soft_delete()
+        obj.notify_on_delete(request.user)
+    else:
+        obj.delete()
 
-    def get_success_message(self):
-        return self.success_message % {"model": self.object._meta.verbose_name}
+    messages.success(
+        request, _("%(model)s has been deleted") % {"model": obj._meta.verbose_name}
+    )
+    target = request.POST.get("target", None)
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    if target:
+        return TurboStream(target).remove.response()
 
-        if self.request.user != self.object.owner:
-            self.object.soft_delete()
-            self.object.notify_on_delete(self.request.user)
-        else:
-            self.object.delete()
-
-        target = request.POST.get("target", None)
-        if target:
-            return self.render_success_message(TurboStream(target).remove.response())
-
-        messages.success(request, self.get_success_message())
-
-        return HttpResponseRedirect(self.get_success_url())
+    return redirect(
+        settings.HOME_PAGE_URL
+        if obj.deleted or obj.published
+        else reverse("activities:private")
+    )
 
 
 def get_activity_queryset(request, model, with_common_annotations=False):

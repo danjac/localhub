@@ -185,11 +185,6 @@ class TestPostCommentCreateView:
 
 
 class TestPostDeleteView:
-    def test_get(self, client, post_for_member):
-        # test confirmation page for non-JS clients
-        response = client.get(reverse("posts:delete", args=[post_for_member.id]))
-        assert response.status_code == http.HTTPStatus.OK
-
     def test_post(self, client, post_for_member):
         response = client.post(reverse("posts:delete", args=[post_for_member.id]))
         assert response.url == settings.HOME_PAGE_URL
