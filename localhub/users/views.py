@@ -7,16 +7,20 @@ import datetime
 # Django
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.http import Http404
+from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 from django.urls import resolve
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import DeleteView, DetailView, ListView, View
+from django.views.generic import DetailView, ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -404,15 +408,6 @@ class UserUpdateView(
 user_update_view = UserUpdateView.as_view()
 
 
-class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = "users.delete_user"
-    success_url = settings.HOME_PAGE_URL
-    template_name = "users/user_confirm_delete.html"
-
-
-user_delete_view = UserDeleteView.as_view()
-
-
 class BaseUserActionView(PermissionRequiredMixin, UserQuerySetMixin, ActionView):
     slug_field = "username"
     slug_url_kwarg = "username"
@@ -496,22 +491,20 @@ class UserUnblockView(BaseUserBlockView):
 user_unblock_view = UserUnblockView.as_view()
 
 
-class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = "users.delete_user"
-    success_url = settings.HOME_PAGE_URL
-    template_name = "users/user_confirm_delete.html"
+@login_required
+def user_delete_view(request):
+    if request.method == "POST":
+        request.user.delete()
+        logout(request)
+        return redirect(settings.HOME_PAGE_URL)
+    return TemplateResponse(request, "users/user_confirm_delete.html")
 
 
-user_delete_view = UserDeleteView.as_view()
-
-
-class DismissNoticeView(CurrentUserMixin, View):
-    def post(self, request, notice):
-        self.request.user.dismiss_notice(notice)
-        return TurboStream(f"notice-{notice}").remove.response()
-
-
-dismiss_notice_view = DismissNoticeView.as_view()
+@login_required
+@require_POST
+def dismiss_notice_view(request, notice):
+    request.user.dismiss_notice(notice)
+    return TurboStream(f"notice-{notice}").remove.response()
 
 
 @require_POST
