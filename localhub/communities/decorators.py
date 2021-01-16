@@ -9,8 +9,11 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 
+# Localhub
+from localhub.users.utils import has_perm_or_403
 
-def community_required(view=None, *, allow_non_members=False):
+
+def community_required(view=None, *, allow_non_members=False, permission=None):
     if view is None:
         return functools.partial(
             community_required, allow_non_members=allow_non_members
@@ -31,6 +34,18 @@ def community_required(view=None, *, allow_non_members=False):
                 raise PermissionDenied(_("You must be a member of this community"))
             return redirect("community_welcome")
 
+        if permission:
+            has_perm_or_403(request.user, permission, request.community)
+
         return view(request, *args, **kwargs)
 
     return wrapper
+
+
+community_moderator_required = functools.partial(
+    community_required, permission="communities.moderate_community"
+)
+
+community_admin_required = functools.partial(
+    community_required, permission="communities.manage_community"
+)

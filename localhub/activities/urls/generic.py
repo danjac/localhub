@@ -17,6 +17,7 @@ def create_activity_urls(
     create_view=generic.activity_create_view,
     delete_view=generic.activity_delete_view,
     detail_view=generic.activity_detail_view,
+    flag_view=generic.activity_flag_view,
     like_view=generic.activity_like_view,
     list_view=generic.activity_list_view,
     pin_view=generic.activity_pin_view,
@@ -24,7 +25,6 @@ def create_activity_urls(
     reshare_view=generic.activity_reshare_view,
     update_tags_view=generic.activity_update_tags_view,
     update_view=generic.activity_update_view,
-    flag_view_class=generic.ActivityFlagView,
 ):
     """
     Generates default URL patterns for activity subclasses.
@@ -74,9 +74,7 @@ def create_activity_urls(
             name="comment",
             kwargs={"model": model,},
         ),
-        path(
-            "<int:pk>/~delete/", delete_view, name="delete", kwargs={"model": model,},
-        ),
+        path("<int:pk>/~delete/", delete_view, name="delete", kwargs={"model": model},),
         path("<int:pk>/~like/", like_view, name="like", kwargs={"model": model,},),
         path(
             "<int:pk>/~dislike/",
@@ -84,7 +82,7 @@ def create_activity_urls(
             name="dislike",
             kwargs={"model": model, "remove": True,},
         ),
-        path("<int:pk>/~flag/", flag_view_class.as_view(model=model), name="flag",),
+        path("<int:pk>/~flag/", flag_view, name="flag", kwargs={"model": model}),
         path("<int:pk>/~pin/", pin_view, name="pin", kwargs={"model": model,},),
         path(
             "<int:pk>/~unpin/",

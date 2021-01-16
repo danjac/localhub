@@ -14,7 +14,6 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 # Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redirect_303
 
 # Localhub
@@ -23,13 +22,12 @@ from localhub.comments.forms import CommentForm
 from localhub.common.decorators import add_messages_to_response_header
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.communities.decorators import community_required
-from localhub.flags.views import BaseFlagCreateView
+from localhub.flags.views import handle_flag_create
 from localhub.likes.models import Like
 from localhub.users.utils import has_perm_or_403
 
 # Local
 from ..forms import ActivityTagsForm
-from ..mixins import ActivityQuerySetMixin
 from ..utils import get_activity_models
 
 
@@ -313,6 +311,21 @@ def activity_delete_view(request, pk, model):
     )
 
 
+@community_required
+@login_required
+def activity_flag_view(request, pk, model):
+    obj = get_activity_or_404(
+        request,
+        get_activity_queryset(request, model)
+        .with_has_flagged(request.user)
+        .exclude(has_flagged=True),
+        pk,
+        permission="activities.flag_activity",
+    )
+
+    return handle_flag_create(request, obj)
+
+
 def get_activity_queryset(request, model, with_common_annotations=False):
 
     qs = (
@@ -555,24 +568,3 @@ def model_translation_string(value, model, capitalize=False):
     if capitalize:
         model_name = model_name.capitalize()
     return value % {"model": model_name}
-
-
-class ActivityFlagView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, BaseFlagCreateView
-):
-    permission_required = "activities.flag_activity"
-    success_message = _("This %(model)s has been flagged to the moderators")
-
-    def get_parent_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .with_has_flagged(self.request.user)
-            .exclude(has_flagged=True)
-        )
-
-    def get_permission_object(self):
-        return self.parent
-
-
-activity_flag_view = ActivityFlagView.as_view()

@@ -5,7 +5,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
@@ -15,14 +14,13 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
 # Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import TemplateFormResponse, TurboFrame, redirect_303
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
 from localhub.communities.decorators import community_required
-from localhub.flags.views import BaseFlagCreateView
+from localhub.flags.views import handle_flag_create
 from localhub.likes.models import Like
 from localhub.users.utils import has_perm_or_403
 
@@ -236,10 +234,26 @@ def comment_delete_view(request, pk):
     return redirect(comment.get_content_object() or "comments:list")
 
 
-def get_comment_or_404(request, pk, *, permission=None):
+@community_required
+@login_required
+def comment_flag_view(request, pk):
+    obj = get_comment_or_404(
+        request,
+        pk,
+        queryset=Comment.objects.select_related("owner", "community")
+        .with_has_flagged(request.user)
+        .exclude(has_flagged=True),
+        permission="comments.flag_comment",
+    )
+
+    return handle_flag_create(request, obj)
+
+
+def get_comment_or_404(request, pk, *, queryset=None, permission=None):
 
     comment = get_object_or_404(
-        Comment.objects.for_community(request.community).select_related(
+        queryset
+        or Comment.objects.for_community(request.community).select_related(
             "owner", "community"
         ),
         pk=pk,
@@ -248,30 +262,6 @@ def get_comment_or_404(request, pk, *, permission=None):
     if permission:
         has_perm_or_403(request.user, permission, comment)
     return comment
-
-
-class CommentFlagView(
-    SuccessMessageMixin,
-    PermissionRequiredMixin,
-    CommentQuerySetMixin,
-    BaseFlagCreateView,
-):
-    permission_required = "comments.flag_comment"
-    success_message = _("This comment has been flagged to the moderators")
-
-    def get_parent_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .with_has_flagged(self.request.user)
-            .exclude(has_flagged=True)
-        )
-
-    def get_permission_object(self):
-        return self.parent
-
-
-comment_flag_view = CommentFlagView.as_view()
 
 
 class BaseCommentListView(CommentQuerySetMixin, ListView):
