@@ -49,6 +49,6 @@ You have not exchanged any messages with {{ display_name }}.
 {% endblocktrans %}
 {% endif %}
 
-{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
+{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message %}
 
 {% endblock user_content %}

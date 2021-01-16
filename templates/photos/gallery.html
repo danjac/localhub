@@ -29,9 +29,9 @@
 {% include "includes/pagination.html" with css_class="mt-1 mb-3" %}
 {% endif %}
 
-{% if page_obj.object_list %}
+{% if object_list %}
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-3">
-  {% for photo in page_obj.object_list %}
+  {% for photo in object_list %}
   <div class="mb-3">
     <a href="{{ photo.get_absolute_url }}"
        title="{{ photo.title }}">

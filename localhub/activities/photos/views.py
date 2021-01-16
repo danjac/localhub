@@ -1,10 +1,8 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-# Django
-from django.template.response import TemplateResponse
-
 # Localhub
+from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 
 # Local
@@ -20,4 +18,4 @@ def photo_gallery_view(request):
         .filter(parent__isnull=True)
         .order_by("-created", "-published")
     )
-    return TemplateResponse(request, "photos/gallery.html", {"photos": photos})
+    return render_paginated_queryset(request, photos, "photos/gallery.html")

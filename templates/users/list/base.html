@@ -33,7 +33,6 @@
 
 {% block user_list %}
 
-{% with object_list=page_obj.object_list %}
 
 {% if object_list %}
 
@@ -109,6 +108,5 @@
 {% else %}
 {% include "includes/empty.html" %}
 {% endif %}
-{% endwith %}
 {% endblock user_list %}
 {% endblock content %}
