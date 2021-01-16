@@ -5,13 +5,9 @@
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
-from django.utils.functional import cached_property
-from django.views.generic import View
-from django.views.generic.base import TemplateResponseMixin
-from django.views.generic.detail import SingleObjectMixin
+from django.views.decorators.http import require_POST
 
 # Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import TurboFrame, redirect_303
 
 # Localhub
@@ -26,77 +22,10 @@ from localhub.activities.views.generic import (
     render_activity_update_form,
 )
 from localhub.communities.decorators import community_required
-from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.users.utils import has_perm_or_403
 
 # Local
 from .models import Answer, Poll
-
-
-@community_required
-def poll_list_view(request, model, template_name):
-    qs = get_activity_queryset(
-        request, model, with_common_annotations=True
-    ).with_answers()
-    return render_activity_list(request, qs, template_name)
-
-
-class AnswerVoteView(
-    TemplateResponseMixin,
-    PermissionRequiredMixin,
-    CommunityRequiredMixin,
-    SingleObjectMixin,
-    View,
-):
-    """
-    Returns HTTP fragment in AJAX response when user has voted.
-    """
-
-    permission_required = "polls.vote"
-    template_name = "polls/includes/answers.html"
-
-    @cached_property
-    def object(self):
-        return self.get_object()
-
-    def get_permission_object(self):
-        return self.object.poll
-
-    def get_queryset(self):
-        return Answer.objects.filter(
-            poll__community=self.request.community
-        ).select_related("poll", "poll__community")
-
-    def post(self, request, *args, **kwargs):
-        has_voted = False
-        for voted in Answer.objects.filter(
-            voters=self.request.user, poll=self.object.poll
-        ):
-            voted.voters.remove(self.request.user)
-            has_voted = True
-
-        self.object.voters.add(self.request.user)
-
-        # send notification only the first time someone votes
-        if not has_voted:
-            self.object.poll.notify_on_vote(self.request.user)
-
-        poll = get_object_or_404(Poll.objects.with_answers(), pk=self.object.poll_id)
-
-        context = {
-            "object": poll,
-            "object_type": "poll",
-        }
-
-        return (
-            TurboFrame(f"poll-answers-{poll.id}")
-            .template("polls/includes/answers.html", context)
-            .response(request)
-        )
-
-
-answer_vote_view = AnswerVoteView.as_view()
-
 
 AnswersFormSet = inlineformset_factory(
     Poll,
@@ -107,6 +36,56 @@ AnswersFormSet = inlineformset_factory(
     min_num=2,
     labels={"description": ""},
 )
+
+
+@community_required
+def poll_list_view(request, model, template_name):
+    qs = get_activity_queryset(
+        request, model, with_common_annotations=True
+    ).with_answers()
+    return render_activity_list(request, qs, template_name)
+
+
+@community_required
+@login_required
+@require_POST
+def answer_vote_view(request, pk):
+
+    answer = get_object_or_404(
+        Answer.objects.filter(poll__community=request.community).select_related(
+            "poll", "poll__community"
+        ),
+        pk=pk,
+    )
+
+    has_perm_or_403(request.user, "polls.vote", answer.poll)
+
+    has_voted = False
+
+    for voted in Answer.objects.filter(voters=request.user, poll=answer.poll):
+        voted.voters.remove(request.user)
+        has_voted = True
+
+    answer.voters.add(request.user)
+
+    # send notification only the first time someone votes
+
+    if not has_voted:
+        answer.poll.notify_on_vote(request.user)
+
+    # reload to get with updated answers
+    poll = get_object_or_404(Poll.objects.with_answers(), pk=answer.poll_id)
+
+    context = {
+        "object": poll,
+        "object_type": "poll",
+    }
+
+    return (
+        TurboFrame(f"poll-answers-{poll.id}")
+        .template("polls/includes/answers.html", context)
+        .response(request)
+    )
 
 
 @community_required
