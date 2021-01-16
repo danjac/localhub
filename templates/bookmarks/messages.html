@@ -3,11 +3,17 @@
 
 {% extends "bookmarks/base.html" %}
 
-{% load i18n %}
+{% load i18n pagination %}
 
-{% block subtitle %}{{ block.super }} / {% trans "Messages" %}{% endblock %}
+{% block subtitle %}{{ block.super }} / {% translate "Messages" %}{% endblock %}
 
 {% block bookmarks_content %}
-{% trans "You have not bookmarked any messages." as t_empty_message %}
-{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message%}
+{% paginate private_messages as page_obj %}
+
+{% if page_obj.paginator.count or view.search_query or search %}
+{% include "includes/forms/search_form.html" with selector=True %}
+{% endif %}
+
+{% translate "You have not bookmarked any messages." as t_empty_message %}
+{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
 {% endblock bookmarks_content %}

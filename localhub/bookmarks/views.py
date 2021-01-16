@@ -3,25 +3,20 @@
 
 # Django
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.response import TemplateResponse
 
 # Localhub
 from localhub.activities.views.streams import render_activity_stream
-from localhub.comments.views import BaseCommentListView
-from localhub.common.mixins import SearchMixin
+from localhub.comments.models import Comment
 from localhub.communities.decorators import community_required
-from localhub.private_messages.mixins import SenderOrRecipientQuerySetMixin
-from localhub.private_messages.views import BaseMessageListView
-
-# Local
-from .mixins import BookmarksPermissionMixin
+from localhub.private_messages.models import Message
 
 
 @community_required
 @login_required
 def bookmarks_stream_view(request):
 
-    search = request.GET.get("search", None)
+    search = request.GET.get("q", None)
 
     def _filter_queryset(qs):
         qs = (
@@ -44,44 +39,53 @@ def bookmarks_stream_view(request):
     )
 
 
-class BookmarksMessageListView(
-    BookmarksPermissionMixin, SenderOrRecipientQuerySetMixin, BaseMessageListView
-):
-    template_name = "bookmarks/messages.html"
+@community_required
+@login_required
+def bookmarks_message_list_view(request):
+    messages = (
+        Message.objects.for_community(request.community)
+        .for_sender_or_recipient(request.user)
+        .common_select_related()
+        .bookmarked(request.user)
+        .with_bookmarked_timestamp(request.user)
+        .distinct()
+    )
 
-    def get_queryset(self):
-        qs = (
-            super()
-            .get_queryset()
-            .bookmarked(self.request.user)
-            .with_bookmarked_timestamp(self.request.user)
-            .order_by("-bookmarked", "-created")
-        )
-        if self.search_query:
-            qs = qs.search(self.search_query)
-        return qs
+    if search := request.GET.get("q", None):
+        messages = messages.search(search)
+        ordering = ("-rank", "-bookmarked")
+    else:
+        ordering = ("-bookmarked", "-created")
 
+    messages = messages.order_by(*ordering)
 
-bookmarks_message_list_view = BookmarksMessageListView.as_view()
-
-
-class BookmarksCommentListView(
-    BookmarksPermissionMixin, LoginRequiredMixin, SearchMixin, BaseCommentListView
-):
-    template_name = "bookmarks/comments.html"
-
-    def get_queryset(self):
-        qs = (
-            super()
-            .get_queryset()
-            .bookmarked(self.request.user)
-            .with_common_annotations(self.request.user, self.request.community)
-            .with_bookmarked_timestamp(self.request.user)
-            .order_by("-bookmarked", "-created")
-        )
-        if self.search_query:
-            qs = qs.search(self.search_query)
-        return qs
+    return TemplateResponse(
+        request,
+        "bookmarks/messages.html",
+        {"private_messages": messages, "search": search,},
+    )
 
 
-bookmarks_comment_list_view = BookmarksCommentListView.as_view()
+@community_required
+@login_required
+def bookmarks_comment_list_view(request):
+    comments = (
+        Comment.objects.for_community(request.community)
+        .with_common_annotations(request.user, request.community)
+        .exclude_blocked_users(request.user)
+        .exclude_deleted()
+        .with_common_related()
+        .bookmarked(request.user)
+        .with_bookmarked_timestamp(request.user)
+    )
+    if search := request.GET.get("q", None):
+        comments = comments.search(search)
+        ordering = ("-rank", "-bookmarked")
+    else:
+        ordering = ("-bookmarked", "-created")
+
+    comments = comments.order_by(*ordering)
+
+    return TemplateResponse(
+        request, "bookmarks/comments.html", {"comments": comments, "search": search,},
+    )

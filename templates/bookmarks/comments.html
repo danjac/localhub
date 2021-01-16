@@ -2,11 +2,17 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "bookmarks/base.html" %}
-{% load i18n %}
+{% load i18n pagination %}
 
-{% block subtitle %}{{ block.super }} / {% trans "Comments" %}{% endblock %}
+{% block subtitle %}{{ block.super }} / {% translate "Comments" %}{% endblock %}
 
 {% block bookmarks_content %}
-{% trans "You have not bookmarked any comments." as t_empty_message %}
-{% include "comments/includes/comment_list.html" with empty_message=t_empty_message %}
+{% paginate comments as page_obj %}
+
+{% if page_obj.paginator.count or search %}
+{% include "includes/forms/search_form.html" with selector=True %}
+{% endif %}
+
+{% translate "You have not bookmarked any comments." as t_empty_message %}
+{% include "comments/includes/comment_list.html" with empty_message=t_empty_message object_list=page_obj.object_list %}
 {% endblock bookmarks_content %}
