@@ -134,7 +134,7 @@ class TestFollowingUserListView:
         member.member.following.add(user)
         response = client.get(reverse("users:following_list"))
         assert response.status_code == http.HTTPStatus.OK
-        assert response.context["object_list"][0] == user
+        assert response.context["members"][0] == user
 
 
 class TestBlockedUserListView:
@@ -143,7 +143,7 @@ class TestBlockedUserListView:
         member.member.blocked.add(user)
         response = client.get(reverse("users:blocked_list"))
         assert response.status_code == http.HTTPStatus.OK
-        assert response.context["object_list"][0] == user
+        assert response.context["members"][0] == user
 
 
 class TestFollowerUserListView:
@@ -152,7 +152,7 @@ class TestFollowerUserListView:
         user.following.add(member.member)
         response = client.get(reverse("users:follower_list"))
         assert response.status_code == http.HTTPStatus.OK
-        assert response.context["object_list"][0] == user
+        assert response.context["members"][0] == user
 
 
 class TestUserCommentsView:

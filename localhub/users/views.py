@@ -10,7 +10,6 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
@@ -20,16 +19,13 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
 # Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
-from turbo_response import HttpResponseSeeOther, TurboFrame, TurboStream
-from turbo_response.views import TurboUpdateView
+from turbo_response import TemplateFormResponse, TurboFrame, TurboStream
 
 # Localhub
 from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
-from localhub.common.mixins import SearchMixin
 from localhub.communities.decorators import community_required
 from localhub.communities.rules import is_member
 from localhub.likes.models import Like
@@ -37,12 +33,7 @@ from localhub.private_messages.models import Message
 
 # Local
 from .forms import UserForm
-from .mixins import (
-    CurrentUserMixin,
-    MemberQuerySetMixin,
-    SingleUserMixin,
-    UserQuerySetMixin,
-)
+from .mixins import SingleUserMixin
 from .utils import has_perm_or_403
 
 
@@ -255,71 +246,59 @@ class UserCommentMentionsView(BaseUserCommentListView):
 user_comment_mentions_view = UserCommentMentionsView.as_view()
 
 
-class BaseUserListView(UserQuerySetMixin, ListView):
-    paginate_by = settings.LONG_PAGE_SIZE
+@community_required
+def member_list_view(request):
 
-    def get_queryset(self):
-        return super().get_queryset().order_by("name", "username")
-
-
-class BaseMemberListView(MemberQuerySetMixin, BaseUserListView):
-
-    exclude_blocking_users = True
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .with_is_following(self.request.user)
-            .with_num_unread_messages(self.request.user, self.request.community)
-        )
+    qs = get_member_queryset(request)
+    if search := request.GET.get("q", None):
+        qs = qs.search(search).order_by("-rank")
+    else:
+        qs = qs.order_by("name", "username")
+    return TemplateResponse(
+        request, "users/list/members.html", {"members": qs, "search": search}
+    )
 
 
-class MemberListView(SearchMixin, BaseMemberListView):
-    """
-    Shows all members of community
-    """
-
-    template_name = "users/list/members.html"
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        if self.search_query:
-            qs = qs.search(self.search_query)
-        return qs
-
-
-member_list_view = MemberListView.as_view()
+@community_required
+@login_required
+def follower_user_list_view(request):
+    return TemplateResponse(
+        request,
+        "users/list/following.html",
+        {
+            "members": get_member_queryset(request)
+            .filter(following=request.user)
+            .order_by("name", "username")
+        },
+    )
 
 
-class FollowingUserListView(LoginRequiredMixin, BaseMemberListView):
-    template_name = "users/list/following.html"
-
-    def get_queryset(self):
-        return super().get_queryset().filter(followers=self.request.user)
-
-
-following_user_list_view = FollowingUserListView.as_view()
-
-
-class FollowerUserListView(LoginRequiredMixin, BaseMemberListView):
-    template_name = "users/list/followers.html"
-
-    def get_queryset(self):
-        return super().get_queryset().filter(following=self.request.user)
+@community_required
+@login_required
+def following_user_list_view(request):
+    return TemplateResponse(
+        request,
+        "users/list/following.html",
+        {
+            "members": get_member_queryset(request)
+            .filter(followers=request.user)
+            .order_by("name", "username")
+        },
+    )
 
 
-follower_user_list_view = FollowerUserListView.as_view()
-
-
-class BlockedUserListView(LoginRequiredMixin, MemberQuerySetMixin, BaseUserListView):
-    template_name = "users/list/blocked.html"
-
-    def get_queryset(self):
-        return super().get_queryset().filter(blockers=self.request.user)
-
-
-blocked_user_list_view = BlockedUserListView.as_view()
+@community_required
+@login_required
+def blocked_user_list_view(request):
+    return TemplateResponse(
+        request,
+        "users/list/blocked.html",
+        {
+            "members": get_member_queryset(request, exclude_blocking_users=False)
+            .filter(blockers=request.user)
+            .order_by("name", "username")
+        },
+    )
 
 
 @community_required
@@ -332,40 +311,32 @@ def user_autocomplete_list_view(request):
     if search_term:
         qs = qs.filter(
             Q(Q(username__icontains=search_term) | Q(name__icontains=search_term))
-        )[: settings.DEFAULT_PAGE_SIZE]
+        ).order_by("name", "username")[: settings.DEFAULT_PAGE_SIZE]
     else:
         qs = qs.none()
 
     return TemplateResponse(request, "users/list/autocomplete.html", {"users": qs})
 
 
-class UserUpdateView(
-    SuccessMessageMixin, CurrentUserMixin, PermissionRequiredMixin, TurboUpdateView,
-):
-    permission_required = "users.change_user"
-    success_message = _("Your details have been updated")
-    form_class = UserForm
-    template_name = "users/user_form.html"
-
-    def get_success_url(self):
-        return self.request.path
-
-    def form_valid(self, form):
-        self.object = form.save()
-        self.object.notify_on_update()
-        return HttpResponseSeeOther(self.get_success_url())
-
-    def get_context_data(self, **kwargs):
-        return {
-            **super().get_context_data(**kwargs),
-            **{
-                "is_community": self.request.community.active
-                and is_member(self.request.user, self.request.community)
-            },
-        }
-
-
-user_update_view = UserUpdateView.as_view()
+@login_required
+def user_update_view(request):
+    form = UserForm(
+        request.POST if request.method == "POST" else None, instance=request.user
+    )
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        request.user.notify_on_update()
+        messages.success(request, _("Your details have been updated"))
+        return redirect(request.path)
+    return TemplateFormResponse(
+        request,
+        form,
+        "users/user_form.html",
+        {
+            "is_community": request.community.active
+            and is_member(request.user, request.community)
+        },
+    )
 
 
 @community_required
@@ -401,7 +372,7 @@ def user_block_view(request, username, remove=False):
     user = get_user_or_404(
         request,
         username,
-        queryset=get_user_queryset(request, exclude=None),
+        queryset=get_user_queryset(request, exclude_blocking_users=False),
         permission="users.block_user",
     )
 
@@ -452,16 +423,20 @@ def get_user_or_404(request, username, *, queryset=None, permission=None):
     return user
 
 
-def get_user_queryset(request, exclude="blocking"):
+def get_user_queryset(request, *, exclude_blocking_users=True):
     qs = get_user_model().objects.for_community(request.community)
 
-    if exclude == "blocking":
+    if exclude_blocking_users:
         qs = qs.exclude_blocking(request.user)
 
-    elif exclude == "blocked":
-        qs = qs.exclude_blocked(request.user)
-
-    elif exclude == "blockers":
-        qs = qs.exclude_blockers(request.user)
-
     return qs
+
+
+def get_member_queryset(request, **kwargs):
+    return (
+        get_user_queryset(request, **kwargs)
+        .with_is_following(request.user)
+        .with_num_unread_messages(request.user, request.community)
+        .with_role(request.community)
+        .with_joined(request.community)
+    )
