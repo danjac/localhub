@@ -16,7 +16,7 @@ from turbo_response import TurboFrame, redirect_303
 
 # Localhub
 from localhub.activities.views.generic import (
-    get_activity_for_update,
+    get_activity_or_404,
     get_activity_queryset,
     process_activity_create_form,
     process_activity_update_form,
@@ -143,7 +143,9 @@ def poll_create_view(request, model, form_class, template_name, is_private=False
 @login_required
 def poll_update_view(request, pk, model, form_class, template_name):
 
-    obj = get_activity_for_update(request, model, pk)
+    obj = get_activity_or_404(
+        request, model, pk, permission="activities.change_activity"
+    )
 
     if request.method == "POST":
         form = form_class(request.POST, instance=obj)

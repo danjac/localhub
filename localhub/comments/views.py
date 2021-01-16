@@ -94,8 +94,7 @@ def comment_detail_view(request, pk):
 @community_required
 @add_messages_to_response_header
 def comment_update_view(request, pk):
-    comment = get_comment_or_404(request, pk)
-    has_perm_or_403(request.user, "comments.change_comment", comment)
+    comment = get_comment_or_404(request, pk, permission="comments.change_comment")
 
     form = CommentForm(
         request.POST if request.method == "POST" else None, instance=comment,
@@ -126,8 +125,7 @@ def comment_update_view(request, pk):
 @community_required
 @login_required
 def comment_reply_view(request, pk):
-    parent = get_comment_or_404(request, pk)
-    has_perm_or_403(request.user, "comments.reply_to_comment", parent)
+    parent = get_comment_or_404(request, pk, permission="comments.reply_to_comment")
 
     form = CommentForm(request.POST if request.method == "POST" else None,)
 
@@ -159,9 +157,7 @@ def comment_reply_view(request, pk):
 @add_messages_to_response_header
 @require_POST
 def comment_bookmark_view(request, pk, remove=False):
-    comment = get_comment_or_404(request, pk)
-    has_perm_or_403(request.user, "comments.bookmark_comment", comment)
-
+    comment = get_comment_or_404(request, pk, permission="comments.bookmark_comment")
     if remove:
         Bookmark.objects.filter(user=request.user, comment=comment).delete()
         messages.info(request, _("You have removed this bookmark"))
@@ -191,8 +187,7 @@ def comment_bookmark_view(request, pk, remove=False):
 @add_messages_to_response_header
 @require_POST
 def comment_like_view(request, pk, remove=False):
-    comment = get_comment_or_404(request, pk)
-    has_perm_or_403(request.user, "comments.like_comment", comment)
+    comment = get_comment_or_404(request, pk, permission="comments.like_comment")
 
     if remove:
         Like.objects.filter(user=request.user, comment=comment).delete()
@@ -228,9 +223,7 @@ def comment_like_view(request, pk, remove=False):
 @login_required
 @require_POST
 def comment_delete_view(request, pk):
-    comment = get_comment_or_404(request, pk)
-
-    has_perm_or_403(request.user, "comments.delete_comment", comment)
+    comment = get_comment_or_404(request, pk, permission="comments.delete_comment")
 
     if request.user == comment.owner:
         comment.delete()
@@ -243,18 +236,18 @@ def comment_delete_view(request, pk):
     return redirect(comment.get_content_object() or "comments:list")
 
 
-def get_comment_or_404(request, pk, with_parent=False):
+def get_comment_or_404(request, pk, *, permission=None):
 
-    select_related = ["owner", "community"]
-    if with_parent:
-        select_related += ["parent", "parent__owner", "parent__community"]
-
-    return get_object_or_404(
+    comment = get_object_or_404(
         Comment.objects.for_community(request.community).select_related(
-            *select_related
+            "owner", "community"
         ),
         pk=pk,
     )
+
+    if permission:
+        has_perm_or_403(request.user, permission, comment)
+    return comment
 
 
 class CommentFlagView(
