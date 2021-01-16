@@ -178,18 +178,26 @@ def render_activity_detail(request, obj, template_name, *, extra_context=None):
             is_read=True
         )
 
-    context = {
-        "object": obj,
-        "comments": obj.get_comments()
+    comments = (
+        obj.get_comments()
         .for_community(request.community)
         .with_common_annotations(request.user, request.community)
         .exclude_deleted()
         .with_common_related()
-        .order_by("created"),
-        "reshares": obj.reshares.for_community(request.community)
+        .order_by("created")
+    )
+
+    reshares = (
+        obj.reshares.for_community(request.community)
         .exclude_blocked_users(request.user)
         .select_related("owner")
-        .order_by("-created"),
+        .order_by("-created")
+    )
+
+    context = {
+        "object": obj,
+        "comments": comments,
+        "reshares": reshares,
     }
 
     if request.user.has_perm("communities.moderate_community", request.community):
