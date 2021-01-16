@@ -28,7 +28,12 @@ urlpatterns = create_activity_urls(
 urlpatterns += [
     path("calendar/", views.event_calendar_view, name="calendar"),
     path("<int:pk>~attend/", views.event_attend_view, name="attend"),
-    path("<int:pk>~unattend/", views.event_unattend_view, name="unattend"),
+    path(
+        "<int:pk>~unattend/",
+        views.event_attend_view,
+        name="unattend",
+        kwargs={"remove": True},
+    ),
     path("<int:pk>~cancel/", views.event_cancel_view, name="cancel"),
     path("<int:pk>~download/", views.event_download_view, name="download"),
 ]

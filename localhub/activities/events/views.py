@@ -9,112 +9,85 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import View
-from django.views.generic.detail import SingleObjectMixin
+from django.views.decorators.http import require_POST
 
 # Third Party Libraries
 import pytz
 from dateutil import relativedelta
-from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import TurboFrame
 
 # Localhub
 from localhub.activities.views.generic import (
-    ActivityQuerySetMixin,
-    BaseActivityActionView,
     activity_detail_view,
     activity_update_view,
     get_activity_queryset,
     handle_activity_create,
     render_activity_list,
 )
+from localhub.common.decorators import add_messages_to_response_header
 from localhub.communities.decorators import community_required
 from localhub.users.utils import has_perm_or_403
 
 # Local
 from .decorators import override_timezone
-from .mixins import TimezoneOverrideMixin
 from .models import Event
 
 
-class BaseEventActionView(BaseActivityActionView):
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def event_cancel_view(request, pk):
+    event = get_object_or_404(get_activity_queryset(request, Event), pk=pk)
+    has_perm_or_403(request.user, "events.cancel", event)
 
-    model = Event
+    event.canceled = timezone.now()
+    event.save()
+    event.notify_on_cancel(request.user)
 
+    messages.success(request, _("This event has been canceled"))
 
-class EventCancelView(PermissionRequiredMixin, BaseEventActionView):
-    success_message = _("This event has been canceled")
-
-    permission_required = "events.cancel"
-
-    def post(self, request, *args, **kwargs):
-        self.object.canceled = timezone.now()
-        self.object.save()
-        self.object.notify_on_cancel(self.request.user)
-        messages.success(request, self.success_message)
-
-        return self.render_to_response()
+    return redirect(event)
 
 
-event_cancel_view = EventCancelView.as_view()
+@community_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def event_attend_view(request, pk, remove=False):
 
+    event = get_object_or_404(get_activity_queryset(request, Event), pk=pk)
+    has_perm_or_403(request.user, "events.attend", event)
 
-class BaseEventAttendView(PermissionRequiredMixin, BaseEventActionView):
-    permission_required = "events.attend"
+    if remove:
+        event.attendees.remove(request.user)
+        messages.info(request, _("You are no longer attending this event"))
+    else:
+        event.attendees.add(request.user)
+        event.notify_on_attend(request.user)
+        messages.success(request, _("You are now attending this event"))
 
-    def render_to_response(self, is_attending):
-        return (
-            TurboFrame(self.object.get_dom_id() + "-attend")
-            .template(
-                "events/includes/attend.html",
-                {"object": self.object, "is_attending": is_attending},
-            )
-            .response(self.request)
+    return (
+        TurboFrame(event.get_dom_id() + "-attend")
+        .template(
+            "events/includes/attend.html",
+            {"object": event, "is_attending": not (remove)},
         )
+        .response(request)
+    )
 
 
-class EventAttendView(BaseEventAttendView):
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.attendees.add(self.request.user)
-        self.object.notify_on_attend(self.request.user)
-        return self.render_to_response(is_attending=True)
-
-
-event_attend_view = EventAttendView.as_view()
-
-
-class EventUnattendView(BaseEventAttendView):
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.attendees.remove(self.request.user)
-        return self.render_to_response(is_attending=False)
-
-
-event_unattend_view = EventUnattendView.as_view()
-
-
-class EventDownloadView(
-    ActivityQuerySetMixin, SingleObjectMixin, TimezoneOverrideMixin, View
-):
-    """
-    Generates a calendar .ics file.
-    """
-
-    model = Event
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        response = HttpResponse(content_type="text/calendar")
-        response.write(self.object.to_ical())
-        return response
-
-
-event_download_view = EventDownloadView.as_view()
+@community_required
+@override_timezone
+def event_download_view(request, pk):
+    event = get_object_or_404(get_activity_queryset(request, Event), pk=pk)
+    response = HttpResponse(content_type="text/calendar")
+    response.write(event.to_ical())
+    return response
 
 
 @community_required
