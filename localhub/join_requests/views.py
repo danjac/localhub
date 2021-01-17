@@ -7,16 +7,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Case, IntegerField, Value, When
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import DeleteView, DetailView, ListView
+from django.views.generic import DetailView, ListView
 
 # Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import redirect_303, render_form_response
 
 # Localhub
@@ -25,6 +22,7 @@ from localhub.common.mixins import SearchMixin
 from localhub.communities.decorators import community_admin_required, community_required
 from localhub.communities.mixins import CommunityAdminRequiredMixin
 from localhub.communities.models import Membership
+from localhub.users.utils import has_perm_or_403
 
 # Local
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
@@ -101,41 +99,31 @@ def join_request_create_view(request):
         )
 
 
-class JoinRequestDeleteView(PermissionRequiredMixin, DeleteView):
-    model = JoinRequest
-    permission_required = "join_requests.delete"
+@login_required
+@require_POST
+def join_request_delete_view(request, pk):
+    join_req = get_object_or_404(JoinRequest, pk=pk)
+    has_perm_or_403(request.user, "join_requests.delete", join_req)
 
-    def get_queryset(self):
-        return super().get_queryset().select_related("community", "sender")
+    join_req.delete()
 
-    @cached_property
-    def is_sender(self):
-        return self.object.sender == self.request.user
-
-    def get_success_url(self):
-        if self.is_sender:
-            if JoinRequest.objects.for_sender(self.request.user).exists():
-                return reverse("join_requests:sent_list")
-            return settings.HOME_PAGE_URL
-        return reverse("join_requests:list")
-
-    def get_success_message(self):
-        if self.is_sender:
-            return _("Your join request for %(community)s has been deleted") % {
-                "community": self.object.community.name
-            }
-        return _("Join request for %(sender)s has been deleted") % {
-            "sender": self.object.sender.get_display_name()
+    if join_req.sender == request.user:
+        success_message = _("Your join request for %(community)s has been deleted") % {
+            "community": join_req.community.name
         }
+        success_url = (
+            "join_requests:sent_list"
+            if JoinRequest.objects.for_sender(request.user).exists()
+            else settings.HOME_PAGE_URL
+        )
+    else:
+        success_message = _("Join request for %(sender)s has been deleted") % {
+            "sender": join_req.sender.get_display_name()
+        }
+        success_url = "join_requests:list"
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
-
-
-join_request_delete_view = JoinRequestDeleteView.as_view()
+    messages.info(request, success_message)
+    return redirect(success_url)
 
 
 class JoinRequestDetailView(
@@ -221,12 +209,14 @@ class SentJoinRequestListView(LoginRequiredMixin, ListView):
 sent_join_request_list_view = SentJoinRequestListView.as_view()
 
 
-def get_join_request_or_404(request, pk, status=None):
+def get_join_request_or_404(request, pk, *, status=None):
     return get_object_or_404(get_join_request_queryset(request, status), pk=pk)
 
 
 def get_join_request_queryset(request, status=None):
-    qs = JoinRequest.objects.for_community(request.community)
+    qs = JoinRequest.objects.for_community(request.community).select_related(
+        "community", "sender"
+    )
     if status:
         if isinstance(status, str):
             status = [status]

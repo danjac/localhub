@@ -36,11 +36,6 @@ class TestJoinRequestDetailView:
 
 
 class TestJoinRequestDeleteView:
-    def test_get(self, client, admin):
-        join_request = JoinRequestFactory(community=admin.community)
-        response = client.get(reverse("join_requests:delete", args=[join_request.id]))
-        assert response.status_code == 200
-
     def test_post_if_admin(self, client, admin):
         join_request = JoinRequestFactory(community=admin.community)
         response = client.post(reverse("join_requests:delete", args=[join_request.id]))
