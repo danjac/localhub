@@ -5,6 +5,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count, F, Q
@@ -16,16 +17,18 @@ from django.views.generic import DeleteView, DetailView, ListView, TemplateView
 # Third Party Libraries
 import rules
 from rules.contrib.views import PermissionRequiredMixin
+from turbo_response import redirect_303, render_form_response
 from turbo_response.views import TurboUpdateView
 
 # Localhub
+from localhub.common.forms import process_form
 from localhub.common.mixins import SearchMixin
 from localhub.common.pagination import render_paginated_queryset
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 
 # Local
-from .decorators import community_required
+from .decorators import community_admin_required, community_required
 from .emails import send_membership_deleted_email
 from .forms import CommunityForm, MembershipForm
 from .mixins import (
@@ -128,20 +131,22 @@ def community_list_view(request):
     )
 
 
-class CommunityUpdateView(
-    SuccessMessageMixin,
-    CurrentCommunityMixin,
-    CommunityAdminRequiredMixin,
-    TurboUpdateView,
-):
-    form_class = CommunityForm
-    success_message = _("Community settings have been updated")
-
-    def get_success_url(self):
-        return self.request.path
-
-
-community_update_view = CommunityUpdateView.as_view()
+@community_admin_required
+@login_required
+def community_update_view(request):
+    with process_form(request, CommunityForm, instance=request.community) as (
+        form,
+        success,
+    ):
+        if success:
+            form.save()
+            messages.success(_("Community settings have been updated"))
+            return redirect_303(request.path)
+        return render_form_response(
+            request,
+            form,
+            "communities/community_form.html",
+        )
 
 
 class BaseCommunityDetailView(CurrentCommunityMixin, DetailView):
