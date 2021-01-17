@@ -20,7 +20,6 @@ __all__ = [
 
 @contextlib.contextmanager
 def process_form(request, form_class, **form_kwargs):
-    """Handles form processing """
     if request.method == "POST":
         form = form_class(data=request.POST, files=request.FILES, **form_kwargs)
         yield form, form.is_valid()
