@@ -30,10 +30,10 @@ from .forms import InviteForm
 from .models import Invite
 
 
-@community_admin_required
-@login_required
-@add_messages_to_response_header
 @require_POST
+@login_required
+@community_admin_required
+@add_messages_to_response_header
 def invite_resend_view(request, pk):
     invite = get_invite_or_404(request, pk)
     invite.sent = timezone.now()
@@ -75,8 +75,8 @@ def invite_accept_view(request, pk):
     )
 
 
-@login_required
 @require_POST
+@login_required
 def invite_reject_view(request, pk):
     invite = get_recipient_invite_or_404(request, pk)
     invite.reject()
@@ -88,8 +88,8 @@ def invite_reject_view(request, pk):
     )
 
 
-@community_admin_required
 @login_required
+@community_admin_required
 def invite_create_view(request):
 
     with process_form(request, InviteForm, community=request.community) as (
@@ -117,9 +117,9 @@ def invite_create_view(request):
         return render_form_response(request, form, "invites/invite_form.html")
 
 
-@community_admin_required
-@login_required
 @require_POST
+@login_required
+@community_admin_required
 def invite_delete_view(request, pk):
     invite = get_invite_or_404(request, pk)
     invite.delete()
@@ -133,8 +133,8 @@ def invite_detail_view(request, pk):
     return TemplateResponse(request, "invites/invite_detail.html", {"invite": invite})
 
 
-@community_admin_required
 @login_required
+@community_admin_required
 def invite_list_view(request):
     invites = get_invite_queryset(request).order_by("-created")
     total_count = invites.count()

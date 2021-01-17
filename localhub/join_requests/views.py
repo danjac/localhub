@@ -27,8 +27,8 @@ from .forms import JoinRequestForm
 from .models import JoinRequest
 
 
-@community_admin_required
 @login_required
+@community_admin_required
 @require_POST
 def join_request_accept_view(request, pk):
     join_req = get_join_request_or_404(
@@ -57,8 +57,8 @@ def join_request_accept_view(request, pk):
     return redirect("join_requests:list")
 
 
-@community_admin_required
 @login_required
+@community_admin_required
 @require_POST
 def join_request_reject_view(request, pk):
     join_req = get_join_request_or_404(request, pk)
@@ -73,8 +73,8 @@ def join_request_reject_view(request, pk):
     return redirect("join_requests:list")
 
 
-@community_required(allow_non_members=True, permission="join_requests.create")
 @login_required
+@community_required(allow_non_members=True, permission="join_requests.create")
 def join_request_create_view(request):
     with process_form(
         request, JoinRequestForm, user=request.user, community=request.community
@@ -122,8 +122,8 @@ def join_request_delete_view(request, pk):
     return redirect(success_url)
 
 
-@community_admin_required
 @login_required
+@community_admin_required
 def join_request_detail_view(request, pk):
     join_req = get_join_request_or_404(request, pk)
     return TemplateResponse(
@@ -131,8 +131,8 @@ def join_request_detail_view(request, pk):
     )
 
 
-@community_admin_required
 @login_required
+@community_admin_required
 def join_request_list_view(request):
 
     join_reqs = get_join_request_queryset(request)

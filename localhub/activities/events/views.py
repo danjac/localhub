@@ -37,8 +37,8 @@ from .decorators import override_timezone
 from .models import Event
 
 
-@community_required
 @login_required
+@community_required
 @add_messages_to_response_header
 @require_POST
 def event_cancel_view(request, pk):
@@ -54,8 +54,8 @@ def event_cancel_view(request, pk):
     return redirect(event)
 
 
-@community_required
 @login_required
+@community_required
 @add_messages_to_response_header
 @require_POST
 def event_attend_view(request, pk, remove=False):
@@ -90,8 +90,8 @@ def event_download_view(request, pk):
     return response
 
 
-@community_required
 @login_required
+@community_required
 @override_timezone
 def event_create_view(request, model, form_class, **kwargs):
 

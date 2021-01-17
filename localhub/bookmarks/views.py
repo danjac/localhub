@@ -12,8 +12,8 @@ from localhub.communities.decorators import community_required
 from localhub.private_messages.models import Message
 
 
-@community_required
 @login_required
+@community_required
 def bookmarks_stream_view(request):
     def _filter_queryset(qs):
         qs = (
@@ -36,8 +36,8 @@ def bookmarks_stream_view(request):
     )
 
 
-@community_required
 @login_required
+@community_required
 def bookmarks_message_list_view(request):
     messages = (
         Message.objects.for_community(request.community)
@@ -63,8 +63,8 @@ def bookmarks_message_list_view(request):
     )
 
 
-@community_required
 @login_required
+@community_required
 def bookmarks_comment_list_view(request):
     comments = (
         Comment.objects.for_community(request.community)

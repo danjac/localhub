@@ -33,8 +33,8 @@ from ..forms import ActivityTagsForm
 from ..utils import get_activity_models
 
 
-@community_required
 @login_required
+@community_required
 def activity_create_view(
     request,
     model,
@@ -56,8 +56,8 @@ def activity_create_view(
     )
 
 
-@community_required
 @login_required
+@community_required
 @require_POST
 def create_comment_view(request, pk, model):
 
@@ -91,14 +91,14 @@ def create_comment_view(request, pk, model):
         )
 
 
-@community_required
 @login_required
+@community_required
 def activity_update_view(request, pk, model, form_class, template_name):
     return handle_activity_update(request, pk, model, form_class, template_name)
 
 
-@community_required
 @login_required
+@community_required
 def activity_update_tags_view(request, pk, model, template_name):
     return handle_activity_update(
         request,
@@ -137,8 +137,8 @@ def activity_detail_view(request, pk, model, template_name, slug=None):
     return render_activity_detail(request, obj, template_name)
 
 
-@community_required
 @login_required
+@community_required
 @require_POST
 def activity_reshare_view(request, pk, model):
     obj = get_activity_or_404(
@@ -158,8 +158,8 @@ def activity_reshare_view(request, pk, model):
     return redirect(reshare)
 
 
-@community_required
 @login_required
+@community_required
 @require_POST
 def activity_publish_view(request, pk, model):
     obj = get_activity_or_404(
@@ -180,8 +180,8 @@ def activity_publish_view(request, pk, model):
     return redirect(obj)
 
 
-@community_required
 @login_required
+@community_required
 @require_POST
 def activity_pin_view(request, pk, model, remove=False):
 
@@ -209,8 +209,8 @@ def activity_pin_view(request, pk, model, remove=False):
     return redirect(settings.HOME_PAGE_URL)
 
 
-@community_required
 @login_required
+@community_required
 @add_messages_to_response_header
 @require_POST
 def activity_bookmark_view(request, pk, model, remove=False):
@@ -247,8 +247,8 @@ def activity_bookmark_view(request, pk, model, remove=False):
     return redirect(obj)
 
 
-@community_required
 @login_required
+@community_required
 @add_messages_to_response_header
 @require_POST
 def activity_like_view(request, pk, model, remove=False):
@@ -290,8 +290,8 @@ def activity_like_view(request, pk, model, remove=False):
     return redirect(obj)
 
 
-@community_required
 @login_required
+@community_required
 @add_messages_to_response_header
 @require_POST
 def activity_delete_view(request, pk, model):
@@ -318,8 +318,8 @@ def activity_delete_view(request, pk, model):
     )
 
 
-@community_required
 @login_required
+@community_required
 def activity_flag_view(request, pk, model):
     obj = get_activity_or_404(
         request,

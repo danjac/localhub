@@ -68,8 +68,8 @@ def tag_list_view(request):
     return render_tag_list(request, qs, "hashtags/list/all.html")
 
 
-@community_required
 @login_required
+@community_required
 def following_tag_list_view(request):
     return render_tag_list(
         request,
@@ -78,8 +78,8 @@ def following_tag_list_view(request):
     )
 
 
-@community_required
 @login_required
+@community_required
 def blocked_tag_list_view(request):
     return render_tag_list(
         request,
@@ -116,9 +116,9 @@ def tag_detail_view(request, slug):
     )
 
 
-@community_required(permission="users.follow_tag")
-@login_required
 @require_POST
+@login_required
+@community_required(permission="users.follow_tag")
 def tag_follow_view(request, pk, remove=False):
 
     tag = get_object_or_404(Tag, pk=pk)
@@ -140,9 +140,9 @@ def tag_follow_view(request, pk, remove=False):
     )
 
 
-@community_required(permission="users.block_tag")
-@login_required
 @require_POST
+@login_required
+@community_required(permission="users.block_tag")
 def tag_block_view(request, pk, remove=False):
 
     tag = get_object_or_404(Tag, pk=pk)

@@ -99,8 +99,8 @@ def comment_update_view(request, pk):
         ).response(request)
 
 
-@community_required
 @login_required
+@community_required
 def comment_reply_view(request, pk):
     parent = get_comment_or_404(request, pk, permission="comments.reply_to_comment")
 
@@ -129,10 +129,10 @@ def comment_reply_view(request, pk):
         )
 
 
-@community_required
-@login_required
-@add_messages_to_response_header
 @require_POST
+@login_required
+@community_required
+@add_messages_to_response_header
 def comment_bookmark_view(request, pk, remove=False):
     comment = get_comment_or_404(request, pk, permission="comments.bookmark_comment")
     if remove:
@@ -161,10 +161,10 @@ def comment_bookmark_view(request, pk, remove=False):
     return redirect(comment)
 
 
-@community_required
-@login_required
-@add_messages_to_response_header
 @require_POST
+@login_required
+@community_required
+@add_messages_to_response_header
 def comment_like_view(request, pk, remove=False):
     comment = get_comment_or_404(request, pk, permission="comments.like_comment")
 
@@ -198,9 +198,9 @@ def comment_like_view(request, pk, remove=False):
     return redirect(comment)
 
 
-@community_required
-@login_required
 @require_POST
+@login_required
+@community_required
 def comment_delete_view(request, pk):
     comment = get_comment_or_404(request, pk, permission="comments.delete_comment")
 
@@ -215,8 +215,8 @@ def comment_delete_view(request, pk):
     return redirect(comment.get_content_object() or "comments:list")
 
 
-@community_required
 @login_required
+@community_required
 def comment_flag_view(request, pk):
     obj = get_comment_or_404(
         request,

@@ -26,8 +26,8 @@ from .models import Notification, PushSubscription
 from .signals import notification_read
 
 
-@community_required
 @login_required
+@community_required
 def notification_list_view(request):
     qs = (
         get_notification_queryset(request)
@@ -52,9 +52,9 @@ def notification_list_view(request):
     )
 
 
-@community_required
-@login_required
 @require_POST
+@login_required
+@community_required
 def notification_mark_all_read_view(request):
     qs = get_unread_notification_queryset(request)
     [
@@ -68,9 +68,9 @@ def notification_mark_all_read_view(request):
     return redirect("notifications:list")
 
 
-@community_required
-@login_required
 @require_POST
+@login_required
+@community_required
 def notification_mark_read_view(request, pk):
     obj = get_object_or_404(get_unread_notification_queryset(request), pk=pk)
     obj.is_read = True
@@ -88,17 +88,17 @@ def notification_mark_read_view(request, pk):
     return TurboStream(target).remove.response()
 
 
-@community_required
-@login_required
 @require_POST
+@login_required
+@community_required
 def notification_delete_all_view(request):
     get_notification_queryset(request).delete()
     return redirect("notifications:list")
 
 
-@community_required
-@login_required
 @require_POST
+@login_required
+@community_required
 def notification_delete_view(request, pk):
     obj = get_object_or_404(get_notification_queryset(request), pk=pk)
     target = f"notification-{obj.id}"
@@ -106,9 +106,9 @@ def notification_delete_view(request, pk):
     return TurboStream(target).remove.response()
 
 
-@community_required
-@login_required
 @require_POST
+@login_required
+@community_required
 def subscribe_view(request, remove=False):
 
     try:

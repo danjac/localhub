@@ -191,8 +191,8 @@ def timeline_view(request):
     return response
 
 
-@community_required
 @login_required
+@community_required
 def private_view(request):
     def _filter_queryset(qs):
         qs = qs.private(request.user)

@@ -21,8 +21,8 @@ from .forms import FlagForm
 from .models import Flag
 
 
-@community_moderator_required
 @login_required
+@community_moderator_required
 def flag_list_view(request):
     flags = (
         Flag.objects.filter(community=request.community)
@@ -33,8 +33,8 @@ def flag_list_view(request):
     return TemplateResponse(request, "flags/flag_list.html", {"flags": flags})
 
 
-@community_moderator_required
 @login_required
+@community_moderator_required
 def flag_delete_view(request, pk):
     flag = get_object_or_404(Flag.objects.filter(community=request.community), pk=pk)
     flag.delete()

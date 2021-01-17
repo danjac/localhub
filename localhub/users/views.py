@@ -75,8 +75,8 @@ def user_stream_view(request, username):
     )
 
 
-@community_required
 @login_required
+@community_required
 def user_message_list_view(request, username):
     """
     Renders thread of all private messages between this user
@@ -222,8 +222,8 @@ def member_list_view(request):
     return render_paginated_queryset(request, qs, "users/list/members.html")
 
 
-@community_required
 @login_required
+@community_required
 def follower_user_list_view(request):
     return render_paginated_queryset(
         request,
@@ -234,8 +234,8 @@ def follower_user_list_view(request):
     )
 
 
-@community_required
 @login_required
+@community_required
 def following_user_list_view(request):
     return render_paginated_queryset(
         request,
@@ -246,8 +246,8 @@ def following_user_list_view(request):
     )
 
 
-@community_required
 @login_required
+@community_required
 def blocked_user_list_view(request):
     return render_paginated_queryset(
         request,
@@ -293,9 +293,9 @@ def user_update_view(request):
         )
 
 
-@community_required
-@login_required
 @require_POST
+@login_required
+@community_required
 def user_follow_view(request, username, remove=False):
 
     user = get_user_or_404(request, username, permission="users.follow_user")
@@ -323,9 +323,9 @@ def user_follow_view(request, username, remove=False):
     )
 
 
-@community_required
-@login_required
 @require_POST
+@login_required
+@community_required
 def user_block_view(request, username, remove=False):
     user = get_user_or_404(
         request,
@@ -353,8 +353,8 @@ def user_delete_view(request):
     return TemplateResponse(request, "users/user_confirm_delete.html")
 
 
-@login_required
 @require_POST
+@login_required
 def dismiss_notice_view(request, notice):
     request.user.dismiss_notice(notice)
     return TurboStream(f"notice-{notice}").remove.response()

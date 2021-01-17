@@ -46,8 +46,8 @@ def poll_list_view(request, model, template_name):
     return render_activity_list(request, qs, template_name)
 
 
-@community_required
 @login_required
+@community_required
 @require_POST
 def answer_vote_view(request, pk):
 
@@ -89,8 +89,8 @@ def answer_vote_view(request, pk):
     )
 
 
-@community_required
 @login_required
+@community_required
 def poll_create_view(request, model, form_class, template_name, is_private=False):
 
     has_perm_or_403(request.user, "activities.create_activity", request.community)
@@ -119,8 +119,8 @@ def poll_create_view(request, model, form_class, template_name, is_private=False
     )
 
 
-@community_required
 @login_required
+@community_required
 def poll_update_view(request, pk, model, form_class, template_name):
 
     obj = get_activity_or_404(
