@@ -20,10 +20,12 @@ from turbo_response.views import TurboUpdateView
 
 # Localhub
 from localhub.common.mixins import SearchMixin
+from localhub.common.pagination import render_paginated_queryset
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 
 # Local
+from .decorators import community_required
 from .emails import send_membership_deleted_email
 from .forms import CommunityForm, MembershipForm
 from .mixins import (
@@ -34,68 +36,26 @@ from .mixins import (
 from .models import Community, Membership
 
 
-class CommunityListView(SearchMixin, ListView):
-    """
-    Returns all public communities, or communities the
-    current user belongs to.
+@community_required
+def community_list_view(request):
+    qs = Community.objects.accessible(request.user).order_by("name")
+    if request.search:
+        qs = qs.filter(name__icontains=request.search)
 
-    TBD: list invites (matching email)
-    """
+    if request.user.is_authenticated:
 
-    paginate_by = settings.DEFAULT_PAGE_SIZE
-    template_name = "communities/community_list.html"
+        communities = Community.objects.filter(
+            membership__member=request.user, membership__active=True
+        ).exclude(pk=request.community.id)
 
-    def get_queryset(self):
-        qs = Community.objects.accessible(self.request.user).order_by("name")
-        if self.search_query:
-            qs = qs.filter(name__icontains=self.search_query)
-        return qs
-
-    def get_member_communities(self):
-        if self.request.user.is_anonymous:
-            return Community.objects.none()
-        return Community.objects.filter(
-            membership__member=self.request.user, membership__active=True
-        ).exclude(pk=self.request.community.id)
-
-    def get_available_users(self):
-        user_model = get_user_model()
-
-        if self.request.user.is_anonymous:
-            return user_model.none()
-        return user_model.objects.filter(is_active=True).exclude(
-            pk__in=self.request.user.blocked.all()
+        users = (
+            get_user_model()
+            .objects.filter(is_active=True)
+            .exclude(pk__in=request.user.blocked.all())
         )
 
-    def get_notifications_count(self):
-        if self.request.user.is_anonymous:
-            return {}
-
-        return dict(
-            self.get_member_communities()
-            .annotate(
-                num_notifications=Count(
-                    "notification",
-                    filter=Q(
-                        notification__recipient=self.request.user,
-                        notification__is_read=False,
-                        notification__actor__pk__in=self.get_available_users(),
-                        notification__actor__membership__active=True,
-                        notification__actor__membership__community=F("pk"),
-                    ),
-                    distinct=True,
-                )
-            )
-            .values_list("id", "num_notifications")
-        )
-
-    def get_flags_count(self):
-        if self.request.user.is_anonymous:
-            return {}
-
-        return dict(
-            self.get_member_communities()
-            .filter(
+        flags = dict(
+            communities.filter(
                 membership__role__in=(
                     Membership.Role.ADMIN,
                     Membership.Role.MODERATOR,
@@ -104,36 +64,8 @@ class CommunityListView(SearchMixin, ListView):
             .annotate(num_flags=Count("flag", distinct=True))
             .values_list("id", "num_flags")
         )
-
-    def get_messages_count(self):
-        if self.request.user.is_anonymous:
-            return {}
-
-        return dict(
-            self.get_member_communities()
-            .annotate(
-                num_messages=Count(
-                    "message",
-                    filter=Q(
-                        message__recipient=self.request.user,
-                        message__read__isnull=True,
-                        message__sender__pk__in=self.get_available_users(),
-                        message__sender__membership__active=True,
-                        message__sender__membership__community=F("pk"),
-                    ),
-                    distinct=True,
-                )
-            )
-            .values_list("id", "num_messages")
-        )
-
-    def get_join_requests_count(self):
-        if self.request.user.is_anonymous:
-            return {}
-
-        return dict(
-            self.get_member_communities()
-            .filter(membership__role=Membership.Role.ADMIN)
+        join_requests = dict(
+            communities.filter(membership__role=Membership.Role.ADMIN)
             .annotate(
                 num_join_requests=Count(
                     "joinrequest",
@@ -143,24 +75,57 @@ class CommunityListView(SearchMixin, ListView):
             )
             .values_list("id", "num_join_requests")
         )
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {
-                "counters": {
-                    "flags": self.get_flags_count(),
-                    "join_requests": self.get_join_requests_count(),
-                    "messages": self.get_messages_count(),
-                    "notifications": self.get_notifications_count(),
-                },
-                "roles": dict(Membership.Role.choices),
-            }
+        messages = dict(
+            communities.annotate(
+                num_messages=Count(
+                    "message",
+                    filter=Q(
+                        message__recipient=request.user,
+                        message__read__isnull=True,
+                        message__sender__pk__in=users,
+                        message__sender__membership__active=True,
+                        message__sender__membership__community=F("pk"),
+                    ),
+                    distinct=True,
+                )
+            ).values_list("id", "num_messages")
         )
-        return data
+        notifications = dict(
+            communities.annotate(
+                num_notifications=Count(
+                    "notification",
+                    filter=Q(
+                        notification__recipient=request.user,
+                        notification__is_read=False,
+                        notification__actor__pk__in=users,
+                        notification__actor__membership__active=True,
+                        notification__actor__membership__community=F("pk"),
+                    ),
+                    distinct=True,
+                )
+            ).values_list("id", "num_notifications")
+        )
 
+    else:
+        flags = {}
+        join_requests = {}
+        messages = {}
+        notifications = {}
 
-community_list_view = CommunityListView.as_view()
+    return render_paginated_queryset(
+        request,
+        qs,
+        "communities/community_list.html",
+        {
+            "counters": {
+                "flags": flags,
+                "join_requests": join_requests,
+                "messages": messages,
+                "notifications": notifications,
+            },
+            "roles": dict(Membership.Role.choices),
+        },
+    )
 
 
 class CommunityUpdateView(
