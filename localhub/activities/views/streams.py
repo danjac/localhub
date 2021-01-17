@@ -249,6 +249,7 @@ def render_activity_stream(
     ).get_page(request.GET.get("q", 1))
 
     page = load_objects(page, querysets)
+    print(extra_context)
 
     context = {
         "page_obj": page,

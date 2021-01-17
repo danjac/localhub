@@ -5,7 +5,7 @@
 # Django
 from django.conf import settings
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
-from django.template.response import TemplateResponse
+from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
@@ -15,9 +15,10 @@ from taggit.models import Tag
 from turbo_response import TurboFrame
 
 # Localhub
-from localhub.activities.views.streams import BaseActivityStreamView
-from localhub.common.mixins import ParentObjectMixin, SearchMixin
+from localhub.activities.views.streams import render_activity_stream
+from localhub.common.mixins import SearchMixin
 from localhub.common.views import ActionView
+from localhub.communities.decorators import community_required
 
 # Local
 from .mixins import TagQuerySetMixin
@@ -108,42 +109,32 @@ class BlockedTagListView(BaseTagListView):
 blocked_tag_list_view = BlockedTagListView.as_view()
 
 
-class TagDetailView(ParentObjectMixin, BaseActivityStreamView):
-    template_name = "hashtags/tag_detail.html"
-    ordering = "-created"
+@community_required
+def tag_detail_view(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
 
-    parent_model = Tag
-    parent_context_object_name = "tag"
-    parent_required = False
-
-    def get(self, request, *args, **kwargs):
-        if self.parent is None:
-            return TemplateResponse(
-                request, "hashtags/not_found.html", {"tag": kwargs["slug"]}, status=404,
-            )
-        return super().get(request, *args, **kwargs)
-
-    def filter_queryset(self, queryset):
+    def _filter_queryset(qs):
         qs = (
-            super()
-            .filter_queryset(queryset)
-            .exclude_blocked_users(self.request.user)
-            .published_or_owner(self.request.user)
-            .filter(tags__name__in=[self.parent.name])
+            qs.exclude_blocked_users(request.user)
+            .published_or_owner(request.user)
+            .filter(tags__name__in=[tag])
             .distinct()
         )
-
         # ensure we block all unwanted tags *unless* it's the tag
         # in question.
-        if self.request.user.is_authenticated:
+        if request.user.is_authenticated:
             qs = qs.exclude(
-                Q(tags__in=self.request.user.blocked_tags.exclude(id=self.parent.id)),
-                ~Q(owner=self.request.user),
+                Q(tags__in=request.user.blocked_tags.exclude(id=tag.id)),
+                ~Q(owner=request.user),
             )
         return qs
 
-
-tag_detail_view = TagDetailView.as_view()
+    return render_activity_stream(
+        request,
+        _filter_queryset,
+        "hashtags/tag_detail.html",
+        extra_context={"tag": tag},
+    )
 
 
 class BaseTagActionView(PermissionRequiredMixin, TagQuerySetMixin, ActionView):
