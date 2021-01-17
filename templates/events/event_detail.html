@@ -7,7 +7,7 @@
 
 {% block breadcrumbs %}
 {% if object.published %}
-{% with starts=event.get_next_start_date %}
+{% with starts=object.get_next_start_date %}
 <ul class="breadcrumbs">
   <li class="breadcrumb-item">
     <a href="{% url 'events:list' %}">{% trans "Events" %}</a>

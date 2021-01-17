@@ -24,8 +24,10 @@ from turbo_response import TurboFrame
 from localhub.activities.views.generic import (
     activity_detail_view,
     activity_update_view,
+    get_activity_or_404,
     get_activity_queryset,
     handle_activity_create,
+    render_activity_detail,
     render_activity_list,
 )
 from localhub.common.decorators import add_messages_to_response_header
@@ -114,6 +116,19 @@ event_update_view = override_timezone(activity_update_view)
 
 
 event_detail_view = override_timezone(activity_detail_view)
+
+
+@community_required
+@override_timezone
+def event_detail_view(request, model, pk, template_name, slug=None):
+    event = get_activity_or_404(
+        request,
+        get_activity_queryset(
+            request, model, with_common_annotations=True
+        ).with_next_date(),
+        pk=pk,
+    )
+    return render_activity_detail(request, event, template_name)
 
 
 @community_required
