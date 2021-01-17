@@ -13,11 +13,12 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 # Third Party Libraries
-from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redirect_303
+from turbo_response import TurboFrame, TurboStream, redirect_303, render_form_response
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
+from localhub.common.forms import process_form
 from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.users.utils import has_perm_or_403
@@ -47,39 +48,39 @@ def message_reply_view(request, pk, is_follow_up=False):
     parent = get_object_or_404(qs, pk=pk)
     recipient = parent.get_other_user(request.user)
 
-    form = MessageForm(request.POST if request.method == "POST" else None)
+    with process_form(request, MessageForm) as (form, success):
 
-    form["message"].label = (
-        _("Send follow-up to %(recipient)s")
-        if is_follow_up
-        else _("Send reply to %(recipient)s")
-    ) % {"recipient": recipient.get_display_name()}
+        if success:
 
-    if request.method == "POST" and form.is_valid():
+            message = form.save(commit=False)
+            message.community = request.community
+            message.sender = request.user
+            message.recipient = recipient
+            message.parent = parent
+            message.save()
 
-        message = form.save(commit=False)
-        message.community = request.community
-        message.sender = request.user
-        message.recipient = recipient
-        message.parent = parent
-        message.save()
+            message.notify_on_reply()
 
-        message.notify_on_reply()
+            messages.success(
+                request,
+                _("Your message has been sent to %(recipient)s")
+                % {"recipient": recipient.get_display_name()},
+            )
 
-        messages.success(
+            return redirect_303(message)
+
+        form["message"].label = (
+            _("Send follow-up to %(recipient)s")
+            if is_follow_up
+            else _("Send reply to %(recipient)s")
+        ) % {"recipient": recipient.get_display_name()}
+
+        return render_form_response(
             request,
-            _("Your message has been sent to %(recipient)s")
-            % {"recipient": recipient.get_display_name()},
+            form,
+            "private_messages/message_form.html",
+            {"recipient": recipient, "parent": parent},
         )
-
-        return redirect_303(message)
-
-    return TemplateFormResponse(
-        request,
-        form,
-        "private_messages/message_form.html",
-        {"recipient": recipient, "parent": parent},
-    )
 
 
 @community_required
@@ -97,64 +98,64 @@ def message_recipient_create_view(request, username):
         username__iexact=username,
     )
 
-    form = MessageForm(request.POST if request.method == "POST" else None)
+    with process_form(request, MessageForm) as (form, success):
 
-    form["message"].label = _(
-        "Send message to %(recipient)s" % {"recipient": recipient.get_display_name()}
-    )
+        frame = TurboFrame("modal")
 
-    frame = TurboFrame("modal")
+        if success:
+            message = form.save(commit=False)
+            message.community = request.community
+            message.sender = request.user
+            message.recipient = recipient
+            message.save()
 
-    if request.method == "POST" and form.is_valid():
+            message.notify_on_send()
 
-        message = form.save(commit=False)
-        message.community = request.community
-        message.sender = request.user
-        message.recipient = recipient
-        message.save()
+            messages.success(
+                request,
+                _("Your message has been sent to %(recipient)s")
+                % {"recipient": recipient.get_display_name()},
+            )
 
-        message.notify_on_send()
+            return frame.response()
 
-        messages.success(
-            request,
-            _("Your message has been sent to %(recipient)s")
-            % {"recipient": recipient.get_display_name()},
+        form["message"].label = _(
+            "Send message to %(recipient)s"
+            % {"recipient": recipient.get_display_name()}
         )
 
-        return frame.response()
-
-    return frame.template(
-        "private_messages/includes/modal_message_form.html",
-        {"form": form, "recipient": recipient},
-    ).response(request)
+        return frame.template(
+            "private_messages/includes/modal_message_form.html",
+            {"form": form, "recipient": recipient},
+        ).response(request)
 
 
 @community_required
 @login_required
 def message_create_view(request):
 
-    form = MessageRecipientForm(
-        request.POST if request.method == "POST" else None,
-        community=request.community,
-        sender=request.user,
-    )
+    with process_form(
+        request, MessageRecipientForm, community=request.community, sender=request.user
+    ) as (form, success):
 
-    if request.method == "POST" and form.is_valid():
-        message = form.save(commit=False)
-        message.community = request.community
-        message.sender = request.user
-        message.save()
-        message.notify_on_send()
+        if success:
+            message = form.save(commit=False)
+            message.community = request.community
+            message.sender = request.user
+            message.save()
+            message.notify_on_send()
 
-        messages.success(
-            request,
-            _("Your message has been sent to %(recipient)s")
-            % {"recipient": message.recipient.get_display_name()},
+            messages.success(
+                request,
+                _("Your message has been sent to %(recipient)s")
+                % {"recipient": message.recipient.get_display_name()},
+            )
+
+            return redirect_303(message)
+
+        return render_form_response(
+            request, form, "private_messages/message_form.html",
         )
-
-        return redirect_303(message)
-
-    return TemplateFormResponse(request, form, "private_messages/message_form.html",)
 
 
 @community_required

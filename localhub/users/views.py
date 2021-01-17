@@ -20,13 +20,14 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 # Third Party Libraries
-from turbo_response import TemplateFormResponse, TurboFrame, TurboStream
+from turbo_response import TurboFrame, TurboStream, render_form_response
 
 # Localhub
 from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import render_activity_stream
 from localhub.comments.models import Comment
 from localhub.comments.views import get_comment_queryset
+from localhub.common.forms import process_form
 from localhub.common.pagination import get_pagination_context, render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.communities.models import Membership
@@ -275,23 +276,21 @@ def user_autocomplete_list_view(request):
 
 @login_required
 def user_update_view(request):
-    form = UserForm(
-        request.POST if request.method == "POST" else None, instance=request.user
-    )
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        request.user.notify_on_update()
-        messages.success(request, _("Your details have been updated"))
-        return redirect(request.path)
-    return TemplateFormResponse(
-        request,
-        form,
-        "users/user_form.html",
-        {
-            "is_community": request.community.active
-            and is_member(request.user, request.community)
-        },
-    )
+    with process_form(request, UserForm, instance=request.user) as (form, success):
+        if success:
+            form.save()
+            request.user.notify_on_update()
+            messages.success(request, _("Your details have been updated"))
+            return redirect(request.path)
+        return render_form_response(
+            request,
+            form,
+            "users/user_form.html",
+            {
+                "is_community": request.community.active
+                and is_member(request.user, request.community)
+            },
+        )
 
 
 @community_required

@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 # Third Party Libraries
-from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redirect_303
+from turbo_response import TurboFrame, TurboStream, redirect_303, render_form_response
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
@@ -508,7 +508,7 @@ def render_activity_create_form(
         if activity_model != model
     ]
 
-    return TemplateFormResponse(
+    return render_form_response(
         request,
         form,
         template_name,
@@ -526,7 +526,7 @@ def render_activity_update_form(
     request, obj, form, template_name, *, extra_context=None
 ):
 
-    return TemplateFormResponse(
+    return render_form_response(
         request,
         form,
         template_name,

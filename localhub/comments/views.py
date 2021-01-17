@@ -12,11 +12,12 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 # Third Party Libraries
-from turbo_response import TemplateFormResponse, TurboFrame, redirect_303
+from turbo_response import TurboFrame, redirect_303, render_form_response
 
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
+from localhub.common.forms import process_form
 from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.flags.views import handle_flag_create
@@ -74,31 +75,28 @@ def comment_detail_view(request, pk):
 @add_messages_to_response_header
 def comment_update_view(request, pk):
     comment = get_comment_or_404(request, pk, permission="comments.change_comment")
-
-    form = CommentForm(
-        request.POST if request.method == "POST" else None, instance=comment,
-    )
-
     frame = TurboFrame(f"comment-{comment.id}-content")
 
-    if request.method == "POST" and form.is_valid():
+    with process_form(request, CommentForm, instance=comment) as (form, success):
 
-        comment = form.save(commit=False)
-        comment.editor = request.user
-        comment.edited = timezone.now()
-        comment.save()
+        if success:
 
-        comment.notify_on_update()
+            comment = form.save(commit=False)
+            comment.editor = request.user
+            comment.edited = timezone.now()
+            comment.save()
 
-        messages.success(request, _("Your comment has been updated"))
+            comment.notify_on_update()
+
+            messages.success(request, _("Your comment has been updated"))
+
+            return frame.template(
+                "comments/includes/content.html", {"comment": comment}
+            ).response(request)
 
         return frame.template(
-            "comments/includes/content.html", {"comment": comment}
+            "comments/includes/comment_form.html", {"form": form, "comment": comment}
         ).response(request)
-
-    return frame.template(
-        "comments/includes/comment_form.html", {"form": form, "comment": comment}
-    ).response(request)
 
 
 @community_required
@@ -106,29 +104,29 @@ def comment_update_view(request, pk):
 def comment_reply_view(request, pk):
     parent = get_comment_or_404(request, pk, permission="comments.reply_to_comment")
 
-    form = CommentForm(request.POST if request.method == "POST" else None,)
+    with process_form(request, CommentForm) as (form, success):
 
-    form.fields["content"].label = _("Reply")
+        if success:
+            reply = form.save(commit=False)
+            reply.parent = parent
+            reply.content_object = parent.content_object
+            reply.owner = request.user
+            reply.community = request.community
+            reply.save()
 
-    if request.method == "POST" and form.is_valid():
-        reply = form.save(commit=False)
-        reply.parent = parent
-        reply.content_object = parent.content_object
-        reply.owner = request.user
-        reply.community = request.community
-        reply.save()
+            reply.notify_on_create()
 
-        reply.notify_on_create()
+            messages.success(request, _("You have replied to this comment"))
+            return redirect_303(parent.content_object)
 
-        messages.success(request, _("You have replied to this comment"))
-        return redirect_303(parent.content_object)
+        form.fields["content"].label = _("Reply")
 
-    return TemplateFormResponse(
-        request,
-        form,
-        "comments/comment_form.html",
-        {"content_object": parent.content_object, "parent": parent},
-    )
+        return render_form_response(
+            request,
+            form,
+            "comments/comment_form.html",
+            {"content_object": parent.content_object, "parent": parent},
+        )
 
 
 @community_required

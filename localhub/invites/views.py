@@ -18,7 +18,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
-from turbo_response import TemplateFormResponse, redirect_303
+from turbo_response import redirect_303, render_form_response
 
 # Localhub
 from localhub.common.decorators import add_messages_to_response_header
@@ -118,7 +118,7 @@ def invite_create_view(request):
             )
             return redirect_303("invites:list")
 
-        return TemplateFormResponse(request, form, "invites/invite_form.html")
+        return render_form_response(request, form, "invites/invite_form.html")
 
 
 class InviteDeleteView(

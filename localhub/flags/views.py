@@ -10,9 +10,10 @@ from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 
 # Third Party Libraries
-from turbo_response import TemplateFormResponse, redirect_303
+from turbo_response import redirect_303, render_form_response
 
 # Localhub
+from localhub.common.forms import process_form
 from localhub.communities.decorators import community_moderator_required
 
 # Local
@@ -41,24 +42,22 @@ def flag_delete_view(request, pk):
 
 
 def handle_flag_create(request, model):
+    with process_form(request, FlagForm) as (form, success):
+        if success:
+            flag = form.save(commit=False)
+            flag.content_object = model
+            flag.community = request.community
+            flag.user = request.user
+            flag.save()
 
-    form = FlagForm(request.POST if request.method == "POST" else None)
-    if request.method == "POST" and form.is_valid():
+            flag.notify()
 
-        flag = form.save(commit=False)
-        flag.content_object = model
-        flag.community = request.community
-        flag.user = request.user
-        flag.save()
+            success_message = _("This %(model)s has been flagged to the moderators") % {
+                "model": model._meta.verbose_name
+            }
+            messages.success(request, success_message)
+            return redirect_303(model)
 
-        flag.notify()
-
-        success_message = _("This %(model)s has been flagged to the moderators") % {
-            "model": model._meta.verbose_name
-        }
-        messages.success(request, success_message)
-        return redirect_303(model)
-
-    return TemplateFormResponse(
-        request, form, "flags/flag_form.html", context={"parent": model}
-    )
+        return render_form_response(
+            request, form, "flags/flag_form.html", context={"parent": model}
+        )
