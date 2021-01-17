@@ -48,8 +48,8 @@ def invite_resend_view(request, pk):
     return HttpResponse(status=http.HTTPStatus.NO_CONTENT)
 
 
-@login_required
 @require_POST
+@login_required
 def invite_accept_view(request, pk):
     """
     Handles an invite accept action.

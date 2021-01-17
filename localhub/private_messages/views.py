@@ -28,8 +28,8 @@ from .forms import MessageForm, MessageRecipientForm
 from .models import Message
 
 
-@community_required
 @login_required
+@community_required
 def message_reply_view(request, pk, is_follow_up=False):
 
     has_perm_or_403(request.user, "private_messages.create_message", request.community)
@@ -83,8 +83,8 @@ def message_reply_view(request, pk, is_follow_up=False):
         )
 
 
-@community_required
 @login_required
+@community_required
 @add_messages_to_response_header
 def message_recipient_create_view(request, username):
 
@@ -130,8 +130,8 @@ def message_recipient_create_view(request, username):
         ).response(request)
 
 
-@community_required
 @login_required
+@community_required
 def message_create_view(request):
 
     with process_form(
@@ -160,8 +160,8 @@ def message_create_view(request):
         )
 
 
-@community_required
 @login_required
+@community_required
 def inbox_view(request):
     messages = (
         Message.objects.for_community(community=request.community)
@@ -183,8 +183,8 @@ def inbox_view(request):
     )
 
 
-@community_required
 @login_required
+@community_required
 def outbox_view(request):
     messages = (
         Message.objects.for_community(community=request.community)
@@ -206,8 +206,8 @@ def outbox_view(request):
     )
 
 
-@community_required
 @login_required
+@community_required
 def message_detail_view(request, pk):
     message = get_object_or_404(
         Message.objects.for_community(request.community)
@@ -239,8 +239,8 @@ def message_detail_view(request, pk):
     )
 
 
-@community_required
 @login_required
+@community_required
 def message_mark_all_read_view(request):
     Message.objects.for_community(request.community).for_recipient(
         request.user
@@ -248,8 +248,8 @@ def message_mark_all_read_view(request):
     return redirect("private_messages:inbox")
 
 
-@community_required
 @login_required
+@community_required
 def message_mark_read_view(request, pk):
 
     message = get_object_or_404(
@@ -263,10 +263,10 @@ def message_mark_read_view(request, pk):
     return TurboStream(f"message-{message.id}-mark-read").remove.response()
 
 
-@community_required
-@login_required
-@add_messages_to_response_header
 @require_POST
+@login_required
+@community_required
+@add_messages_to_response_header
 def message_bookmark_view(request, pk, remove=False):
     message = get_object_or_404(
         Message.objects.for_community(request.community).for_sender_or_recipient(
@@ -299,10 +299,10 @@ def message_bookmark_view(request, pk, remove=False):
     )
 
 
-@community_required
-@login_required
-@add_messages_to_response_header
 @require_POST
+@login_required
+@community_required
+@add_messages_to_response_header
 def message_delete_view(request, pk):
 
     message = get_object_or_404(

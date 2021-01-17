@@ -37,10 +37,10 @@ from .decorators import override_timezone
 from .models import Event
 
 
+@require_POST
 @login_required
 @community_required
 @add_messages_to_response_header
-@require_POST
 def event_cancel_view(request, pk):
     event = get_object_or_404(get_activity_queryset(request, Event), pk=pk)
     has_perm_or_403(request.user, "events.cancel", event)
@@ -54,10 +54,10 @@ def event_cancel_view(request, pk):
     return redirect(event)
 
 
+@require_POST
 @login_required
 @community_required
 @add_messages_to_response_header
-@require_POST
 def event_attend_view(request, pk, remove=False):
 
     event = get_object_or_404(get_activity_queryset(request, Event), pk=pk)

@@ -46,9 +46,9 @@ def poll_list_view(request, model, template_name):
     return render_activity_list(request, qs, template_name)
 
 
+@require_POST
 @login_required
 @community_required
-@require_POST
 def answer_vote_view(request, pk):
 
     answer = get_object_or_404(

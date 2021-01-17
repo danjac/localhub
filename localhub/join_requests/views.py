@@ -27,9 +27,9 @@ from .forms import JoinRequestForm
 from .models import JoinRequest
 
 
+@require_POST
 @login_required
 @community_admin_required
-@require_POST
 def join_request_accept_view(request, pk):
     join_req = get_join_request_or_404(
         request, pk, status=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED)
@@ -57,9 +57,9 @@ def join_request_accept_view(request, pk):
     return redirect("join_requests:list")
 
 
+@require_POST
 @login_required
 @community_admin_required
-@require_POST
 def join_request_reject_view(request, pk):
     join_req = get_join_request_or_404(request, pk)
     join_req.reject()
@@ -95,8 +95,8 @@ def join_request_create_view(request):
         )
 
 
-@login_required
 @require_POST
+@login_required
 def join_request_delete_view(request, pk):
     join_req = get_object_or_404(JoinRequest, pk=pk)
     has_perm_or_403(request.user, "join_requests.delete", join_req)

@@ -213,8 +213,8 @@ def membership_list_view(request):
     )
 
 
-@community_required
 @login_required
+@community_required
 def membership_detail_view(request, pk):
     member = get_membership_or_404(
         request, pk, permission="communities.view_membership"
@@ -226,8 +226,8 @@ def membership_detail_view(request, pk):
     )
 
 
-@community_required
 @login_required
+@community_required
 def membership_update_view(request, pk):
     member = get_membership_or_404(
         request, pk, permission="communities.change_membership"
@@ -242,9 +242,9 @@ def membership_update_view(request, pk):
         )
 
 
-@community_required
-@login_required
 @require_POST
+@login_required
+@community_required
 def membership_delete_view(request, pk):
     member = get_membership_or_404(
         request, pk, permission="communities.delete_membership"
@@ -267,8 +267,8 @@ def membership_delete_view(request, pk):
         return redirect("communities:membership_list")
 
 
-@community_required
 @login_required
+@community_required
 def membership_leave_view(request):
     """
     Allows the current user to be able to voluntarily leave a community.

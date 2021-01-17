@@ -56,9 +56,9 @@ def activity_create_view(
     )
 
 
+@require_POST
 @login_required
 @community_required
-@require_POST
 def create_comment_view(request, pk, model):
 
     obj = get_object_or_404(
@@ -137,9 +137,9 @@ def activity_detail_view(request, pk, model, template_name, slug=None):
     return render_activity_detail(request, obj, template_name)
 
 
+@require_POST
 @login_required
 @community_required
-@require_POST
 def activity_reshare_view(request, pk, model):
     obj = get_activity_or_404(
         request,
@@ -158,9 +158,9 @@ def activity_reshare_view(request, pk, model):
     return redirect(reshare)
 
 
+@require_POST
 @login_required
 @community_required
-@require_POST
 def activity_publish_view(request, pk, model):
     obj = get_activity_or_404(
         request,
@@ -180,9 +180,9 @@ def activity_publish_view(request, pk, model):
     return redirect(obj)
 
 
+@require_POST
 @login_required
 @community_required
-@require_POST
 def activity_pin_view(request, pk, model, remove=False):
 
     obj = get_activity_or_404(request, model, pk, permission="activities.pin_activity")
@@ -209,10 +209,10 @@ def activity_pin_view(request, pk, model, remove=False):
     return redirect(settings.HOME_PAGE_URL)
 
 
+@require_POST
 @login_required
 @community_required
 @add_messages_to_response_header
-@require_POST
 def activity_bookmark_view(request, pk, model, remove=False):
     obj = get_activity_or_404(
         request, model, pk, permission="activities.bookmark_activity"
@@ -247,10 +247,10 @@ def activity_bookmark_view(request, pk, model, remove=False):
     return redirect(obj)
 
 
+@require_POST
 @login_required
 @community_required
 @add_messages_to_response_header
-@require_POST
 def activity_like_view(request, pk, model, remove=False):
     obj = get_activity_or_404(request, model, pk, permission="activities.like_activity")
 
@@ -290,10 +290,10 @@ def activity_like_view(request, pk, model, remove=False):
     return redirect(obj)
 
 
+@require_POST
 @login_required
 @community_required
 @add_messages_to_response_header
-@require_POST
 def activity_delete_view(request, pk, model):
     obj = get_activity_or_404(
         request, model, pk, permission="activities.delete_activity"
