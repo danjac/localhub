@@ -1,94 +1,36 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import http
+
 # Django
 from django.conf import settings
-from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpResponse
 from django.urls import reverse
-from django.views.generic import View
 
 # Third Party Libraries
 import pytest
 
 # Local
 from ..factories import CommunityFactory, MembershipFactory
-from ..mixins import CommunityRequiredMixin
-from ..models import Membership, RequestCommunity
+from ..models import Membership
 
 pytestmark = pytest.mark.django_db
 
 
-class MyView(CommunityRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        return HttpResponse()
-
-
-my_view = MyView.as_view()
-
-
-class TestCommunityRequiredMixin:
-    def test_community_available(self, member, rf):
-        req = rf.get("/")
-        req.community = member.community
-        req.user = member.member
-        assert my_view(req).status_code == 200
-
-    def test_community_not_found(self, rf, user):
-        req = rf.get("/")
-        req.user = user
-        req.community = RequestCommunity(req, "example.com", "example.com")
-        assert my_view(req).url == reverse("community_not_found")
-
-    def test_community_not_found_if_ajax(self, rf, user):
-        req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        req.user = user
-        req.community = RequestCommunity(req, "example.com", "example.com")
-        with pytest.raises(Http404):
-            my_view(req).url
-
-    def test_redirect_to_community_welcome_if_anonymous(self, rf, anonymous_user):
-        req = rf.get("/")
-        req.community = CommunityFactory(public=False)
-        req.user = anonymous_user
-        assert my_view(req).url == reverse("community_welcome")
-
-    def test_redirect_to_community_welcome_if_non_members_allowed(self, rf, user):
-        req = rf.get("/")
-        req.community = CommunityFactory()
-        req.user = user
-        my_public_view = MyView.as_view(allow_non_members=True)
-        assert my_public_view(req).status_code == 200
-
-    def test_redirect_to_community_welcome_if_public(self, rf, user):
-        req = rf.get("/")
-        req.community = CommunityFactory(public=True)
-        req.user = user
-        my_public_view = MyView.as_view(allow_non_members=False)
-        assert my_public_view(req).status_code == 200
-
-    def test_redirect_to_community_welcome_if_authenticated_private(self, rf, user):
-        req = rf.get("/")
-        req.community = CommunityFactory(public=False)
-        req.user = user
-        assert my_view(req).url == reverse("community_welcome")
-
-    def test_permission_denied_if_ajax(self, rf, user):
-        req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        req.community = CommunityFactory(public=False)
-        req.user = user
-        with pytest.raises(PermissionDenied):
-            my_view(req)
-
-
 class TestCommunityDetailView:
     def test_get(self, client, member):
-        assert client.get(reverse("communities:community_detail")).status_code == 200
+        assert (
+            client.get(reverse("communities:community_detail")).status_code
+            == http.HTTPStatus.OK
+        )
 
 
 class TestCommunityWelcomeView:
     def test_get_if_authenticated(self, client, community, login_user):
-        assert client.get(reverse("community_welcome")).status_code == 200
+        assert (
+            client.get(reverse("community_welcome")).status_code == http.HTTPStatus.OK
+        )
 
     def test_get_if_member(self, client, member):
         assert client.get(reverse("community_welcome")).url == settings.HOME_PAGE_URL
@@ -96,10 +38,14 @@ class TestCommunityWelcomeView:
 
 class TestCommunityNotFoundView:
     def test_get_if_does_not_exist_anon_user(self, client):
-        assert client.get(reverse("community_not_found")).status_code == 200
+        assert (
+            client.get(reverse("community_not_found")).status_code == http.HTTPStatus.OK
+        )
 
     def test_get_if_does_not_exist_auth_user(self, client, login_user):
-        assert client.get(reverse("community_not_found")).status_code == 200
+        assert (
+            client.get(reverse("community_not_found")).status_code == http.HTTPStatus.OK
+        )
 
     def test_community_does_exist(self, client, member):
         assert client.get(reverse("community_not_found")).url == settings.HOME_PAGE_URL
@@ -107,12 +53,18 @@ class TestCommunityNotFoundView:
 
 class TestCommunityTermsView:
     def test_get(self, client, member):
-        assert client.get(reverse("communities:community_terms")).status_code == 200
+        assert (
+            client.get(reverse("communities:community_terms")).status_code
+            == http.HTTPStatus.OK
+        )
 
 
 class TestCommunityUpdateView:
     def test_get(self, client, admin):
-        assert client.get(reverse("communities:community_update")).status_code == 200
+        assert (
+            client.get(reverse("communities:community_update")).status_code
+            == http.HTTPStatus.OK
+        )
 
     def test_post(self, client, admin):
         url = reverse("communities:community_update")
@@ -169,7 +121,7 @@ class TestMembershipDetailView:
             client.get(
                 reverse("communities:membership_detail", args=[membership.id])
             ).status_code
-            == 200
+            == http.HTTPStatus.OK
         )
 
 
@@ -180,7 +132,7 @@ class TestMembershipUpdateView:
             client.get(
                 reverse("communities:membership_update", args=[membership.id])
             ).status_code
-            == 200
+            == http.HTTPStatus.OK
         )
 
     def test_post(self, client, admin, user):
@@ -197,15 +149,6 @@ class TestMembershipUpdateView:
 
 
 class TestMembershipDeleteView:
-    def test_get(self, client, admin, user):
-        membership = MembershipFactory(member=user, community=admin.community)
-        assert (
-            client.get(
-                reverse("communities:membership_delete", args=[membership.id])
-            ).status_code
-            == 200
-        )
-
     def test_delete(self, client, admin, user, mailoutbox):
         membership = MembershipFactory(community=admin.community)
         response = client.post(
@@ -227,7 +170,10 @@ class TestMembershipDeleteView:
 
 class TestMembershipLeaveView:
     def test_get(self, client, member, user):
-        assert client.get(reverse("communities:membership_leave")).status_code == 200
+        assert (
+            client.get(reverse("communities:membership_leave")).status_code
+            == http.HTTPStatus.OK
+        )
 
     def test_delete(self, client, member, user):
         response = client.post(reverse("communities:membership_leave"))

@@ -6,36 +6,27 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count, F, Q
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.shortcuts import get_object_or_404, redirect
+from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
-from django.views.generic import DeleteView, DetailView, ListView, TemplateView
+from django.views.decorators.http import require_POST
 
 # Third Party Libraries
 import rules
-from rules.contrib.views import PermissionRequiredMixin
 from turbo_response import redirect_303, render_form_response
-from turbo_response.views import TurboUpdateView
 
 # Localhub
 from localhub.common.forms import process_form
-from localhub.common.mixins import SearchMixin
 from localhub.common.pagination import render_paginated_queryset
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
+from localhub.users.utils import has_perm_or_403
 
 # Local
 from .decorators import community_admin_required, community_required
 from .emails import send_membership_deleted_email
 from .forms import CommunityForm, MembershipForm
-from .mixins import (
-    CommunityAdminRequiredMixin,
-    CurrentCommunityMixin,
-    MembershipQuerySetMixin,
-)
 from .models import Community, Membership
 
 
@@ -140,7 +131,7 @@ def community_update_view(request):
     ):
         if success:
             form.save()
-            messages.success(_("Community settings have been updated"))
+            messages.success(request, _("Community settings have been updated"))
             return redirect_303(request.path)
         return render_form_response(
             request,
@@ -149,200 +140,161 @@ def community_update_view(request):
         )
 
 
-class BaseCommunityDetailView(CurrentCommunityMixin, DetailView):
-    ...
+@community_required
+def community_detail_view(request):
+    return TemplateResponse(request, "communities/community_detail.html")
 
 
-class CommunityDetailView(BaseCommunityDetailView):
-    ...
+@community_required
+def community_terms_view(request):
+    return TemplateResponse(request, "communities/terms.html")
 
 
-community_detail_view = CommunityDetailView.as_view()
-
-
-class CommunityWelcomeView(LoginRequiredMixin, BaseCommunityDetailView):
+@community_required(allow_non_members=True)
+@login_required
+def community_welcome_view(request):
     """
     This is shown if the user is not a member (or is not authenticated).
 
     If user is already a member, redirects to home page.
     """
 
-    template_name = "communities/welcome.html"
-    allow_non_members = True
+    if rules.test_rule("communities.is_member", request.user, request.community):
+        return redirect(settings.HOME_PAGE_URL)
 
-    def get(self, request):
-        if rules.test_rule("communities.is_member", request.user, request.community):
-            return HttpResponseRedirect(settings.HOME_PAGE_URL)
-        return super().get(request)
+    join_request = JoinRequest.objects.filter(
+        sender=request.user,
+        community=request.community,
+        status__in=(
+            JoinRequest.Status.PENDING,
+            JoinRequest.Status.REJECTED,
+        ),
+    ).first()
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {
-                "join_request": self.get_join_request(),
-                "invite": self.get_invite(),
-                "is_inactive_member": self.is_inactive_member(),
-            }
-        )
-        return data
-
-    def is_inactive_member(self):
-        return rules.test_rule(
-            "communities.is_inactive_member",
-            self.request.user,
-            self.request.community,
-        )
-
-    def get_join_request(self):
-        return JoinRequest.objects.filter(
-            sender=self.request.user,
-            community=self.request.community,
-            status__in=(
-                JoinRequest.Status.PENDING,
-                JoinRequest.Status.REJECTED,
+    return TemplateResponse(
+        request,
+        "communities/welcome.html",
+        {
+            "invite": (
+                Invite.objects.pending()
+                .for_user(request.user)
+                .filter(community=request.community)
+                .first()
             ),
-        ).first()
+            "join_request": join_request,
+            "is_inactive_member": rules.test_rule(
+                "communities.is_inactive_member",
+                request.user,
+                request.community,
+            ),
+        },
+    )
 
-    def get_invite(self):
-        return (
-            Invite.objects.pending()
-            .for_user(self.request.user)
-            .filter(community=self.request.community)
-            .first()
+
+def community_not_found_view(request):
+    if request.community.active:
+        return redirect(settings.HOME_PAGE_URL)
+    return TemplateResponse(request, "communities/not_found.html")
+
+
+@community_admin_required
+@login_required
+def membership_list_view(request):
+    members = get_membership_queryset(request).order_by(
+        "member__name", "member__username"
+    )
+    if request.search:
+        members = members.search(request.search)
+    return render_paginated_queryset(
+        request,
+        members,
+        "communities/membership_list.html",
+        page_size=settings.LONG_PAGE_SIZE,
+    )
+
+
+@community_required
+@login_required
+def membership_detail_view(request, pk):
+    member = get_membership_or_404(
+        request, pk, permission="communities.view_membership"
+    )
+    return TemplateResponse(
+        request,
+        "communities/membership_detail.html",
+        {"membership": member, "object": member},
+    )
+
+
+@community_required
+@login_required
+def membership_update_view(request, pk):
+    member = get_membership_or_404(
+        request, pk, permission="communities.change_membership"
+    )
+    with process_form(request, MembershipForm, instance=member) as (form, success):
+        if success:
+            form.save()
+            messages.success(request, _("Membership has been updated"))
+            return redirect_303(member)
+        return render_form_response(
+            request, form, "communities/membership_form.html", {"membership": member}
         )
 
 
-community_welcome_view = CommunityWelcomeView.as_view()
+@community_required
+@login_required
+@require_POST
+def membership_delete_view(request, pk):
+    member = get_membership_or_404(
+        request, pk, permission="communities.delete_membership"
+    )
+
+    member.delete()
+
+    if member.member == request.user:
+        return redirect(settings.HOME_PAGE_URL)
+
+    else:
+        send_membership_deleted_email(member.member, member.community)
+
+        messages.success(
+            request,
+            _("You have deleted the membership for %(user)s")
+            % {"user": member.member.username},
+        )
+
+        return redirect("communities:membership_list")
 
 
-class CommunityTermsView(BaseCommunityDetailView):
-    template_name = "communities/terms.html"
-
-
-community_terms_view = CommunityTermsView.as_view()
-
-
-class CommunityNotFoundView(TemplateView):
-    """
-    This is shown if no community exists for this domain.
-    """
-
-    template_name = "communities/not_found.html"
-
-    def get(self, request):
-        if request.community.active:
-            return HttpResponseRedirect(settings.HOME_PAGE_URL)
-        return super().get(request)
-
-
-community_not_found_view = CommunityNotFoundView.as_view()
-
-
-class MembershipListView(
-    CommunityAdminRequiredMixin,
-    MembershipQuerySetMixin,
-    SearchMixin,
-    ListView,
-):
-    paginate_by = settings.LONG_PAGE_SIZE
-    model = Membership
-
-    def get_queryset(self):
-        qs = super().get_queryset().order_by("member__name", "member__username")
-
-        if self.search_query:
-            qs = qs.search(self.search_query)
-        return qs
-
-
-membership_list_view = MembershipListView.as_view()
-
-
-class MembershipDetailView(
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    DetailView,
-):
-
-    permission_required = "communities.view_membership"
-    model = Membership
-
-
-membership_detail_view = MembershipDetailView.as_view()
-
-
-class MembershipUpdateView(
-    SuccessMessageMixin,
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    TurboUpdateView,
-):
-    model = Membership
-    form_class = MembershipForm
-    permission_required = "communities.change_membership"
-    success_message = _("Membership has been updated")
-
-
-membership_update_view = MembershipUpdateView.as_view()
-
-
-class BaseMembershipDeleteView(
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    DeleteView,
-):
-    permission_required = "communities.delete_membership"
-    model = Membership
-
-
-class MembershipDeleteView(BaseMembershipDeleteView):
-    def get_success_url(self):
-        if self.object.member == self.request.user:
-            return settings.HOME_PAGE_URL
-        return reverse("communities:membership_list")
-
-    def get_success_message(self):
-        return _("You have deleted the membership for %(user)s") % {
-            "user": self.object.member.username
-        }
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-
-        send_membership_deleted_email(self.object.member, self.object.community)
-
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
-
-
-membership_delete_view = MembershipDeleteView.as_view()
-
-
-class MembershipLeaveView(BaseMembershipDeleteView):
+@community_required
+@login_required
+def membership_leave_view(request):
     """
     Allows the current user to be able to voluntarily leave a community.
     """
 
-    template_name = "communities/membership_leave.html"
-
-    def get_object(self):
-        return super().get_queryset().filter(member__pk=self.request.user.id).get()
-
-    def get_success_message(self):
-        return _(
-            "You have left the community %(community)s"
-            % {"community": self.object.community.name}
+    member = get_object_or_404(get_membership_queryset(request), member=request.user)
+    if request.method == "POST":
+        member.delete()
+        messages.success(
+            request,
+            _("You have left the community %(community)s")
+            % {"community": member.community.name},
         )
+        return redirect(settings.HOME_PAGE_URL)
 
-    def get_success_url(self):
-        return settings.HOME_PAGE_URL
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+    return TemplateResponse(request, "communities/membership_leave.html")
 
 
-membership_leave_view = MembershipLeaveView.as_view()
+def get_membership_or_404(request, pk, permission=None):
+    obj = get_object_or_404(get_membership_queryset(request), pk=pk)
+    if permission:
+        has_perm_or_403(request.user, permission, obj)
+    return obj
+
+
+def get_membership_queryset(request):
+    return Membership.objects.filter(community=request.community).select_related(
+        "community", "member"
+    )
