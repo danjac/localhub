@@ -59,28 +59,28 @@ def create_comment_view(request, pk, model):
     obj = get_object_or_404(get_activity_queryset(request, model), pk=pk,)
     has_perm_or_403(request.user, "activities.create_comment", obj)
 
-    form = CommentForm(request.POST)
-    if form.is_valid():
+    with process_form(request, CommentForm) as (form, success):
+        if success:
 
-        comment = form.save(commit=False)
-        comment.content_object = obj
-        comment.community = request.community
-        comment.owner = request.user
-        comment.save()
+            comment = form.save(commit=False)
+            comment.content_object = obj
+            comment.community = request.community
+            comment.owner = request.user
+            comment.save()
 
-        comment.notify_on_create()
+            comment.notify_on_create()
 
-        messages.success(request, _("Your comment has been posted"))
+            messages.success(request, _("Your comment has been posted"))
 
-        return redirect(obj)
+            return redirect(obj)
 
-    return (
-        TurboStream("comment-form")
-        .replace.template(
-            "activities/includes/comment_form.html", {"form": form, "object": obj}
+        return (
+            TurboStream("comment-form")
+            .replace.template(
+                "activities/includes/comment_form.html", {"form": form, "object": obj}
+            )
+            .response(request)
         )
-        .response(request)
-    )
 
 
 @community_required
