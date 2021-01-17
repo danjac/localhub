@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
@@ -18,13 +17,12 @@ from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
-from turbo_response import HttpResponseSeeOther
-from turbo_response.views import TurboCreateView
+from turbo_response import redirect_303, render_form_response
 
 # Localhub
+from localhub.common.forms import process_form
 from localhub.common.mixins import SearchMixin
-from localhub.common.views import ActionView
-from localhub.communities.decorators import community_admin_required
+from localhub.communities.decorators import community_admin_required, community_required
 from localhub.communities.mixins import CommunityAdminRequiredMixin
 from localhub.communities.models import Membership
 
@@ -33,15 +31,6 @@ from .emails import send_acceptance_email, send_join_request_email, send_rejecti
 from .forms import JoinRequestForm
 from .mixins import JoinRequestAdminMixin, JoinRequestQuerySetMixin
 from .models import JoinRequest
-
-
-class BaseJoinRequestActionView(
-    CommunityAdminRequiredMixin,
-    JoinRequestQuerySetMixin,
-    ActionView,
-):
-    def get_success_url(self):
-        return self.request.POST.get("redirect", reverse("join_requests:list"))
 
 
 @community_admin_required
@@ -74,58 +63,42 @@ def join_request_accept_view(request, pk):
     return redirect("join_requests:list")
 
 
-class JoinRequestRejectView(BaseJoinRequestActionView):
-    def get_queryset(self):
-        return super().get_queryset().pending()
+@community_admin_required
+@login_required
+@require_POST
+def join_request_reject_view(request, pk):
+    join_req = get_join_request_or_404(request, pk)
+    join_req.reject()
+    send_rejection_email(join_req)
+    messages.info(
+        request,
+        _("Join request for %(sender)s has been rejected")
+        % {"sender": join_req.sender.get_display_name()},
+    )
 
-    def get_success_message(self):
-        return (
-            _("Join request for %(sender)s has been rejected")
-            % {"sender": self.object.sender.get_display_name()},
+    return redirect("join_requests:list")
+
+
+@community_required(allow_non_members=True, permission="join_requests.create")
+@login_required
+def join_request_create_view(request):
+    with process_form(
+        request, JoinRequestForm, user=request.user, community=request.community
+    ) as (form, success):
+        if success:
+            join_req = form.save()
+            send_join_request_email(join_req)
+            messages.success(
+                request, _("Your request has been sent to the community admins")
+            )
+            return redirect_303(
+                settings.HOME_PAGE_URL
+                if request.community.public
+                else "community_welcome"
+            )
+        return render_form_response(
+            request, form, "join_requests/joinrequest_form.html"
         )
-
-    def post(self, request, *args, **kwargs):
-        self.object.reject()
-        send_rejection_email(self.object)
-        return HttpResponseRedirect(self.get_success_url())
-
-
-join_request_reject_view = JoinRequestRejectView.as_view()
-
-
-class JoinRequestCreateView(
-    SuccessMessageMixin,
-    LoginRequiredMixin,
-    CommunityAdminRequiredMixin,
-    TurboCreateView,
-):
-    model = JoinRequest
-    form_class = JoinRequestForm
-    template_name = "join_requests/joinrequest_form.html"
-    allow_non_members = True
-    permission_required = "join_requests.create"
-    success_message = _("Your request has been sent to the community admins")
-
-    def get_form_kwargs(self, *args, **kwargs):
-        return {
-            **super().get_form_kwargs(),
-            **{"user": self.request.user, "community": self.request.community},
-        }
-
-    def form_valid(self, form):
-        self.object = form.save()
-        send_join_request_email(self.object)
-        return HttpResponseSeeOther(self.get_success_url())
-
-    def get_success_url(self):
-        return (
-            settings.HOME_PAGE_URL
-            if self.request.community.public
-            else reverse("community_welcome")
-        )
-
-
-join_request_create_view = JoinRequestCreateView.as_view()
 
 
 class JoinRequestDeleteView(PermissionRequiredMixin, DeleteView):
