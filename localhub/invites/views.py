@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -18,33 +18,20 @@ from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
-from turbo_response.views import TurboCreateView
+from turbo_response import TemplateFormResponse, redirect_303
 
 # Localhub
 from localhub.common.decorators import add_messages_to_response_header
+from localhub.common.forms import process_form
 from localhub.common.mixins import SearchMixin
-from localhub.common.views import ActionView
 from localhub.communities.decorators import community_admin_required
-from localhub.communities.mixins import (
-    CommunityAdminRequiredMixin,
-    CommunityRequiredMixin,
-)
+from localhub.communities.mixins import CommunityAdminRequiredMixin
 
 # Local
 from .emails import send_invitation_email
 from .forms import InviteForm
 from .mixins import InviteQuerySetMixin, InviteRecipientQuerySetMixin
 from .models import Invite
-
-
-class BaseInviteAdminActionView(
-    CommunityAdminRequiredMixin, InviteQuerySetMixin, ActionView
-):
-    ...
-
-
-class BaseInviteRecipientActionView(InviteRecipientQuerySetMixin, ActionView):
-    ...
 
 
 @community_admin_required
@@ -92,54 +79,46 @@ def invite_accept_view(request, pk):
     )
 
 
-class InviteRejectView(BaseInviteRecipientActionView):
-    def get_success_url(self):
-        if Invite.objects.pending().for_user(self.request.user).exists():
-            return reverse("invites:received_list")
-        return settings.HOME_PAGE_URL
+@login_required
+@require_POST
+def invite_reject_view(request, pk):
+    invite = get_recipient_invite_or_404(request, pk)
+    invite.reject()
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.reject()
-
-        return HttpResponseRedirect(self.get_success_url())
-
-
-invite_reject_view = InviteRejectView.as_view()
+    return redirect(
+        "invites:received_list"
+        if Invite.objects.pending().for_user(request.user).exists()
+        else settings.HOME_PAGE_URL
+    )
 
 
-class InviteCreateView(
-    CommunityAdminRequiredMixin, CommunityRequiredMixin, TurboCreateView,
-):
-    model = Invite
-    form_class = InviteForm
-    success_url = reverse_lazy("invites:list")
+@community_admin_required
+@login_required
+def invite_create_view(request):
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({"community": self.request.community})
-        return kwargs
+    with process_form(request, InviteForm, community=request.community) as (
+        form,
+        success,
+    ):
+        if success:
 
-    def get_success_message(self):
-        return _("Your invitation has been sent to %(email)s") % {
-            "email": self.object.email
-        }
+            invite = form.save(commit=False)
+            invite.sender = request.user
+            invite.community = request.community
+            invite.sent = timezone.now()
+            invite.save()
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.sender = self.request.user
-        self.object.community = self.request.community
-        self.object.sent = timezone.now()
-        self.object.save()
+            # send email to recipient
+            send_invitation_email(invite)
 
-        # send email to recipient
-        send_invitation_email(self.object)
+            messages.success(
+                request,
+                _("Your invitation has been sent to %(email)s")
+                % {"email": invite.email},
+            )
+            return redirect_303("invites:list")
 
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
-
-
-invite_create_view = InviteCreateView.as_view()
+        return TemplateFormResponse(request, form, "invites/invite_form.html")
 
 
 class InviteDeleteView(

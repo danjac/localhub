@@ -92,15 +92,15 @@ def poll_create_view(request, model, form_class, template_name, is_private=False
     has_perm_or_403(request.user, "activities.create_activity", request.community)
 
     if request.method == "POST":
-        form = form_class(request.POST)
         formset = AnswersFormSet(request.POST)
     else:
-        form = form_class()
         formset = AnswersFormSet()
 
-    obj, ok = process_activity_create_form(request, model, form, is_private=is_private)
+    obj, form, success = process_activity_create_form(
+        request, model, form_class, is_private=is_private
+    )
 
-    if ok and formset.is_valid():
+    if success and formset.is_valid():
         formset.instance = obj
         formset.save()
         return redirect_303(obj)
@@ -124,15 +124,13 @@ def poll_update_view(request, pk, model, form_class, template_name):
     )
 
     if request.method == "POST":
-        form = form_class(request.POST, instance=obj)
         formset = AnswersFormSet(request.POST, instance=obj)
     else:
-        form = form_class(instance=obj)
         formset = AnswersFormSet(instance=obj)
 
-    obj, ok = process_activity_update_form(request, obj, form)
+    obj, form, success = process_activity_update_form(request, form_class, instance=obj)
 
-    if ok and formset.is_valid():
+    if success and formset.is_valid():
         formset.save()
         return redirect_303(obj)
 

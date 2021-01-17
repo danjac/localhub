@@ -20,6 +20,7 @@ from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redire
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
 from localhub.common.decorators import add_messages_to_response_header
+from localhub.common.forms import process_form
 from localhub.common.pagination import get_pagination_context, render_paginated_queryset
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.communities.decorators import community_required
@@ -40,15 +41,10 @@ def activity_create_view(
 
     has_perm_or_403(request.user, "activities.create_activity", request.community)
 
-    if request.method == "POST":
-        form = form_class(request.POST, request.FILES)
-    else:
-        form = form_class()
-
     return handle_activity_create(
         request,
         model,
-        form,
+        form_class,
         template_name,
         is_private=is_private,
         extra_context=extra_context,
@@ -384,11 +380,20 @@ def render_activity_list(
 
 
 def handle_activity_create(
-    request, model, form, template_name, *, is_private=False, extra_context=None,
+    request,
+    model,
+    form_class,
+    template_name,
+    *,
+    is_private=False,
+    extra_context=None,
+    **form_kwargs,
 ):
-    obj, ok = process_activity_create_form(request, model, form, is_private=is_private)
+    obj, form, success = process_activity_create_form(
+        request, model, form_class, is_private=is_private, **form_kwargs
+    )
 
-    if ok:
+    if success:
         return redirect_303(obj)
 
     return render_activity_create_form(
@@ -410,14 +415,13 @@ def handle_activity_update(
     *,
     permission="activities.change_activity",
     extra_context=None,
+    **form_kwargs,
 ):
     obj = get_activity_or_404(request, model, pk, permission=permission)
-    if request.method == "POST":
-        form = form_class(request.POST, request.FILES, instance=obj)
-    else:
-        form = form_class(instance=obj)
-    obj, ok = process_activity_update_form(request, obj, form)
-    if ok:
+    obj, form, success = process_activity_update_form(
+        request, form_class, instance=obj, **form_kwargs
+    )
+    if success:
         return redirect_303(obj)
 
     return render_activity_update_form(
@@ -425,58 +429,66 @@ def handle_activity_update(
     )
 
 
-def process_activity_create_form(request, model, form, *, is_private=False):
+def process_activity_create_form(
+    request, model, form_class, *, is_private=False, **form_kwargs
+):
 
-    if request.method == "POST" and form.is_valid():
+    with process_form(request, form_class, **form_kwargs) as (form, success):
+        if success:
 
-        publish = is_private is False and "save_private" not in request.POST
+            publish = is_private is False and "save_private" not in request.POST
 
-        obj = form.save(commit=False)
-        obj.owner = request.user
-        obj.community = request.community
+            obj = form.save(commit=False)
+            obj.owner = request.user
+            obj.community = request.community
 
-        if publish:
-            obj.published = timezone.now()
+            if publish:
+                obj.published = timezone.now()
 
-        obj.save()
+            obj.save()
 
-        if publish:
-            obj.notify_on_publish()
+            if publish:
+                obj.notify_on_publish()
 
-        success_message = (
-            _("Your %(model)s has been published")
-            if obj.published
-            else _("Your %(model)s has been saved to your Private Stash")
-        )
+            success_message = (
+                _("Your %(model)s has been published")
+                if obj.published
+                else _("Your %(model)s has been saved to your Private Stash")
+            )
 
-        messages.success(request, model_translation_string(success_message, obj))
+            messages.success(request, model_translation_string(success_message, obj))
 
-        return obj, True
+            return obj, form, True
 
-    return None, False
+    return None, form, False
 
 
-def process_activity_update_form(request, obj, form):
+def process_activity_update_form(request, form_class, instance, **form_kwargs):
 
-    if request.method == "POST" and form.is_valid():
-        obj = form.save(commit=False)
-        obj.editor = request.user
-        obj.edited = timezone.now()
-        obj.save()
+    with process_form(request, form_class, instance=instance, **form_kwargs) as (
+        form,
+        success,
+    ):
 
-        obj.update_reshares()
+        if success:
+            instance = form.save(commit=False)
+            instance.editor = request.user
+            instance.edited = timezone.now()
+            instance.save()
 
-        if obj.published:
-            obj.notify_on_update()
+            instance.update_reshares()
 
-        success_message = model_translation_string(
-            _("Your %(model)s has been updated"), obj
-        )
+            if instance.published:
+                instance.notify_on_update()
 
-        messages.success(request, success_message)
+            success_message = model_translation_string(
+                _("Your %(model)s has been updated"), instance
+            )
 
-        return obj, True
-    return obj, False
+            messages.success(request, success_message)
+
+            return instance, form, True
+    return instance, form, False
 
 
 def render_activity_create_form(

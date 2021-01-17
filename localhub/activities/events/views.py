@@ -97,22 +97,17 @@ def event_create_view(request, model, form_class, **kwargs):
 
     has_perm_or_403(request.user, "activities.create_activity", request.community)
 
-    if request.method == "POST":
-        form = form_class(request.POST)
-    else:
-        try:
-            [day, month, year] = [
-                int(request.GET[param]) for param in ("day", "month", "year")
-            ]
-            starts = datetime.datetime(day=day, month=month, year=year, hour=9)
-        except (KeyError, ValueError):
-            starts = None
+    try:
+        [day, month, year] = [
+            int(request.GET[param]) for param in ("day", "month", "year")
+        ]
+        starts = datetime.datetime(day=day, month=month, year=year, hour=9)
+    except (KeyError, ValueError):
+        starts = None
 
-        form = form_class(
-            initial={"timezone": request.user.default_timezone, "starts": starts}
-        )
+    initial = {"timezone": request.user.default_timezone, "starts": starts}
 
-    return handle_activity_create(request, model, form, **kwargs)
+    return handle_activity_create(request, model, form_class, initial=initial, **kwargs)
 
 
 event_update_view = override_timezone(activity_update_view)
