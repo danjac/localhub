@@ -1,8 +1,6 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{# Use this template together with SearchMixin views #}
-
 {% load i18n %}
 {% load rules %}
 
@@ -11,7 +9,7 @@
 <form method="GET"
       action="{{ request.path }}"
       data-controller="search"
-      data-search-param-value="{{ view.search_parameter|default:'q' }}"
+      data-search-param-value="q"
       data-action="search#search"
       class="my-2 search-form">
   {% for name, value in non_search_params.items %}
@@ -21,15 +19,14 @@
   {% endfor %}
   <div class="flex items-center mb-3">
     <input class="form-input"
-           name="{{ view.search_parameter|default:'q' }}"
+           name="q"
            type="search"
-           {% if not view.search_optional %}
-           required
-           {% endif %}
            data-search-target="input"
            data-action="keyup->search#toggleSelector"
            placeholder="{% trans "Search..." %}"
-           value="{% if search %}{{ search }}{% else %}{{ view.search_query|default:"" }}{% endif %}">
+           {% if search %}
+           value="{{ search }}"
+           {% endif %}>
   </div>
   {% if selector %}
   <div class="relative mb-3">
@@ -76,14 +73,13 @@
    class="btn btn-block bg-white mb-3">
   {% trans "Clear Search" %}
 </a>
-{% endif %}
-
-{% if view.search_query and object_list %}
+{% if object_list %}
 <div class="notification font-bold mb-3">
-  {% blocktrans count counter=paginator.count with query=view.search_query %}
-  1 Result for "{{ query }}"
+  {% blocktrans count counter=paginator.count %}
+  1 Result for "{{ search }}"
   {% plural %}
-  {{ counter }} Results for "{{ query }}"
+  {{ counter }} Results for "{{ search }}"
   {% endblocktrans %}
 </div>
+{% endif %}
 {% endif %}

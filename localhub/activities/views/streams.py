@@ -69,14 +69,12 @@ def activity_stream_view(request):
 
 @community_required
 def activity_search_view(request):
-    search = request.GET.get("q", None)
-
     def _filter_queryset(qs):
-        if search:
+        if request.search:
             return (
                 qs.exclude_blocked(request.user)
                 .published_or_owner(request.user)
-                .search(search)
+                .search(request.search)
             )
         return qs.none()
 
@@ -84,8 +82,8 @@ def activity_search_view(request):
         request,
         _filter_queryset,
         "activities/search.html",
-        ordering=("-rank", "-created") if search else None,
-        extra_context={"search": search, "non_search_path": reverse("activity_stream")},
+        ordering=("-rank", "-created") if request.search else None,
+        extra_context={"non_search_path": reverse("activity_stream")},
     )
 
 
@@ -196,20 +194,17 @@ def timeline_view(request):
 @community_required
 @login_required
 def private_view(request):
-    search = request.GET.get("q", None)
-
     def _filter_queryset(qs):
         qs = qs.private(request.user)
-        if search:
-            qs = qs.search(search)
+        if request.search:
+            qs = qs.search(request.search)
         return qs
 
     return render_activity_stream(
         request,
         _filter_queryset,
         "activities/private.html",
-        ordering=("-rank", "-created") if search else "-created",
-        extra_context={"search": search},
+        ordering=("-rank", "-created") if request.search else "-created",
     )
 
 

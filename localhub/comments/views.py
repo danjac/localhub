@@ -32,14 +32,12 @@ from .models import Comment
 def comment_list_view(request):
     comments = get_comment_queryset(request)
 
-    if search := request.GET.get("q", None):
-        comments = comments.search(search).order_by("-rank", "-created")
+    if request.search:
+        comments = comments.search(request.search).order_by("-rank", "-created")
     else:
         comments = comments.order_by("-created")
 
-    return render_paginated_queryset(
-        request, comments, "comments/comment_list.html", {"search": search},
-    )
+    return render_paginated_queryset(request, comments, "comments/comment_list.html")
 
 
 @community_required

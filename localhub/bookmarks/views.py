@@ -15,9 +15,6 @@ from localhub.private_messages.models import Message
 @community_required
 @login_required
 def bookmarks_stream_view(request):
-
-    search = request.GET.get("q", None)
-
     def _filter_queryset(qs):
         qs = (
             qs.published_or_owner(request.user)
@@ -25,7 +22,7 @@ def bookmarks_stream_view(request):
             .with_bookmarked_timestamp(request.user)
         )
 
-        if search:
+        if request.search:
             qs = qs.search(qs)
         return qs
 
@@ -33,8 +30,9 @@ def bookmarks_stream_view(request):
         request,
         _filter_queryset,
         "bookmarks/activities.html",
-        ordering=("-rank", "-bookmarked") if search else ("-bookmarked", "-created"),
-        extra_context={"search": search},
+        ordering=("-rank", "-bookmarked")
+        if request.search
+        else ("-bookmarked", "-created"),
     )
 
 
@@ -50,17 +48,15 @@ def bookmarks_message_list_view(request):
         .distinct()
     )
 
-    if search := request.GET.get("q", None):
-        messages = messages.search(search)
+    if request.search:
+        messages = messages.search(request.search)
         ordering = ("-rank", "-bookmarked")
     else:
         ordering = ("-bookmarked", "-created")
 
     messages = messages.order_by(*ordering)
 
-    return render_paginated_queryset(
-        request, messages, "bookmarks/messages.html", {"search": search},
-    )
+    return render_paginated_queryset(request, messages, "bookmarks/messages.html",)
 
 
 @community_required
@@ -75,14 +71,12 @@ def bookmarks_comment_list_view(request):
         .bookmarked(request.user)
         .with_bookmarked_timestamp(request.user)
     )
-    if search := request.GET.get("q", None):
-        comments = comments.search(search)
+    if request.search:
+        comments = comments.search(request.search)
         ordering = ("-rank", "-bookmarked")
     else:
         ordering = ("-bookmarked", "-created")
 
     comments = comments.order_by(*ordering)
 
-    return render_paginated_queryset(
-        request, comments, "bookmarks/comments.html", {"search": search,},
-    )
+    return render_paginated_queryset(request, comments, "bookmarks/comments.html")

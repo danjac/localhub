@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -12,7 +11,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView
 
 # Third Party Libraries
 from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redirect_303
@@ -20,7 +18,6 @@ from turbo_response import TemplateFormResponse, TurboFrame, TurboStream, redire
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
-from localhub.common.mixins import SearchMixin
 from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.users.utils import has_perm_or_403
@@ -316,7 +313,3 @@ def message_delete_view(request, pk):
         )
 
     return TurboStream(f"message-{pk}").remove.response()
-
-
-class BaseMessageListView(SearchMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE

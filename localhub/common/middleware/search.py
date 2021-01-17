@@ -4,9 +4,6 @@
 # Standard Library
 import functools
 
-# Django
-from django.utils.functional import SimpleLazyObject
-
 
 class SearchMiddleware:
     """
@@ -23,5 +20,5 @@ class SearchMiddleware:
         def _get_search():
             return request.GET.get(self.search_parameter, "").strip()
 
-        request.search = SimpleLazyObject(lambda: _get_search())
+        request.search = _get_search()
         return self.get_response(request)

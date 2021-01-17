@@ -213,14 +213,12 @@ def user_activity_mentions_view(request, username):
 def member_list_view(request):
 
     qs = get_member_queryset(request)
-    if search := request.GET.get("q", None):
-        qs = qs.search(search).order_by("-rank")
+    if request.search:
+        qs = qs.search(request.search).order_by("-rank")
     else:
         qs = qs.order_by("name", "username")
 
-    return render_paginated_queryset(
-        request, qs, "users/list/members.html", {"search": search}
-    )
+    return render_paginated_queryset(request, qs, "users/list/members.html")
 
 
 @community_required
@@ -265,10 +263,9 @@ def user_autocomplete_list_view(request):
 
     if request.user.is_authenticated:
         qs = qs.exclude(pk=request.user.pk)
-    search_term = request.GET.get("q", "").strip()
-    if search_term:
+    if request.search:
         qs = qs.filter(
-            Q(Q(username__icontains=search_term) | Q(name__icontains=search_term))
+            Q(Q(username__icontains=request.search) | Q(name__icontains=request.search))
         ).order_by("name", "username")[: settings.DEFAULT_PAGE_SIZE]
     else:
         qs = qs.none()
