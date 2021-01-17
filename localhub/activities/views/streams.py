@@ -13,7 +13,6 @@ from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import date_format
-from django.views.generic import TemplateView
 from django.views.generic.dates import _date_from_string
 
 # Third Party Libraries
@@ -22,7 +21,6 @@ from dateutil import relativedelta
 # Localhub
 from localhub.common.pagination import PresetCountPaginator
 from localhub.communities.decorators import community_required
-from localhub.communities.mixins import CommunityRequiredMixin
 from localhub.join_requests.models import JoinRequest
 from localhub.notifications.models import Notification
 
@@ -279,72 +277,3 @@ def make_date_lookup_value(value):
     if settings.USE_TZ:
         value = timezone.make_aware(value)
     return value
-
-
-class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
-    """
-    Pattern adapted from:
-    https://simonwillison.net/2018/Mar/25/combined-recent-additions/
-    """
-
-    allow_empty = True
-    ordering = ("-created", "-published")
-
-    paginate_by = settings.DEFAULT_PAGE_SIZE
-    paginator_class = PresetCountPaginator
-    page_kwarg = "page"
-
-    def get_ordering(self):
-        return self.ordering
-
-    def filter_queryset(self, queryset):
-        """
-        Override this method for view-specific filtering
-        """
-        return queryset.for_community(community=self.request.community)
-
-    def get_queryset_for_model(self, model):
-        """
-        Include any annotations etc you need
-        """
-        return model.objects.for_activity_stream(
-            self.request.user, self.request.community
-        ).distinct()
-
-    def get_count_queryset_for_model(self, model):
-        """
-        We do not usually need all the additional annotations etc for the count.
-        """
-        return model.objects.distinct()
-
-    def get_count(self):
-        return get_activity_queryset_count(
-            lambda model: self.filter_queryset(self.get_count_queryset_for_model(model))
-        )
-
-    def get_page(self):
-        qs, querysets = get_activity_querysets(
-            lambda model: self.filter_queryset(self.get_queryset_for_model(model)),
-            ordering=self.get_ordering(),
-        )
-
-        page = self.paginator_class(
-            object_list=qs,
-            count=self.get_count(),
-            per_page=self.paginate_by,
-            allow_empty_first_page=self.allow_empty,
-        ).get_page(self.request.GET.get(self.page_kwarg, 1))
-
-        return load_objects(page, querysets)
-
-    def get_context_data(self, **kwargs):
-        page = self.get_page()
-        return {
-            **super().get_context_data(**kwargs),
-            **{
-                "page_obj": page,
-                "paginator": page.paginator,
-                "object_list": page.object_list,
-                "is_paginated": page.has_other_pages(),
-            },
-        }
