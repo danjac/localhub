@@ -5,29 +5,25 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Case, IntegerField, Value, When
 from django.shortcuts import get_object_or_404, redirect
-from django.utils.functional import cached_property
+from django.template.response import TemplateResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, ListView
 
 # Third Party Libraries
 from turbo_response import redirect_303, render_form_response
 
 # Localhub
 from localhub.common.forms import process_form
-from localhub.common.mixins import SearchMixin
+from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_admin_required, community_required
-from localhub.communities.mixins import CommunityAdminRequiredMixin
 from localhub.communities.models import Membership
 from localhub.users.utils import has_perm_or_403
 
 # Local
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
 from .forms import JoinRequestForm
-from .mixins import JoinRequestAdminMixin, JoinRequestQuerySetMixin
 from .models import JoinRequest
 
 
@@ -126,87 +122,70 @@ def join_request_delete_view(request, pk):
     return redirect(success_url)
 
 
-class JoinRequestDetailView(
-    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, DetailView
-):
-    model = JoinRequest
+@community_admin_required
+@login_required
+def join_request_detail_view(request, pk):
+    join_req = get_join_request_or_404(request, pk)
+    return TemplateResponse(
+        request, "join_requests/joinrequest_detail.html", {"object": join_req}
+    )
 
 
-join_request_detail_view = JoinRequestDetailView.as_view()
+@community_admin_required
+@login_required
+def join_request_list_view(request):
+
+    join_reqs = get_join_request_queryset(request)
+    total_count = join_reqs.count()
+
+    status = request.GET.get("status")
+    status_display = None
+
+    if total_count == 0 or status not in JoinRequest.Status.values:
+        status = None
+
+    if status:
+        status_display = dict(JoinRequest.Status.choices)[status]
+        join_reqs = join_reqs.filter(status=status).order_by("-created")
+    else:
+        join_reqs = join_reqs.annotate(
+            priority=Case(
+                When(status=JoinRequest.Status.PENDING, then=Value(1)),
+                default_value=0,
+                output_field=IntegerField(),
+            )
+        ).order_by("priority", "-created")
+
+    if request.search:
+        join_reqs = join_reqs.search(request.search)
+
+    return render_paginated_queryset(
+        request,
+        join_reqs,
+        "join_requests/joinrequest_list.html",
+        {
+            "status": status,
+            "status_display": status_display,
+            "status_choices": list(JoinRequest.Status.choices),
+            "total_count": total_count,
+        },
+    )
 
 
-class JoinRequestListView(
-    JoinRequestQuerySetMixin, JoinRequestAdminMixin, SearchMixin, ListView
-):
-    paginate_by = settings.LONG_PAGE_SIZE
-    model = JoinRequest
-
-    @cached_property
-    def status(self):
-        status = self.request.GET.get("status")
-        if status in JoinRequest.Status.values and self.total_count:
-            return status
-        return None
-
-    @cached_property
-    def status_display(self):
-        return dict(JoinRequest.Status.choices)[self.status] if self.status else None
-
-    @cached_property
-    def total_count(self):
-        return super().get_queryset().count()
-
-    def get_queryset(self):
-        qs = super().get_queryset().select_related("community", "sender")
-        if self.search_query:
-            qs = qs.search(self.search_query)
-
-        if self.status:
-            qs = qs.filter(status=self.status).order_by("-created")
-        else:
-            qs = qs.annotate(
-                priority=Case(
-                    When(status=JoinRequest.Status.PENDING, then=Value(1)),
-                    default_value=0,
-                    output_field=IntegerField(),
-                )
-            ).order_by("priority", "-created")
-        return qs
-
-    def get_context_data(self, **kwargs):
-        return {
-            **super().get_context_data(**kwargs),
-            **{
-                "total_count": self.total_count,
-                "status": self.status,
-                "status_display": self.status_display,
-                "status_choices": list(JoinRequest.Status.choices),
-            },
-        }
-
-
-join_request_list_view = JoinRequestListView.as_view()
-
-
-class SentJoinRequestListView(LoginRequiredMixin, ListView):
+@login_required
+def sent_join_request_list_view(request):
     """
     List of pending join requests sent by this user
     """
 
-    model = JoinRequest
-    paginate_by = settings.LONG_PAGE_SIZE
-    template_name = "join_requests/sent_joinrequest_list.html"
-
-    def get_queryset(self):
-        return (
-            JoinRequest.objects.pending()
-            .for_sender(self.request.user)
-            .select_related("community")
-            .order_by("-created")
-        )
-
-
-sent_join_request_list_view = SentJoinRequestListView.as_view()
+    return render_paginated_queryset(
+        request,
+        JoinRequest.objects.for_sender(request.user)
+        .select_related("community")
+        .order_by("-created"),
+        "join_requests/sent_joinrequest_list.html",
+        page_size=settings.LONG_PAGE_SIZE,
+    )
 
 
 def get_join_request_or_404(request, pk, *, status=None):
