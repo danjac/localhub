@@ -6,205 +6,150 @@ import json
 
 # Django
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
-from django.urls import reverse
-from django.views.generic import DeleteView, ListView, TemplateView, View
-from django.views.generic.detail import SingleObjectMixin
+from django.http import HttpResponseBadRequest, JsonResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.template.response import TemplateResponse
+from django.views.decorators.http import require_POST
 
 # Third Party Libraries
 from turbo_response import TurboStream
 
 # Localhub
-from localhub.communities.mixins import CommunityRequiredMixin
+from localhub.common.pagination import render_paginated_queryset
+from localhub.communities.decorators import community_required
 
 # Local
-from .mixins import (
-    NotificationQuerySetMixin,
-    NotificationSuccessRedirectMixin,
-    UnreadNotificationQuerySetMixin,
-)
 from .models import Notification, PushSubscription
 from .signals import notification_read
 
 
-class NotificationListView(NotificationQuerySetMixin, ListView):
-    paginate_by = settings.LONG_PAGE_SIZE
-    template_name = "notifications/notification_list.html"
-    model = Notification
+@community_required
+@login_required
+def notification_list_view(request):
+    qs = (
+        get_notification_queryset(request)
+        .exclude_blocked_actors(request.user)
+        .prefetch_related("content_object")
+        .select_related("actor", "content_type", "community", "recipient")
+        .order_by("is_read", "-created")
+    )
 
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .exclude_blocked_actors(self.request.user)
-            .prefetch_related("content_object")
-            .select_related("actor", "content_type", "community", "recipient")
-            .order_by("is_read", "-created")
-        )
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {
-                "is_unread_notifications": self.get_queryset()
-                .filter(is_read=False)
-                .exists(),
-                "webpush_settings": {
-                    "public_key": settings.VAPID_PUBLIC_KEY,
-                    "enabled": settings.WEBPUSH_ENABLED,
-                },
-            }
-        )
-        return data
+    return render_paginated_queryset(
+        request,
+        qs,
+        "notifications/notification_list.html",
+        {
+            "is_unread_notifications": qs.filter(is_read=False).exists(),
+            "webpush_settings": {
+                "public_key": settings.VAPID_PUBLIC_KEY,
+                "enabled": settings.WEBPUSH_ENABLED,
+            },
+        },
+        page_size=settings.LONG_PAGE_SIZE,
+    )
 
 
-notification_list_view = NotificationListView.as_view()
-
-
-class NotificationMarkAllReadView(
-    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, View
-):
-    def post(self, request, *args, **kwargs):
-        qs = self.get_queryset()
-        [
-            notification_read.send(
-                sender=notification.content_object.__class__,
-                instance=notification.content_object,
-            )
-            for notification in qs.prefetch_related("content_object")
-        ]
-        qs.update(is_read=True)
-        return HttpResponseRedirect(reverse("notifications:list"))
-
-
-notification_mark_all_read_view = NotificationMarkAllReadView.as_view()
-
-
-class NotificationMarkReadView(
-    UnreadNotificationQuerySetMixin, SingleObjectMixin, View
-):
-    def post(self, request, *args, **kwargs):
-
-        self.object = self.get_object()
-
-        self.object.is_read = True
-        self.object.save()
-
+@community_required
+@login_required
+@require_POST
+def notification_mark_all_read_view(request):
+    qs = get_unread_notification_queryset(request)
+    [
         notification_read.send(
-            sender=self.object.content_object.__class__,
-            instance=self.object.content_object,
+            sender=notification.content_object.__class__,
+            instance=notification.content_object,
         )
-
-        target = (
-            f"notification-{self.object.id}"
-            if Notification.objects.filter(
-                recipient=self.request.user, is_read=False
-            ).exists()
-            else "notifications"
-        )
-        return TurboStream(target).remove.response()
+        for notification in qs.prefetch_related("content_object")
+    ]
+    qs.update(is_read=True)
+    return redirect("notifications:list")
 
 
-notification_mark_read_view = NotificationMarkReadView.as_view()
+@community_required
+@login_required
+@require_POST
+def notification_mark_read_view(request, pk):
+    obj = get_object_or_404(get_unread_notification_queryset(request), pk=pk)
+    obj.is_read = True
+    obj.save()
+    notification_read.send(
+        sender=obj.content_object.__class__, instance=obj.content_object,
+    )
+
+    target = (
+        f"notification-{obj.id}"
+        if Notification.objects.filter(recipient=request.user, is_read=False).exists()
+        else "notifications"
+    )
+    return TurboStream(target).remove.response()
 
 
-class NotificationDeleteAllView(
-    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, View,
-):
-    def post(self, request):
-        self.get_queryset().delete()
-        return HttpResponseRedirect(reverse("notifications:list"))
+@community_required
+@login_required
+@require_POST
+def notification_delete_all_view(request):
+    get_notification_queryset(request).delete()
+    return redirect("notifications:list")
 
 
-notification_delete_all_view = NotificationDeleteAllView.as_view()
+@community_required
+@login_required
+@require_POST
+def notification_delete_view(request, pk):
+    obj = get_object_or_404(get_notification_queryset(request), pk=pk)
+    target = f"notification-{obj.id}"
+    obj.delete()
+    return TurboStream(target).remove.response()
 
 
-class NotificationDeleteView(NotificationQuerySetMixin, DeleteView):
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        target = f"notification-{self.object.id}"
-        self.object.delete()
-        return TurboStream(target).remove.response()
+@community_required
+@login_required
+@require_POST
+def subscribe_view(request, remove=False):
 
+    try:
+        json_body = json.loads(request.body.decode("utf-8"))
 
-notification_delete_view = NotificationDeleteView.as_view()
+        data = {"endpoint": json_body["endpoint"]}
+        keys = json_body["keys"]
+        data["auth"] = keys["auth"]
+        data["p256dh"] = keys["p256dh"]
 
+    except (ValueError, KeyError):
+        return HttpResponseBadRequest()
 
-class BasePushSubscriptionView(CommunityRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
+    data |= {"user": request.user, "community": request.community}
+
+    if remove:
+        PushSubscription.filter(**data).delete()
+    else:
         try:
-            json_body = json.loads(request.body.decode("utf-8"))
-
-            data = {"endpoint": json_body["endpoint"]}
-            keys = json_body["keys"]
-            data["auth"] = keys["auth"]
-            data["p256dh"] = keys["p256dh"]
-
-        except (ValueError, KeyError):
-            return HttpResponseBadRequest()
-
-        return self.handle_action(request, **data)
-
-    def handle_action(self, request, auth, p256dh, endpoint):
-        raise NotImplementedError
+            PushSubscription.objects.get_or_create(**data)
+        except IntegrityError:
+            pass  # dupe, ignore
+    return JsonResponse({"message": "ok"})
 
 
-class ServiceWorkerView(TemplateView):
+def service_worker_view(request):
     """
     Returns template containing serviceWorker JS, can't use
     static as must always be under domain. We can also pass
     in server specific settings.
     """
 
-    template_name = "notifications/service_worker.js"
-
-    def get(self, request):
-        response = super().get(request)
-        response["Content-Type"] = "application/javascript"
-        return response
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["vapid_public_key"] = settings.VAPID_PUBLIC_KEY
-        return data
+    return TemplateResponse(
+        request,
+        "notifications/service_worker.js",
+        {"vapid_public_key": settings.VAPID_PUBLIC_KEY},
+        content_type="application/javascript",
+    )
 
 
-service_worker_view = ServiceWorkerView.as_view()
+def get_notification_queryset(request):
+    return Notification.objects.filter(recipient=request.user)
 
 
-class SubscribeView(BasePushSubscriptionView):
-    def handle_action(self, request, auth, p256dh, endpoint):
-
-        try:
-            PushSubscription.objects.get_or_create(
-                auth=auth,
-                p256dh=p256dh,
-                endpoint=endpoint,
-                user=request.user,
-                community=request.community,
-            )
-        except IntegrityError:
-            pass  # dupe, ignore
-
-        return JsonResponse({"message": "ok"}, status=201)
-
-
-subscribe_view = SubscribeView.as_view()
-
-
-class UnsubscribeView(BasePushSubscriptionView):
-    def handle_action(self, request, auth, p256dh, endpoint):
-
-        PushSubscription.objects.filter(
-            auth=auth,
-            p256dh=p256dh,
-            endpoint=endpoint,
-            user=request.user,
-            community=request.community,
-        ).delete()
-
-        return JsonResponse({"message": "ok"}, status=200)
-
-
-unsubscribe_view = UnsubscribeView.as_view()
+def get_unread_notification_queryset(request):
+    return get_notification_queryset(request).filter(is_read=False)
