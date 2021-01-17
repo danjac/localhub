@@ -7,16 +7,16 @@ import operator
 
 # Django
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import ListView
+from django.views.decorators.http import require_POST
 
 # Third Party Libraries
-from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 from turbo_response import TurboFrame
 
@@ -24,24 +24,7 @@ from turbo_response import TurboFrame
 from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import render_activity_stream
 from localhub.common.pagination import render_paginated_queryset
-from localhub.common.views import ActionView
 from localhub.communities.decorators import community_required
-
-# Local
-from .mixins import TagQuerySetMixin
-
-
-class BaseTagListView(TagQuerySetMixin, ListView):
-    def get_queryset(self):
-        return super().get_queryset().order_by("name")
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["content_warnings"] = [
-            tag.strip().lower()[1:]
-            for tag in self.request.community.content_warning_tags.split()
-        ]
-        return data
 
 
 def tag_autocomplete_list_view(request):
@@ -133,79 +116,51 @@ def tag_detail_view(request, slug):
     )
 
 
-class BaseTagActionView(PermissionRequiredMixin, TagQuerySetMixin, ActionView):
-    def get_permission_object(self):
-        return self.request.community
+@community_required(permission="users.follow_tag")
+@login_required
+@require_POST
+def tag_follow_view(request, pk, remove=False):
 
+    tag = get_object_or_404(Tag, pk=pk)
 
-class BaseTagFollowView(BaseTagActionView):
-    permission_required = "users.follow_tag"
+    if remove:
+        request.user.following_tags.remove(tag)
+        messages.info(request, _("You are no longer following #%(tag)s" % {"tag": tag}))
+    else:
+        request.user.following_tags.add(tag)
+        messages.success(request, _("You are now following #%(tag)s" % {"tag": tag}))
 
-    def render_to_response(self, is_following):
-        return (
-            TurboFrame(f"hashtag-{self.object.id}-follow")
-            .template(
-                "hashtags/includes/follow.html",
-                {"object": self.object, "is_following": is_following},
-            )
-            .response(self.request)
+    return (
+        TurboFrame(f"hashtag-{tag.id}-follow")
+        .template(
+            "hashtags/includes/follow.html",
+            {"object": tag, "is_following": not (remove)},
         )
+        .response(request)
+    )
 
 
-class TagFollowView(BaseTagFollowView):
-    success_message = _("You are now following #%(object)s")
+@community_required(permission="users.block_tag")
+@login_required
+@require_POST
+def tag_block_view(request, pk, remove=False):
 
-    def post(self, request, *args, **kwargs):
-        self.request.user.following_tags.add(self.object)
-        return self.render_to_response(is_following=True)
+    tag = get_object_or_404(Tag, pk=pk)
 
+    if remove:
+        request.user.blocked_tags.remove(tag)
+        messages.info(request, _("You are no longer blocking #%(tag)s" % {"tag": tag}))
+    else:
+        request.user.blocked_tags.add(tag)
+        messages.success(request, _("You are now blocking #%(tag)s" % {"tag": tag}))
 
-tag_follow_view = TagFollowView.as_view()
-
-
-class TagUnfollowView(BaseTagFollowView):
-    success_message = _("You are no longer following #%(object)s")
-
-    def post(self, request, *args, **kwargs):
-        self.request.user.following_tags.remove(self.object)
-        return self.render_to_response(is_following=False)
-
-
-tag_unfollow_view = TagUnfollowView.as_view()
-
-
-class BaseTagBlockView(BaseTagActionView):
-    permission_required = "users.block_tag"
-
-    def render_to_response(self, is_blocked):
-        return (
-            TurboFrame(f"hashtag-{self.object.id}-block")
-            .template(
-                "hashtags/includes/block.html",
-                {"object": self.object, "is_blocked": is_blocked},
-            )
-            .response(self.request)
+    return (
+        TurboFrame(f"hashtag-{tag.id}-block")
+        .template(
+            "hashtags/includes/block.html", {"object": tag, "is_blocked": not (remove)},
         )
-
-
-class TagBlockView(BaseTagBlockView):
-    def post(self, request, *args, **kwargs):
-        self.request.user.blocked_tags.add(self.object)
-        return self.render_to_response(is_blocked=True)
-
-
-tag_block_view = TagBlockView.as_view()
-
-
-class TagUnblockView(BaseTagBlockView):
-    success_message = _("You are no longer blocking #%(object)s")
-
-    def post(self, request, *args, **kwargs):
-        self.request.user.blocked_tags.remove(self.object)
-        return self.render_to_response(is_blocked=False)
-
-
-tag_unblock_view = TagUnblockView.as_view()
+        .response(request)
+    )
 
 
 def get_tag_queryset(request, exclude_unused_tags=False):

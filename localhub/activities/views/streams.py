@@ -208,14 +208,12 @@ def private_view(request):
     )
 
 
-def render_activity_stream(
+def get_activity_stream_context(
     request,
     queryset_filter,
-    template_name,
     *,
     ordering=("-created", "-published"),
     page_size=settings.DEFAULT_PAGE_SIZE,
-    extra_context=None,
 ):
     """
     Pattern adapted from:
@@ -242,17 +240,31 @@ def render_activity_stream(
     ).get_page(request.GET.get("q", 1))
 
     page = load_objects(page, querysets)
-    print(extra_context)
 
-    context = {
+    return {
         "page_obj": page,
         "paginator": page.paginator,
         "object_list": page.object_list,
         "is_paginated": page.has_other_pages(),
-        **(extra_context or {}),
     }
 
-    return TemplateResponse(request, template_name, context)
+
+def render_activity_stream(
+    request, queryset_filter, template_name, *, extra_context=None, **kwargs
+):
+    """
+    Pattern adapted from:
+    https://simonwillison.net/2018/Mar/25/combined-recent-additions/
+    """
+
+    return TemplateResponse(
+        request,
+        template_name,
+        {
+            **get_activity_stream_context(request, queryset_filter, **kwargs),
+            **(extra_context or {}),
+        },
+    )
 
 
 def get_months(dates, year=None):
