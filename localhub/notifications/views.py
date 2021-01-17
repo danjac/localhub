@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Standard Library
+import http
 import json
 
 # Django
@@ -123,13 +124,15 @@ def subscribe_view(request, remove=False):
     data |= {"user": request.user, "community": request.community}
 
     if remove:
-        PushSubscription.filter(**data).delete()
+        PushSubscription.objects.filter(**data).delete()
+        status = http.HTTPStatus.OK
     else:
         try:
-            PushSubscription.objects.get_or_create(**data)
+            _, created = PushSubscription.objects.get_or_create(**data)
+            status = http.HTTPStatus.CREATED if created else http.HTTPStatus.OK
         except IntegrityError:
             pass  # dupe, ignore
-    return JsonResponse({"message": "ok"})
+    return JsonResponse({"message": "ok"}, status=status)
 
 
 def service_worker_view(request):
@@ -148,7 +151,9 @@ def service_worker_view(request):
 
 
 def get_notification_queryset(request):
-    return Notification.objects.filter(recipient=request.user)
+    return Notification.objects.for_community(request.community).filter(
+        recipient=request.user
+    )
 
 
 def get_unread_notification_queryset(request):
