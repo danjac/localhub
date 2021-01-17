@@ -4,13 +4,16 @@
 # Django
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
@@ -21,6 +24,7 @@ from turbo_response.views import TurboCreateView
 # Localhub
 from localhub.common.mixins import SearchMixin
 from localhub.common.views import ActionView
+from localhub.communities.decorators import community_admin_required
 from localhub.communities.mixins import CommunityAdminRequiredMixin
 from localhub.communities.models import Membership
 
@@ -32,48 +36,42 @@ from .models import JoinRequest
 
 
 class BaseJoinRequestActionView(
-    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, ActionView,
+    CommunityAdminRequiredMixin,
+    JoinRequestQuerySetMixin,
+    ActionView,
 ):
     def get_success_url(self):
         return self.request.POST.get("redirect", reverse("join_requests:list"))
 
 
-class JoinRequestAcceptView(BaseJoinRequestActionView):
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(
-                status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED)
-            )
-        )
+@community_admin_required
+@login_required
+@require_POST
+def join_request_accept_view(request, pk):
+    join_req = get_join_request_or_404(
+        request, pk, status=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED)
+    )
 
-    def get_success_message(self):
-        return _("Join request for %(sender)s has been accepted") % {
-            "sender": self.object.sender.get_display_name()
-        }
+    if Membership.objects.filter(
+        member=join_req.sender, community=request.community
+    ).exists():
+        messages.error(request, _("User already belongs to this community"))
+        return redirect("join_requests:list")
 
-    def post(self, request, *args, **kwargs):
-        if Membership.objects.filter(
-            member=self.object.sender, community=self.object.community
-        ).exists():
-            messages.error(request, _("User already belongs to this community"))
-            return HttpResponseRedirect(reverse("join_requests:list"))
+    join_req.accept()
 
-        self.object.accept()
+    Membership.objects.create(member=join_req.sender, community=request.community)
 
-        Membership.objects.create(
-            member=self.object.sender, community=self.object.community
-        )
+    send_acceptance_email(join_req)
+    join_req.sender.notify_on_join(request.community)
 
-        send_acceptance_email(self.object)
+    messages.success(
+        request,
+        _("Join request for %(sender)s has been accepted")
+        % {"sender": join_req.sender.get_display_name()},
+    )
 
-        self.object.sender.notify_on_join(self.object.community)
-
-        return HttpResponseRedirect(self.get_success_url())
-
-
-join_request_accept_view = JoinRequestAcceptView.as_view()
+    return redirect("join_requests:list")
 
 
 class JoinRequestRejectView(BaseJoinRequestActionView):
@@ -248,3 +246,17 @@ class SentJoinRequestListView(LoginRequiredMixin, ListView):
 
 
 sent_join_request_list_view = SentJoinRequestListView.as_view()
+
+
+def get_join_request_or_404(request, pk, status=None):
+    return get_object_or_404(get_join_request_queryset(request, status), pk=pk)
+
+
+def get_join_request_queryset(request, status=None):
+    qs = JoinRequest.objects.for_community(request.community)
+    if status:
+        if isinstance(status, str):
+            status = [status]
+        status = list(status)
+        qs = qs.filter(status__in=status)
+    return qs
