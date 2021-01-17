@@ -185,6 +185,9 @@ class Community(TimeStampedModel):
     def get_content_warning_tags(self):
         return extract_hashtags(self.content_warning_tags)
 
+    def get_content_warnings(self):
+        return [tag.strip().lower()[1:] for tag in self.content_warning_tags.split()]
+
     def resolve_url(self, url):
         """
         Prepends the community domain to create a complete URL string

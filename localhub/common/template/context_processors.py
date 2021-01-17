@@ -11,3 +11,8 @@ def home_page_url(request):
 
 def is_cookies_accepted(request):
     return {"accept_cookies": "accept-cookies" in request.COOKIES}
+
+
+def search(request):
+    """Requires localhub.common.middleware.search.SearchMiddleware"""
+    return {"search": getattr(request, "search", None)}

@@ -1,22 +1,29 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import functools
+import operator
 
 # Django
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.shortcuts import get_object_or_404
+from django.template.response import TemplateResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 from turbo_response import TurboFrame
 
 # Localhub
+from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import render_activity_stream
-from localhub.common.mixins import SearchMixin
+from localhub.common.pagination import render_paginated_queryset
 from localhub.common.views import ActionView
 from localhub.communities.decorators import community_required
 
@@ -37,76 +44,65 @@ class BaseTagListView(TagQuerySetMixin, ListView):
         return data
 
 
-class TagAutocompleteListView(BaseTagListView):
-    template_name = "hashtags/list/autocomplete.html"
-    exclude_unused_tags = True
+def tag_autocomplete_list_view(request):
+    if request.search:
+        tags = get_tag_queryset(request, exclude_unused_tags=True).filter(
+            name__istartswith=request.search
+        )[: settings.DEFAULT_PAGE_SIZE]
+    else:
+        tags = Tag.objects.none()
+    return TemplateResponse(
+        request,
+        "hashtags/list/autocomplete.html",
+        {
+            "object_list": tags,
+            "content_warnings": request.community.get_content_warnings(),
+        },
+    )
 
-    def get_queryset(self):
-        search_term = self.request.GET.get("q", "").strip()
-        if not search_term:
-            return Tag.objects.none()
-        return (
-            super()
-            .get_queryset()
-            .filter(name__istartswith=search_term)[: settings.DEFAULT_PAGE_SIZE]
-        )
 
-
-tag_autocomplete_list_view = TagAutocompleteListView.as_view()
-
-
-class TagListView(SearchMixin, BaseTagListView):
-    template_name = "hashtags/list/all.html"
-    paginate_by = settings.LONG_PAGE_SIZE
-    exclude_unused_tags = True
-
-    def get_queryset(self):
-
-        qs = super().get_queryset()
-
-        if self.search_query:
-            qs = qs.filter(name__icontains=self.search_query)
-
-        if self.request.user.is_authenticated:
-            qs = qs.annotate(
-                is_following=Exists(
-                    self.request.user.following_tags.filter(pk=OuterRef("id"))
-                )
-            )
-        else:
-            qs = qs.annotate(is_following=Value(False, BooleanField()))
-
+@community_required
+def tag_list_view(request):
+    qs = get_tag_queryset(request, exclude_unused_tags=True)
+    if request.search:
+        qs = qs.filter(name__icontains=request.search)
+    if request.user.is_authenticated:
         qs = qs.annotate(
-            item_count=Count(
-                "taggit_taggeditem_items",
-                filter=Q(taggit_taggeditem_items__pk__in=self.get_tagged_items()),
-            )
+            is_following=Exists(request.user.following_tags.filter(pk=OuterRef("id")))
         )
+    else:
+        qs = qs.annotate(is_following=Value(False, BooleanField()))
 
-        return qs.order_by("-item_count", "name")
+    qs = qs.annotate(
+        item_count=Count(
+            "taggit_taggeditem_items",
+            filter=Q(taggit_taggeditem_items__pk__in=get_tagged_items(request)),
+        )
+    )
 
+    qs = qs.order_by("-item_count", "name")
 
-tag_list_view = TagListView.as_view()
-
-
-class FollowingTagListView(BaseTagListView):
-    template_name = "hashtags/list/following.html"
-
-    def get_queryset(self):
-        return self.request.user.following_tags.order_by("name")
-
-
-following_tag_list_view = FollowingTagListView.as_view()
+    return render_tag_list(request, qs, "hashtags/list/all.html")
 
 
-class BlockedTagListView(BaseTagListView):
-    template_name = "hashtags/list/blocked.html"
+@community_required
+@login_required
+def following_tag_list_view(request):
+    return render_tag_list(
+        request,
+        request.user.following_tags.order_by("name"),
+        "hashtags/list/following.html",
+    )
 
-    def get_queryset(self):
-        return self.request.user.blocked_tags.order_by("name")
 
-
-blocked_tag_list_view = BlockedTagListView.as_view()
+@community_required
+@login_required
+def blocked_tag_list_view(request):
+    return render_tag_list(
+        request,
+        request.user.blocked_tags.order_by("name"),
+        "hashtags/list/blocked.html",
+    )
 
 
 @community_required
@@ -210,3 +206,41 @@ class TagUnblockView(BaseTagBlockView):
 
 
 tag_unblock_view = TagUnblockView.as_view()
+
+
+def get_tag_queryset(request, exclude_unused_tags=False):
+    qs = Tag.objects.all()
+    if exclude_unused_tags:
+        qs = qs.filter(taggit_taggeditem_items__in=get_tagged_items(request))
+    return qs.distinct()
+
+
+def get_tagged_items(request):
+    return TaggedItem.objects.filter(
+        Q(
+            functools.reduce(
+                operator.or_,
+                [
+                    Q(
+                        object_id__in=model.objects.filter(
+                            community=request.community
+                        ).values("id"),
+                        content_type=content_type,
+                    )
+                    for model, content_type in ContentType.objects.get_for_models(
+                        *get_activity_models()
+                    ).items()
+                ],
+            )
+        )
+    )
+
+
+def render_tag_list(request, tags, template_name):
+    return render_paginated_queryset(
+        request,
+        tags,
+        template_name,
+        {"content_warnings": request.community.get_content_warnings()},
+        page_size=settings.LONG_PAGE_SIZE,
+    )
