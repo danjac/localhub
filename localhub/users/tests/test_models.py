@@ -187,7 +187,9 @@ class TestUserManager:
 
     def test_with_num_unread_messages_if_recipient_read(self, user_model, member):
         MessageFactory(
-            recipient=member.member, community=member.community, read=timezone.now(),
+            recipient=member.member,
+            community=member.community,
+            read=timezone.now(),
         )
         user = (
             user_model.objects.exclude(pk=member.member_id)
@@ -448,7 +450,8 @@ class TestUserModel:
         # add first follower to same community: should just be one update !
 
         MembershipFactory(
-            member=follower.member, community=other_community_follower.community,
+            member=follower.member,
+            community=other_community_follower.community,
         )
 
         member.member.reset_tracker()
@@ -474,7 +477,9 @@ class TestUserModel:
         assert send_webpush_mock.is_called()
 
     def test_notify_on_join(self, member, send_webpush_mock):
-        other_member = MembershipFactory(community=member.community,).member
+        other_member = MembershipFactory(
+            community=member.community,
+        ).member
         notifications = member.member.notify_on_join(member.community)
         assert len(notifications) == 1
         assert notifications[0].recipient == other_member
@@ -486,7 +491,8 @@ class TestUserModel:
 
     def test_notify_on_follow(self, member, send_webpush_mock):
         follower = MembershipFactory(
-            community=member.community, member=UserFactory(),
+            community=member.community,
+            member=UserFactory(),
         ).member
         notifications = follower.notify_on_follow(member.member, member.community)
         assert len(notifications) == 1

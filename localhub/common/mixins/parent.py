@@ -103,8 +103,7 @@ class ParentObjectMixin:
     parent = cached_property(get_parent_object)
 
     def get_context_data(self, **kwargs):
-        """Includes parent_context_object_name in context data.
-        """
+        """Includes parent_context_object_name in context data."""
         data = super().get_context_data(**kwargs)
         data[self.get_parent_context_object_name(self.parent)] = self.parent
         return data

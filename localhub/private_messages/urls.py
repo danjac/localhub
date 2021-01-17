@@ -40,7 +40,9 @@ urlpatterns = [
         "message/<int:pk>/~bookmark/remove/",
         views.message_bookmark_view,
         name="message_remove_bookmark",
-        kwargs={"remove": True,},
+        kwargs={
+            "remove": True,
+        },
     ),
     user_re_path(
         r"~send/$",

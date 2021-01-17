@@ -133,7 +133,8 @@ class Like(TimeStampedModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "content_type", "object_id"], name="unique_like",
+                fields=["user", "content_type", "object_id"],
+                name="unique_like",
             )
         ]
         indexes = [models.Index(fields=["content_type", "object_id"])]

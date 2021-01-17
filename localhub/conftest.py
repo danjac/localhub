@@ -94,28 +94,32 @@ def admin(client, login_user, community):
 @pytest.fixture
 def post(community):
     return PostFactory(
-        community=community, owner=MembershipFactory(community=community).member,
+        community=community,
+        owner=MembershipFactory(community=community).member,
     )
 
 
 @pytest.fixture
 def poll(community):
     return PollFactory(
-        community=community, owner=MembershipFactory(community=community).member,
+        community=community,
+        owner=MembershipFactory(community=community).member,
     )
 
 
 @pytest.fixture
 def photo(community):
     return PhotoFactory(
-        community=community, owner=MembershipFactory(community=community).member,
+        community=community,
+        owner=MembershipFactory(community=community).member,
     )
 
 
 @pytest.fixture
 def event(community):
     return EventFactory(
-        community=community, owner=MembershipFactory(community=community).member,
+        community=community,
+        owner=MembershipFactory(community=community).member,
     )
 
 

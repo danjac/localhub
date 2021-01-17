@@ -123,7 +123,11 @@ class CommentQuerySet(
             QuerySet
         """
         return self.select_related(
-            "owner", "parent", "community", "parent__owner", "parent__community",
+            "owner",
+            "parent",
+            "community",
+            "parent__owner",
+            "parent__community",
         ).prefetch_related("content_object")
 
     def deleted(self):

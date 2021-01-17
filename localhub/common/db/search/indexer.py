@@ -32,7 +32,8 @@ class SearchIndexer:
     def get_search_vectors(self, instance):
         return [
             SearchVector(
-                models.Value(text, output_field=models.CharField()), weight=weight,
+                models.Value(text, output_field=models.CharField()),
+                weight=weight,
             )
             for (weight, text) in [
                 (k, getattr(instance, v)) for k, v in self.search_components

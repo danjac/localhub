@@ -362,7 +362,10 @@ class Event(Activity):
             ("US", "AU", "NZ"),
             "{street_address} {locality}, {postcode}, {region}, {country}",
         ),
-        (("RU",), "{street_address} {locality} {postcode}, {region}, {country}",),
+        (
+            ("RU",),
+            "{street_address} {locality} {postcode}, {region}, {country}",
+        ),
     ]
 
     # default for Europe, S. America, China, S. Korea
@@ -381,7 +384,15 @@ class Event(Activity):
     RESHARED_FIELDS = (
         Activity.RESHARED_FIELDS
         + LOCATION_FIELDS
-        + ["url", "starts", "ends", "timezone", "venue", "latitude", "longitude",]
+        + [
+            "url",
+            "starts",
+            "ends",
+            "timezone",
+            "venue",
+            "latitude",
+            "longitude",
+        ]
     )
 
     class InvalidDate(ValueError):
@@ -431,7 +442,9 @@ class Event(Activity):
     )
 
     search_indexer = SearchIndexer(
-        ("A", "title"), ("B", "indexable_location"), ("C", "indexable_description"),
+        ("A", "title"),
+        ("B", "indexable_location"),
+        ("C", "indexable_description"),
     )
 
     objects = EventManager()
@@ -546,8 +559,7 @@ class Event(Activity):
 
     @property
     def indexable_location(self):
-        """Property required for search indexer. Just returns full location.
-        """
+        """Property required for search indexer. Just returns full location."""
         return self.get_full_location()
 
     def has_map(self):

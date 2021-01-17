@@ -22,11 +22,13 @@ logger = logging.getLogger(__name__)
 class PhotoForm(ActivityForm):
 
     extract_gps_data = forms.BooleanField(
-        label=_("Extract GPS data from image if available"), required=False,
+        label=_("Extract GPS data from image if available"),
+        required=False,
     )
 
     clear_gps_data = forms.BooleanField(
-        label=_("Clear GPS data from image"), required=False,
+        label=_("Clear GPS data from image"),
+        required=False,
     )
 
     class Meta(ActivityForm.Meta):
@@ -65,7 +67,14 @@ class PhotoForm(ActivityForm):
                     "allow_comments",
                 ),
             ),
-            (_("Additional Information"), ("artist", "original_url", "cc_license",)),
+            (
+                _("Additional Information"),
+                (
+                    "artist",
+                    "original_url",
+                    "cc_license",
+                ),
+            ),
         )
 
         self.fields["image"].widget = ClearableImageInput()

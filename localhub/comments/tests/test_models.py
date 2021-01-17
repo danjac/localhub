@@ -110,7 +110,8 @@ class TestCommentManager:
 
     def test_with_is_parent_owner_member_true(self, community):
         parent = CommentFactory(
-            community=community, owner=MembershipFactory(community=community).member,
+            community=community,
+            owner=MembershipFactory(community=community).member,
         )
 
         comment = CommentFactory(
@@ -144,7 +145,8 @@ class TestCommentManager:
 
     def test_for_community(self, community):
         comment = CommentFactory(
-            community=community, owner=MembershipFactory(community=community).member,
+            community=community,
+            owner=MembershipFactory(community=community).member,
         )
         CommentFactory(owner=MembershipFactory(community=community).member)
         CommentFactory(community=community)
@@ -174,27 +176,35 @@ class TestCommentManager:
 
     def test_with_has_bookmarked_if_user_has_not_bookmarked(self, comment, user):
         BookmarkFactory(
-            user=user, content_object=comment, community=comment.community,
+            user=user,
+            content_object=comment,
+            community=comment.community,
         )
         comment = Comment.objects.with_has_bookmarked(UserFactory()).get()
         assert not comment.has_bookmarked
 
     def test_with_has_bookmarked_if_user_has_bookmarked(self, comment, user):
         BookmarkFactory(
-            user=user, content_object=comment, community=comment.community,
+            user=user,
+            content_object=comment,
+            community=comment.community,
         )
         comment = Comment.objects.with_has_bookmarked(user).get()
         assert comment.has_bookmarked
 
     def test_bookmarked_if_user_has_not_bookmarked(self, comment, user):
         BookmarkFactory(
-            user=user, content_object=comment, community=comment.community,
+            user=user,
+            content_object=comment,
+            community=comment.community,
         )
         assert Comment.objects.bookmarked(UserFactory()).count() == 0
 
     def test_bookmarked_if_user_has_bookmarked(self, comment, user):
         BookmarkFactory(
-            user=user, content_object=comment, community=comment.community,
+            user=user,
+            content_object=comment,
+            community=comment.community,
         )
         comments = Comment.objects.bookmarked(user)
         assert comments.count() == 1
@@ -202,7 +212,9 @@ class TestCommentManager:
 
     def test_with_bookmarked_timestamp_if_user_has_not_bookmarked(self, comment, user):
         BookmarkFactory(
-            user=user, content_object=comment, community=comment.community,
+            user=user,
+            content_object=comment,
+            community=comment.community,
         )
         # test with *another* user
         comment = Comment.objects.with_bookmarked_timestamp(UserFactory()).first()
@@ -210,7 +222,9 @@ class TestCommentManager:
 
     def test_with_bookmarked_timestamp_if_user_has_bookmarked(self, comment, user):
         BookmarkFactory(
-            user=user, content_object=comment, community=comment.community,
+            user=user,
+            content_object=comment,
+            community=comment.community,
         )
         comment = Comment.objects.with_bookmarked_timestamp(user).first()
         assert comment.bookmarked is not None
@@ -364,7 +378,9 @@ class TestCommentModel:
     def test_notify_on_create_if_no_content_object(self, community):
 
         comment_owner = MembershipFactory(community=community).member
-        post_owner = MembershipFactory(community=community,).member
+        post_owner = MembershipFactory(
+            community=community,
+        ).member
 
         mentioned = UserFactory(username="danjac")
 
@@ -375,7 +391,8 @@ class TestCommentModel:
         )
 
         CommentFactory(
-            owner=MembershipFactory(community=community).member, content_object=post,
+            owner=MembershipFactory(community=community).member,
+            content_object=post,
         )
 
         comment = CommentFactory(
@@ -395,7 +412,9 @@ class TestCommentModel:
     def test_notify_on_create(self, community, mailoutbox, send_webpush_mock):
 
         comment_owner = MembershipFactory(community=community).member
-        post_owner = MembershipFactory(community=community,).member
+        post_owner = MembershipFactory(
+            community=community,
+        ).member
 
         mentioned = UserFactory(username="danjac")
 
@@ -404,7 +423,8 @@ class TestCommentModel:
         post = PostFactory(owner=post_owner, community=community)
 
         other_comment = CommentFactory(
-            owner=MembershipFactory(community=community).member, content_object=post,
+            owner=MembershipFactory(community=community).member,
+            content_object=post,
         )
 
         comment = CommentFactory(
@@ -439,7 +459,9 @@ class TestCommentModel:
 
     def test_notify_on_create_if_parent(self, community, mailoutbox, send_webpush_mock):
 
-        comment_owner = MembershipFactory(community=community,).member
+        comment_owner = MembershipFactory(
+            community=community,
+        ).member
 
         parent_owner = MembershipFactory(community=community).member
 
@@ -452,7 +474,8 @@ class TestCommentModel:
         post = PostFactory(owner=post_owner, community=community)
 
         other_comment = CommentFactory(
-            owner=MembershipFactory(community=community).member, content_object=post,
+            owner=MembershipFactory(community=community).member,
+            content_object=post,
         )
 
         parent = CommentFactory(
@@ -499,7 +522,9 @@ class TestCommentModel:
 
     def test_notify_on_update(self, community, mailoutbox, send_webpush_mock):
 
-        comment_owner = MembershipFactory(community=community,).member
+        comment_owner = MembershipFactory(
+            community=community,
+        ).member
 
         member = MembershipFactory(
             community=community, member=UserFactory(username="danjac")

@@ -36,7 +36,9 @@ class TestOutboxView:
     def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         MessageFactory(
-            community=member.community, sender=member.member, recipient=recipient,
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
         )
         response = client.get(reverse("private_messages:outbox"))
         assert len(response.context["object_list"]) == 1
@@ -46,7 +48,9 @@ class TestMessageDeleteView:
     def test_post_if_sender(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community, sender=member.member, recipient=recipient,
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
         )
         response = client.post(
             reverse("private_messages:message_delete", args=[message.id]),
@@ -74,7 +78,9 @@ class TestMessageDeleteView:
     def test_post_if_recipient(self, client, member):
         sender = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community, recipient=member.member, sender=sender,
+            community=member.community,
+            recipient=member.member,
+            sender=sender,
         )
         response = client.post(
             reverse("private_messages:message_delete", args=[message.id]),
@@ -130,7 +136,9 @@ class TestMessageDetailView:
     def test_get_if_sender(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community, sender=member.member, recipient=recipient,
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == http.HTTPStatus.OK
@@ -173,7 +181,9 @@ class TestMessageFollowUpView:
     def test_post(self, client, member, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         parent = MessageFactory(
-            sender=member.member, recipient=recipient, community=member.community,
+            sender=member.member,
+            recipient=recipient,
+            community=member.community,
         )
         response = client.post(
             reverse("private_messages:message_follow_up", args=[parent.id]),
@@ -215,7 +225,9 @@ class TestMessageReplyView:
     def test_post(self, client, member, send_webpush_mock):
         sender = MembershipFactory(community=member.community).member
         parent = MessageFactory(
-            sender=sender, recipient=member.member, community=member.community,
+            sender=sender,
+            recipient=member.member,
+            community=member.community,
         )
         response = client.post(
             reverse("private_messages:message_reply", args=[parent.id]),
@@ -245,7 +257,9 @@ class TestMessageCreateView:
     def test_post(self, client, member, mailoutbox, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         response = client.post(
-            reverse("private_messages:message_create",),
+            reverse(
+                "private_messages:message_create",
+            ),
             {"message": "test", "recipient": f"@{recipient.username}"},
         )
 
@@ -323,7 +337,9 @@ class TestMessageRemoveBookmarkView:
             community=member.community, recipient=member.member, sender=sender
         )
         BookmarkFactory(
-            user=member.member, content_object=message, community=message.community,
+            user=member.member,
+            content_object=message,
+            community=message.community,
         )
         response = client.post(
             reverse("private_messages:message_remove_bookmark", args=[message.id]),

@@ -27,7 +27,8 @@ class MessageRecipientForm(MessageForm):
     """
 
     recipient = MentionsField(
-        required=True, help_text=_("Use @mention format to find and add a recipient"),
+        required=True,
+        help_text=_("Use @mention format to find and add a recipient"),
     )
 
     class Meta(MessageForm.Meta):

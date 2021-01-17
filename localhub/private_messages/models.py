@@ -151,7 +151,7 @@ class MessageQuerySet(
 
         Returns:
             QuerySet
-         """
+        """
         return self.exclude(
             models.Q(sender__blockers=user) | models.Q(sender__blocked=user)
         )
@@ -166,7 +166,7 @@ class MessageQuerySet(
 
         Returns:
             QuerySet
-         """
+        """
         return self.exclude(
             models.Q(recipient__blockers=user) | models.Q(recipient__blocked=user)
         )

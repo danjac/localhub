@@ -21,7 +21,8 @@ def mock_invalid_exif(mocker):
             raise Exif.Invalid()
 
     mocker.patch(
-        "localhub.common.utils.exif.Exif.from_image", return_value=MockExif(),
+        "localhub.common.utils.exif.Exif.from_image",
+        return_value=MockExif(),
     )
 
     yield
@@ -37,7 +38,8 @@ def mock_exif(mocker):
             pass
 
     mocker.patch(
-        "localhub.common.utils.exif.Exif.from_image", return_value=MockExif(),
+        "localhub.common.utils.exif.Exif.from_image",
+        return_value=MockExif(),
     )
 
     yield

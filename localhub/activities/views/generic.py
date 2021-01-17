@@ -36,7 +36,12 @@ from ..utils import get_activity_models
 @community_required
 @login_required
 def activity_create_view(
-    request, model, form_class, template_name, is_private=False, extra_context=None,
+    request,
+    model,
+    form_class,
+    template_name,
+    is_private=False,
+    extra_context=None,
 ):
 
     has_perm_or_403(request.user, "activities.create_activity", request.community)
@@ -56,7 +61,10 @@ def activity_create_view(
 @require_POST
 def create_comment_view(request, pk, model):
 
-    obj = get_object_or_404(get_activity_queryset(request, model), pk=pk,)
+    obj = get_object_or_404(
+        get_activity_queryset(request, model),
+        pk=pk,
+    )
     has_perm_or_403(request.user, "activities.create_comment", obj)
 
     with process_form(request, CommentForm) as (form, success):
@@ -216,7 +224,9 @@ def activity_bookmark_view(request, pk, model, remove=False):
     else:
         try:
             Bookmark.objects.create(
-                user=request.user, community=request.community, content_object=obj,
+                user=request.user,
+                community=request.community,
+                content_object=obj,
             )
             messages.success(
                 request,
@@ -375,7 +385,10 @@ def render_activity_list(
         request,
         queryset,
         template_name,
-        {"model": queryset.model, **(extra_context or {}),},
+        {
+            "model": queryset.model,
+            **(extra_context or {}),
+        },
     )
 
 
@@ -425,7 +438,11 @@ def handle_activity_update(
         return redirect_303(obj)
 
     return render_activity_update_form(
-        request, obj, form, template_name, extra_context=extra_context,
+        request,
+        obj,
+        form,
+        template_name,
+        extra_context=extra_context,
     )
 
 
@@ -530,7 +547,12 @@ def render_activity_update_form(
         request,
         form,
         template_name,
-        {"object": obj, "model": obj, "is_new": False, **(extra_context or {}),},
+        {
+            "object": obj,
+            "model": obj,
+            "is_new": False,
+            **(extra_context or {}),
+        },
     )
 
 

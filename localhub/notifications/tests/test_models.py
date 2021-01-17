@@ -24,7 +24,8 @@ class TestNotificationManager:
     def test_for_community(self, community: Community):
 
         notification = NotificationFactory(
-            community=community, actor=MembershipFactory(community=community).member,
+            community=community,
+            actor=MembershipFactory(community=community).member,
         )
         NotificationFactory(actor=MembershipFactory(community=community).member)
         NotificationFactory(

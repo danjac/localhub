@@ -11,9 +11,24 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="event", name="contact_email",),
-        migrations.RemoveField(model_name="event", name="contact_name",),
-        migrations.RemoveField(model_name="event", name="contact_phone",),
-        migrations.RemoveField(model_name="event", name="ticket_price",),
-        migrations.RemoveField(model_name="event", name="ticket_vendor",),
+        migrations.RemoveField(
+            model_name="event",
+            name="contact_email",
+        ),
+        migrations.RemoveField(
+            model_name="event",
+            name="contact_name",
+        ),
+        migrations.RemoveField(
+            model_name="event",
+            name="contact_phone",
+        ),
+        migrations.RemoveField(
+            model_name="event",
+            name="ticket_price",
+        ),
+        migrations.RemoveField(
+            model_name="event",
+            name="ticket_vendor",
+        ),
     ]

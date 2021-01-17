@@ -79,7 +79,11 @@ def answer_vote_view(request, pk):
     return (
         TurboFrame(f"poll-answers-{poll.id}")
         .template(
-            "polls/includes/answers.html", {"object": poll, "object_type": "poll",},
+            "polls/includes/answers.html",
+            {
+                "object": poll,
+                "object_type": "poll",
+            },
         )
         .response(request)
     )
@@ -135,7 +139,11 @@ def poll_update_view(request, pk, model, form_class, template_name):
         return redirect_303(obj)
 
     return render_activity_update_form(
-        request, obj, form, template_name, extra_context={"answers_formset": formset},
+        request,
+        obj,
+        form,
+        template_name,
+        extra_context={"answers_formset": formset},
     )
 
 

@@ -49,7 +49,11 @@ class TestPhotoUpdateView:
         assert response.status_code == http.HTTPStatus.OK
 
     def test_post(
-        self, client, photo_for_member, fake_image, send_webpush_mock,
+        self,
+        client,
+        photo_for_member,
+        fake_image,
+        send_webpush_mock,
     ):
         response = client.post(
             reverse("photos:update", args=[photo_for_member.id]),

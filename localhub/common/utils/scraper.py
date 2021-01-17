@@ -138,7 +138,10 @@ class HTMLScraper:
     def get_description(self):
         for value in itertools.chain(
             self.find_meta_tags(
-                "og:description", "twitter:description", "fb:status", "description",
+                "og:description",
+                "twitter:description",
+                "fb:status",
+                "description",
             ),
             self.find_text("p"),
         ):

@@ -29,7 +29,10 @@ class TestCreateCommunity:
     def test_with_new_domain_and_nonexistent_user(self):
         with pytest.raises(CommandError):
             call_command(
-                "createcommunity", "mydomain.localhub.social", "My Domain", admin="me",
+                "createcommunity",
+                "mydomain.localhub.social",
+                "My Domain",
+                admin="me",
             )
         community = Community.objects.first()
         assert community is None

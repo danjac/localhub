@@ -120,7 +120,8 @@ class TestTagDetailView:
 
     def test_get_if_anonymous(self, client, community):
         PostFactory(
-            community=community, owner=MembershipFactory(community=community).member,
+            community=community,
+            owner=MembershipFactory(community=community).member,
         ).tags.add("movies")
 
         response = client.get(reverse("hashtags:detail", args=["movies"]))

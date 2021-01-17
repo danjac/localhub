@@ -170,7 +170,9 @@ class TestEventUnattendView:
 class TestEventCalendarView:
     def test_get_calendar_view(self, client, event, member):
         response = client.get(
-            reverse("events:calendar",),
+            reverse(
+                "events:calendar",
+            ),
             {"month": event.starts.month, "year": event.starts.year},
         )
         assert response.status_code == http.HTTPStatus.OK
@@ -180,7 +182,10 @@ class TestEventCalendarView:
     def test_get_calendar_view_this_month(self, client, member):
         now = timezone.now()
         response = client.get(
-            reverse("events:calendar",), {"month": now.month, "year": now.year},
+            reverse(
+                "events:calendar",
+            ),
+            {"month": now.month, "year": now.year},
         )
         assert response.status_code == http.HTTPStatus.OK
         assert "current_date" not in response.context
@@ -188,13 +193,18 @@ class TestEventCalendarView:
 
     def test_get_calendar_view_with_invalid_date(self, client, event, member):
         response = client.get(
-            reverse("events:calendar",), {"month": 13, "year": event.starts.year},
+            reverse(
+                "events:calendar",
+            ),
+            {"month": 13, "year": event.starts.year},
         )
         assert response.status_code == http.HTTPStatus.NOT_FOUND
 
     def test_get_date_view(self, client, event, member):
         response = client.get(
-            reverse("events:calendar",),
+            reverse(
+                "events:calendar",
+            ),
             {
                 "month": event.starts.month,
                 "year": event.starts.year,
@@ -207,7 +217,9 @@ class TestEventCalendarView:
 
     def test_get_date_view_with_invalid_date(self, client, event, member):
         response = client.get(
-            reverse("events:calendar",),
+            reverse(
+                "events:calendar",
+            ),
             {"month": event.starts.month, "year": event.starts.year, "day": 32},
         )
         assert response.status_code == http.HTTPStatus.NOT_FOUND

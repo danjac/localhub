@@ -166,7 +166,8 @@ class TestPostModel:
         )
 
         tag_follower = MembershipFactory(
-            community=community, member=UserFactory(),
+            community=community,
+            member=UserFactory(),
         ).member
         tag_follower.following_tags.add(movies, reviews)
 
@@ -176,7 +177,8 @@ class TestPostModel:
         assert tag_follower.following_tags.count() == 2
 
         user_follower = MembershipFactory(
-            community=community, member=UserFactory(),
+            community=community,
+            member=UserFactory(),
         ).member
         user_follower.following.add(post.owner)
 
@@ -208,10 +210,13 @@ class TestPostModel:
         owner = MembershipFactory(community=community).member
 
         member = MembershipFactory(
-            community=community, member=UserFactory(username="danjac"),
+            community=community,
+            member=UserFactory(username="danjac"),
         ).member
 
-        moderator = MembershipFactory(community=community,).member
+        moderator = MembershipFactory(
+            community=community,
+        ).member
 
         post = PostFactory(
             owner=owner,
@@ -239,7 +244,8 @@ class TestPostModel:
         owner = MembershipFactory(community=community).member
 
         member = MembershipFactory(
-            community=community, member=UserFactory(username="danjac"),
+            community=community,
+            member=UserFactory(username="danjac"),
         ).member
 
         post = PostFactory(
@@ -272,13 +278,16 @@ class TestPostModel:
         reviews = Tag.objects.create(name="reviews")
 
         tag_follower = MembershipFactory(
-            community=community, member=UserFactory(),
+            community=community,
+            member=UserFactory(),
         ).member
         tag_follower.following_tags.add(movies, reviews)
 
         assert tag_follower.following_tags.count() == 2
 
-        owner = MembershipFactory(community=community,).member
+        owner = MembershipFactory(
+            community=community,
+        ).member
 
         post = PostFactory(
             owner=owner,

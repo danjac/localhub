@@ -72,47 +72,83 @@ def create_activity_urls(
             "<int:pk>/~comment/",
             create_comment_view,
             name="comment",
-            kwargs={"model": model,},
+            kwargs={
+                "model": model,
+            },
         ),
-        path("<int:pk>/~delete/", delete_view, name="delete", kwargs={"model": model},),
-        path("<int:pk>/~like/", like_view, name="like", kwargs={"model": model,},),
+        path(
+            "<int:pk>/~delete/",
+            delete_view,
+            name="delete",
+            kwargs={"model": model},
+        ),
+        path(
+            "<int:pk>/~like/",
+            like_view,
+            name="like",
+            kwargs={
+                "model": model,
+            },
+        ),
         path(
             "<int:pk>/~dislike/",
             like_view,
             name="dislike",
-            kwargs={"model": model, "remove": True,},
+            kwargs={
+                "model": model,
+                "remove": True,
+            },
         ),
         path("<int:pk>/~flag/", flag_view, name="flag", kwargs={"model": model}),
-        path("<int:pk>/~pin/", pin_view, name="pin", kwargs={"model": model,},),
+        path(
+            "<int:pk>/~pin/",
+            pin_view,
+            name="pin",
+            kwargs={
+                "model": model,
+            },
+        ),
         path(
             "<int:pk>/~unpin/",
             pin_view,
             name="unpin",
-            kwargs={"model": model, "remove": True,},
+            kwargs={
+                "model": model,
+                "remove": True,
+            },
         ),
         path(
             "<int:pk>/~reshare/",
             reshare_view,
             name="reshare",
-            kwargs={"model": model,},
+            kwargs={
+                "model": model,
+            },
         ),
         path(
             "<int:pk>/~bookmark/",
             bookmark_view,
             name="bookmark",
-            kwargs={"model": model,},
+            kwargs={
+                "model": model,
+            },
         ),
         path(
             "<int:pk>/~bookmark/remove/",
             bookmark_view,
             name="remove_bookmark",
-            kwargs={"model": model, "remove": True,},
+            kwargs={
+                "model": model,
+                "remove": True,
+            },
         ),
         path(
             "<int:pk>/~publish/",
             publish_view,
             name="publish",
-            kwargs={"model": model,},
+            kwargs={
+                "model": model,
+            },
         ),
         path(
             "<int:pk>/~update/",
@@ -128,19 +164,28 @@ def create_activity_urls(
             "<int:pk>/~update-tags/",
             update_tags_view,
             name="update_tags",
-            kwargs={"model": model, "template_name": form_template_name,},
+            kwargs={
+                "model": model,
+                "template_name": form_template_name,
+            },
         ),
         path(
             "<int:pk>/<slug:slug>/",
             detail_view,
             name="detail",
-            kwargs={"model": model, "template_name": detail_template_name,},
+            kwargs={
+                "model": model,
+                "template_name": detail_template_name,
+            },
         ),
         path(
             "<int:pk>/",
             detail_view,
             name="detail_no_slug",
-            kwargs={"model": model, "template_name": detail_template_name,},
+            kwargs={
+                "model": model,
+                "template_name": detail_template_name,
+            },
         ),
     ]
 

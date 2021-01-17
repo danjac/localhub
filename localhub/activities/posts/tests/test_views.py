@@ -88,7 +88,8 @@ class TestPostCreateView:
         MembershipFactory(community=member.community, role=Membership.Role.MODERATOR)
 
         response = client.post(
-            reverse("posts:create_private"), {"title": "test", "description": "test"},
+            reverse("posts:create_private"),
+            {"title": "test", "description": "test"},
         )
         post = Post.objects.get()
         assert response.url == post.get_absolute_url()
@@ -148,7 +149,8 @@ class TestPostUpdateTagsView:
 
     def test_post(self, client, moderator, post, mailoutbox, send_webpush_mock):
         response = client.post(
-            reverse("posts:update_tags", args=[post.id]), {"hashtags": "#update"},
+            reverse("posts:update_tags", args=[post.id]),
+            {"hashtags": "#update"},
         )
         post.refresh_from_db()
         assert response.url == post.get_absolute_url()
@@ -230,7 +232,8 @@ class TestPostReshareView:
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(
-                community=member.community, member=UserFactory(),
+                community=member.community,
+                member=UserFactory(),
             ).member,
         )
         response = client.post(
@@ -259,7 +262,9 @@ class TestPostPinView:
             community=moderator.community,
             owner=MembershipFactory(community=moderator.community).member,
         )
-        response = client.post(reverse("posts:pin", args=[post.id]),)
+        response = client.post(
+            reverse("posts:pin", args=[post.id]),
+        )
         assert response.url == settings.HOME_PAGE_URL
 
         already_pinned.refresh_from_db()
@@ -314,7 +319,9 @@ class TestPostRemoveBookmarkView:
             owner=MembershipFactory(community=member.community).member,
         )
         BookmarkFactory(
-            user=member.member, content_object=post, community=post.community,
+            user=member.member,
+            content_object=post,
+            community=post.community,
         )
         response = client.post(reverse("posts:remove_bookmark", args=[post.id]))
         assert response.url == post.get_absolute_url()
@@ -327,7 +334,9 @@ class TestPostLikeView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         )
-        response = client.post(reverse("posts:like", args=[post.id]),)
+        response = client.post(
+            reverse("posts:like", args=[post.id]),
+        )
         assert response.url == post.get_absolute_url()
         like = Like.objects.get()
         assert like.user == member.member
@@ -345,7 +354,9 @@ class TestPostDislikeView:
             community=post.community,
             recipient=post.owner,
         )
-        response = client.post(reverse("posts:dislike", args=[post.id]),)
+        response = client.post(
+            reverse("posts:dislike", args=[post.id]),
+        )
         assert response.url == post.get_absolute_url()
         assert Like.objects.count() == 0
 

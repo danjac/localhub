@@ -6,8 +6,7 @@ from django.db.models import DateTimeField, Func
 
 
 class IntervalAdd(Func):
-    """Base class for PostgreSQL interval arithmetic functions.
-    """
+    """Base class for PostgreSQL interval arithmetic functions."""
 
     period = None
     arg_joiner = " + CAST("

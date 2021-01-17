@@ -17,12 +17,15 @@ class TestGeocoder:
             return_value=MockGoodOSMResult,
         )
 
-        assert geocode(
-            street_address="Areenankuja 1",
-            postal_code="20040",
-            locality="Helsinki",
-            country="FI",
-        ) == (60, 50)
+        assert (
+            geocode(
+                street_address="Areenankuja 1",
+                postal_code="20040",
+                locality="Helsinki",
+                country="FI",
+            )
+            == (60, 50)
+        )
 
     def test_geocode_not_ok(self, mocker):
 
@@ -30,12 +33,15 @@ class TestGeocoder:
             "localhub.common.utils.geocode.geolocator.geocode", return_value=None
         )
 
-        assert geocode(
-            street_address="Areenankuja 1",
-            postal_code="20040",
-            locality="Helsinki",
-            country="FI",
-        ) == (None, None)
+        assert (
+            geocode(
+                street_address="Areenankuja 1",
+                postal_code="20040",
+                locality="Helsinki",
+                country="FI",
+            )
+            == (None, None)
+        )
 
         assert mock_geocode.call_count == 1
 
@@ -49,8 +55,13 @@ class TestGeocoder:
             return_value=MockGoodOSMResult,
         )
 
-        assert geocode(
-            street_address="Areenankuja 1", postal_code="20040", country="FI",
-        ) == (None, None)
+        assert (
+            geocode(
+                street_address="Areenankuja 1",
+                postal_code="20040",
+                country="FI",
+            )
+            == (None, None)
+        )
 
         assert mock_geocode.call_count == 0

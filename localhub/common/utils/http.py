@@ -44,8 +44,7 @@ AUDIO_EXTENSIONS = (
 
 
 class URLResolver:
-    """Handles additional URL functionality
-    """
+    """Handles additional URL functionality"""
 
     class Invalid(ValidationError):
         ...

@@ -22,7 +22,9 @@ class Command(BaseCommand):
         )
 
         parser.add_argument(
-            "num_users", help="Number of fake users", type=int,
+            "num_users",
+            help="Number of fake users",
+            type=int,
         )
 
     def handle(self, *args, **options):

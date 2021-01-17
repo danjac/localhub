@@ -52,7 +52,9 @@ class CommunityQuerySet(models.QuerySet):
                 ),
                 member_role=models.Subquery(
                     Membership.objects.filter(
-                        member=user, active=True, community=models.OuterRef("pk"),
+                        member=user,
+                        active=True,
+                        community=models.OuterRef("pk"),
                     ).values("role")[:1],
                 ),
             )
@@ -142,16 +144,23 @@ class Community(TimeStampedModel):
 
     description = MarkdownField(blank=True)
 
-    terms = MarkdownField(blank=True,)
+    terms = MarkdownField(
+        blank=True,
+    )
 
     content_warning_tags = models.TextField(blank=True, default="#nsfw")
 
     email_domain = models.CharField(
-        null=True, blank=True, max_length=100, validators=[DOMAIN_VALIDATOR],
+        null=True,
+        blank=True,
+        max_length=100,
+        validators=[DOMAIN_VALIDATOR],
     )
 
     members = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, through="Membership", related_name="communities",
+        settings.AUTH_USER_MODEL,
+        through="Membership",
+        related_name="communities",
     )
 
     active = models.BooleanField(default=True)
@@ -216,7 +225,9 @@ class Community(TimeStampedModel):
 
     def get_moderators(self, active=True):
         return self.get_members_by_role(
-            Membership.Role.MODERATOR, Membership.Role.ADMIN, active=active,
+            Membership.Role.MODERATOR,
+            Membership.Role.ADMIN,
+            active=active,
         )
 
     def get_admins(self, active=True):

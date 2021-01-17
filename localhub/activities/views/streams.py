@@ -236,7 +236,10 @@ def get_activity_stream_context(
     )
 
     page = PresetCountPaginator(
-        object_list=qs, count=count, per_page=page_size, allow_empty_first_page=True,
+        object_list=qs,
+        count=count,
+        per_page=page_size,
+        allow_empty_first_page=True,
     ).get_page(request.GET.get("q", 1))
 
     page = load_objects(page, querysets)

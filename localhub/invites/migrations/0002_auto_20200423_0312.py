@@ -24,6 +24,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterUniqueTogether(
-            name="invite", unique_together={("email", "community")},
+            name="invite",
+            unique_together={("email", "community")},
         ),
     ]

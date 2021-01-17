@@ -24,10 +24,14 @@ urlpatterns = [
     path("blocked/", views.blocked_user_list_view, name="blocked_list"),
     user_re_path(r"likes/$", views.user_activity_likes_view, name="activity_likes"),
     user_re_path(
-        r"likes/comments/$", views.user_comment_likes_view, name="comment_likes",
+        r"likes/comments/$",
+        views.user_comment_likes_view,
+        name="comment_likes",
     ),
     user_re_path(
-        r"mentions/$", views.user_activity_mentions_view, name="activity_mentions",
+        r"mentions/$",
+        views.user_activity_mentions_view,
+        name="activity_mentions",
     ),
     user_re_path(
         r"mentions/comments/$",

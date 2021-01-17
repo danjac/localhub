@@ -82,7 +82,8 @@ class Flag(TimeStampedModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "content_type", "object_id"], name="unique_flag",
+                fields=["user", "content_type", "object_id"],
+                name="unique_flag",
             )
         ]
         indexes = [

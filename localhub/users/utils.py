@@ -51,7 +51,8 @@ def linkify_mentions(content, css_class=None):
         for mention in MENTIONS_RE.findall(token):
             url = reverse("users:activities", args=[slugify_unicode(mention)])
             token = token.replace(
-                "@" + mention, f'<a href="{url}"{css_class}>@{mention}</a>',
+                "@" + mention,
+                f'<a href="{url}"{css_class}>@{mention}</a>',
             )
 
         rv.append(token)

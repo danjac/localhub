@@ -76,7 +76,8 @@ def notification_mark_read_view(request, pk):
     obj.is_read = True
     obj.save()
     notification_read.send(
-        sender=obj.content_object.__class__, instance=obj.content_object,
+        sender=obj.content_object.__class__,
+        instance=obj.content_object,
     )
 
     target = (

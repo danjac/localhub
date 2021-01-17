@@ -101,7 +101,9 @@ class Migration(migrations.Migration):
                 ("blacklisted_email_domains", models.TextField(blank=True)),
                 ("blacklisted_email_addresses", models.TextField(blank=True)),
             ],
-            options={"verbose_name_plural": "Communities",},
+            options={
+                "verbose_name_plural": "Communities",
+            },
         ),
         migrations.CreateModel(
             name="Membership",

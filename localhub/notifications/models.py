@@ -145,7 +145,13 @@ class Notification(TimeStampedModel):
     class Meta:
         indexes = [
             models.Index(
-                fields=["content_type", "object_id", "created", "-created", "is_read",]
+                fields=[
+                    "content_type",
+                    "object_id",
+                    "created",
+                    "-created",
+                    "is_read",
+                ]
             )
         ]
 

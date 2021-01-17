@@ -129,7 +129,9 @@ class TestGetExternalSiteCounters:
 
     def test_authenticated(self, community, anonymous_user):
 
-        member = MembershipFactory(community=community,).member
+        member = MembershipFactory(
+            community=community,
+        ).member
 
         JoinRequestFactory()
         FlagFactory()

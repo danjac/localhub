@@ -122,7 +122,8 @@ class Bookmark(TimeStampedModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "content_type", "object_id"], name="unique_bookmark",
+                fields=["user", "content_type", "object_id"],
+                name="unique_bookmark",
             )
         ]
         indexes = [models.Index(fields=["content_type", "object_id"])]

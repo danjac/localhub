@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
             index=models.Index(fields=["status"], name="join_reques_status_703ef1_idx"),
         ),
         migrations.AlterUniqueTogether(
-            name="joinrequest", unique_together={("community", "sender")},
+            name="joinrequest",
+            unique_together={("community", "sender")},
         ),
     ]

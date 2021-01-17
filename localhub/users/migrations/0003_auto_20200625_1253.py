@@ -11,7 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveIndex(model_name="user", name="users_user_name_211263_idx",),
+        migrations.RemoveIndex(
+            model_name="user",
+            name="users_user_name_211263_idx",
+        ),
         migrations.AddIndex(
             model_name="user",
             index=models.Index(

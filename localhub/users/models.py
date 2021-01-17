@@ -133,7 +133,9 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             QuerySet
         """
         return self.filter(
-            membership__community=community, membership__active=True, is_active=True,
+            membership__community=community,
+            membership__active=True,
+            is_active=True,
         )
 
     def with_joined(self, community):
@@ -230,7 +232,12 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
 
     def create_superuser(self, username, email, password, **kwargs):
         return self.create_user(
-            username, email, password, is_staff=True, is_superuser=True, **kwargs,
+            username,
+            email,
+            password,
+            is_staff=True,
+            is_superuser=True,
+            **kwargs,
         )
 
 
@@ -272,7 +279,9 @@ class User(TrackerModelMixin, AbstractUser):
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
     language = models.CharField(
-        max_length=6, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE,
+        max_length=6,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
     )
 
     default_timezone = TimeZoneField(default=settings.TIME_ZONE)

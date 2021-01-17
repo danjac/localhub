@@ -23,6 +23,8 @@ urlpatterns = [
     path("<int:pk>/~mark-read/", views.notification_mark_read_view, name="mark_read"),
     path("~delete-all/", views.notification_delete_all_view, name="delete_all"),
     path(
-        "~mark-all-read/", views.notification_mark_all_read_view, name="mark_all_read",
+        "~mark-all-read/",
+        views.notification_mark_all_read_view,
+        name="mark_all_read",
     ),
 ]

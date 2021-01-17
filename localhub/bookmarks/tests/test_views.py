@@ -20,7 +20,9 @@ pytestmark = pytest.mark.django_db
 class TestBookmarksStreamView:
     def test_get(self, client, post, member):
         BookmarkFactory(
-            content_object=post, user=member.member, community=post.community,
+            content_object=post,
+            user=member.member,
+            community=post.community,
         )
 
         response = client.get(
@@ -33,7 +35,9 @@ class TestBookmarksStreamView:
 class TestBookmarksCommentListView:
     def test_get(self, client, comment, member):
         BookmarkFactory(
-            content_object=comment, user=member.member, community=comment.community,
+            content_object=comment,
+            user=member.member,
+            community=comment.community,
         )
 
         response = client.get(
@@ -51,7 +55,9 @@ class TestBookmarksMessageListView:
             sender=MembershipFactory(community=member.community).member,
         )
         BookmarkFactory(
-            content_object=message, user=member.member, community=member.community,
+            content_object=message,
+            user=member.member,
+            community=member.community,
         )
 
         response = client.get(

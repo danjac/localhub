@@ -43,6 +43,7 @@ class TestGetLocalNetworkFlagsCount:
         other = MembershipFactory(member=member.member)
         post = PostFactory(community=other.community)
         FlagFactory(
-            content_object=post, community=post.community,
+            content_object=post,
+            community=post.community,
         )
         assert get_external_flag_count(member.member, member.community) == 0

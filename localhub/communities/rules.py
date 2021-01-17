@@ -65,8 +65,10 @@ rules.add_perm("communities.moderate_community", is_moderator)
 rules.add_perm("communities.view_membership", is_admin_member)
 
 rules.add_perm(
-    "communities.change_membership", is_admin_member & ~is_self,
+    "communities.change_membership",
+    is_admin_member & ~is_self,
 )
 rules.add_perm(
-    "communities.delete_membership", is_admin_member | is_self,
+    "communities.delete_membership",
+    is_admin_member | is_self,
 )

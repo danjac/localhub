@@ -20,7 +20,8 @@ class TestMessageNotificationRead:
         message = MessageFactory()
         NotificationFactory(content_object=message)
         notification_read.send(
-            sender=Message, instance=message,
+            sender=Message,
+            instance=message,
         )
         message.refresh_from_db()
         assert message.read

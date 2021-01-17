@@ -35,7 +35,11 @@ class TestRenderMessage:
         message = MessageFactory(
             sender=auth_request.user, community=auth_request.community, parent=parent
         )
-        context = render_message(auth_request, auth_request.user, message,)
+        context = render_message(
+            auth_request,
+            auth_request.user,
+            message,
+        )
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
         )
@@ -53,7 +57,11 @@ class TestRenderMessage:
             parent=parent,
         )
         message.sender_has_blocked = False
-        context = render_message(auth_request, auth_request.user, message,)
+        context = render_message(
+            auth_request,
+            auth_request.user,
+            message,
+        )
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
         )
@@ -68,7 +76,11 @@ class TestRenderMessage:
             recipient=auth_request.user, community=auth_request.community
         )
         message.sender_has_blocked = True
-        context = render_message(auth_request, auth_request.user, message,)
+        context = render_message(
+            auth_request,
+            auth_request.user,
+            message,
+        )
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
         )

@@ -93,7 +93,7 @@ def get_generic_related_count_subquery(
 
     Returns:
         Subquery
-     """
+    """
     return models.Subquery(
         _get_generic_related_by_id_and_content_type(
             models.OuterRef("pk"),

@@ -313,7 +313,11 @@ def user_follow_view(request, username, remove=False):
         TurboFrame(f"user-{user.id}-follow")
         .template(
             "users/includes/follow.html",
-            {"object": user, "is_following": not (remove), "is_detail": is_detail,},
+            {
+                "object": user,
+                "is_following": not (remove),
+                "is_detail": is_detail,
+            },
         )
         .response(request)
     )

@@ -157,7 +157,8 @@ def tag_block_view(request, pk, remove=False):
     return (
         TurboFrame(f"hashtag-{tag.id}-block")
         .template(
-            "hashtags/includes/block.html", {"object": tag, "is_blocked": not (remove)},
+            "hashtags/includes/block.html",
+            {"object": tag, "is_blocked": not (remove)},
         )
         .response(request)
     )

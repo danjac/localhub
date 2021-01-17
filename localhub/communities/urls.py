@@ -16,7 +16,9 @@ urlpatterns = [
     path("~leave/", views.membership_leave_view, name="membership_leave"),
     path("memberships/", views.membership_list_view, name="membership_list"),
     path(
-        "memberships/<int:pk>/", views.membership_detail_view, name="membership_detail",
+        "memberships/<int:pk>/",
+        views.membership_detail_view,
+        name="membership_detail",
     ),
     path(
         "memberships/<int:pk>/~update/",

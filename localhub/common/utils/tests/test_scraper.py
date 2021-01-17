@@ -23,7 +23,8 @@ class TestHTMLScraperFromUrl:
                 pass
 
         mocker.patch(
-            "requests.get", return_value=MockResponse(),
+            "requests.get",
+            return_value=MockResponse(),
         )
 
         with pytest.raises(HTMLScraper.Invalid):
@@ -52,7 +53,8 @@ class TestHTMLScraperFromUrl:
                 pass
 
         mocker.patch(
-            "requests.get", return_value=MockResponse(),
+            "requests.get",
+            return_value=MockResponse(),
         )
 
         scraper = HTMLScraper.from_url("http://google.com")
@@ -67,7 +69,8 @@ class TestHTMLScraperFromUrl:
                 raise requests.exceptions.HTTPError()
 
         mocker.patch(
-            "requests.get", return_value=MockResponse(),
+            "requests.get",
+            return_value=MockResponse(),
         )
 
         with pytest.raises(HTMLScraper.Invalid):
@@ -79,7 +82,8 @@ class TestHTMLScraperFromUrl:
     def test_if_request_exception(self, mocker):
 
         mocker.patch(
-            "requests.get", side_effect=requests.RequestException,
+            "requests.get",
+            side_effect=requests.RequestException,
         )
 
         with pytest.raises(HTMLScraper.Invalid):

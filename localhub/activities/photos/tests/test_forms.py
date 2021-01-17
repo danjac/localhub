@@ -17,7 +17,9 @@ class TestPhotoForm:
         form = PhotoForm(
             instance=photo,
             *self.get_form_data(
-                image=fake_image, extract_gps_data=True, clear_gps_data=False,
+                image=fake_image,
+                extract_gps_data=True,
+                clear_gps_data=False,
             )
         )
 

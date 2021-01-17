@@ -200,7 +200,12 @@ def event_calendar_view(request):
 def make_datetime(day, month, year):
     try:
         return timezone.localtime(
-            datetime.datetime(day=day, month=month, year=year, tzinfo=pytz.UTC,)
+            datetime.datetime(
+                day=day,
+                month=month,
+                year=year,
+                tzinfo=pytz.UTC,
+            )
         )
     except ValueError:
         raise Http404("Invalid date")

@@ -96,7 +96,10 @@ class CommunityListView(SearchMixin, ListView):
         return dict(
             self.get_member_communities()
             .filter(
-                membership__role__in=(Membership.Role.ADMIN, Membership.Role.MODERATOR,)
+                membership__role__in=(
+                    Membership.Role.ADMIN,
+                    Membership.Role.MODERATOR,
+                )
             )
             .annotate(num_flags=Count("flag", distinct=True))
             .values_list("id", "num_flags")
@@ -215,14 +218,19 @@ class CommunityWelcomeView(LoginRequiredMixin, BaseCommunityDetailView):
 
     def is_inactive_member(self):
         return rules.test_rule(
-            "communities.is_inactive_member", self.request.user, self.request.community,
+            "communities.is_inactive_member",
+            self.request.user,
+            self.request.community,
         )
 
     def get_join_request(self):
         return JoinRequest.objects.filter(
             sender=self.request.user,
             community=self.request.community,
-            status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED,),
+            status__in=(
+                JoinRequest.Status.PENDING,
+                JoinRequest.Status.REJECTED,
+            ),
         ).first()
 
     def get_invite(self):
@@ -261,7 +269,10 @@ community_not_found_view = CommunityNotFoundView.as_view()
 
 
 class MembershipListView(
-    CommunityAdminRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
+    CommunityAdminRequiredMixin,
+    MembershipQuerySetMixin,
+    SearchMixin,
+    ListView,
 ):
     paginate_by = settings.LONG_PAGE_SIZE
     model = Membership
@@ -278,7 +289,9 @@ membership_list_view = MembershipListView.as_view()
 
 
 class MembershipDetailView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, DetailView,
+    PermissionRequiredMixin,
+    MembershipQuerySetMixin,
+    DetailView,
 ):
 
     permission_required = "communities.view_membership"
@@ -304,7 +317,9 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class BaseMembershipDeleteView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, DeleteView,
+    PermissionRequiredMixin,
+    MembershipQuerySetMixin,
+    DeleteView,
 ):
     permission_required = "communities.delete_membership"
     model = Membership

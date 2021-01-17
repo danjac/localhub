@@ -113,6 +113,8 @@ class Migration(migrations.Migration):
                 ("latitude", models.FloatField(blank=True, null=True)),
                 ("longitude", models.FloatField(blank=True, null=True)),
             ],
-            options={"abstract": False,},
+            options={
+                "abstract": False,
+            },
         ),
     ]

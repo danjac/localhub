@@ -141,7 +141,9 @@ def comment_bookmark_view(request, pk, remove=False):
     else:
         try:
             Bookmark.objects.create(
-                user=request.user, community=request.community, content_object=comment,
+                user=request.user,
+                community=request.community,
+                content_object=comment,
             )
             messages.success(request, _("You have bookmarked this comment"))
         except IntegrityError:
@@ -230,7 +232,10 @@ def comment_flag_view(request, pk):
 
 def get_comment_or_404(request, pk, *, queryset=None, permission=None):
 
-    comment = get_object_or_404(queryset or get_comment_queryset(request), pk=pk,)
+    comment = get_object_or_404(
+        queryset or get_comment_queryset(request),
+        pk=pk,
+    )
 
     if permission:
         has_perm_or_403(request.user, permission, comment)

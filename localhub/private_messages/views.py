@@ -154,7 +154,9 @@ def message_create_view(request):
             return redirect_303(message)
 
         return render_form_response(
-            request, form, "private_messages/message_form.html",
+            request,
+            form,
+            "private_messages/message_form.html",
         )
 
 
@@ -174,7 +176,10 @@ def inbox_view(request):
         messages = messages.order_by(F("read").desc(nulls_first=True), "-created")
 
     return render_paginated_queryset(
-        request, messages, "private_messages/inbox.html", {"search": search},
+        request,
+        messages,
+        "private_messages/inbox.html",
+        {"search": search},
     )
 
 
@@ -194,7 +199,10 @@ def outbox_view(request):
         messages = messages.order_by("-created")
 
     return render_paginated_queryset(
-        request, messages, "private_messages/outbox.html", {"search": search},
+        request,
+        messages,
+        "private_messages/outbox.html",
+        {"search": search},
     )
 
 
@@ -273,7 +281,9 @@ def message_bookmark_view(request, pk, remove=False):
 
         try:
             Bookmark.objects.create(
-                user=request.user, community=request.community, content_object=message,
+                user=request.user,
+                community=request.community,
+                content_object=message,
             )
             messages.success(request, _("You have bookmarked this message"))
         except IntegrityError:

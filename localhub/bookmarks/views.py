@@ -56,7 +56,11 @@ def bookmarks_message_list_view(request):
 
     messages = messages.order_by(*ordering)
 
-    return render_paginated_queryset(request, messages, "bookmarks/messages.html",)
+    return render_paginated_queryset(
+        request,
+        messages,
+        "bookmarks/messages.html",
+    )
 
 
 @community_required

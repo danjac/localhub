@@ -294,27 +294,35 @@ class TestMessageManager:
 
     def test_with_has_bookmarked_if_user_has_not_bookmarked(self, message, user):
         BookmarkFactory(
-            user=user, content_object=message, community=message.community,
+            user=user,
+            content_object=message,
+            community=message.community,
         )
         message = Message.objects.with_has_bookmarked(UserFactory()).get()
         assert not message.has_bookmarked
 
     def test_with_has_bookmarked_if_user_has_bookmarked(self, message, user):
         BookmarkFactory(
-            user=user, content_object=message, community=message.community,
+            user=user,
+            content_object=message,
+            community=message.community,
         )
         message = Message.objects.with_has_bookmarked(user).get()
         assert message.has_bookmarked
 
     def test_bookmarked_if_user_has_not_bookmarked(self, message, user):
         BookmarkFactory(
-            user=user, content_object=message, community=message.community,
+            user=user,
+            content_object=message,
+            community=message.community,
         )
         assert Message.objects.bookmarked(UserFactory()).count() == 0
 
     def test_bookmarked_if_user_has_bookmarked(self, message, user):
         BookmarkFactory(
-            user=user, content_object=message, community=message.community,
+            user=user,
+            content_object=message,
+            community=message.community,
         )
         messages = Message.objects.bookmarked(user)
         assert messages.count() == 1
@@ -322,7 +330,9 @@ class TestMessageManager:
 
     def test_with_bookmarked_timestamp_if_user_has_not_bookmarked(self, message, user):
         BookmarkFactory(
-            user=user, content_object=message, community=message.community,
+            user=user,
+            content_object=message,
+            community=message.community,
         )
         # test with *another* user
         message = Message.objects.with_bookmarked_timestamp(UserFactory()).first()
@@ -330,7 +340,9 @@ class TestMessageManager:
 
     def test_with_bookmarked_timestamp_if_user_has_bookmarked(self, message, user):
         BookmarkFactory(
-            user=user, content_object=message, community=message.community,
+            user=user,
+            content_object=message,
+            community=message.community,
         )
         message = Message.objects.with_bookmarked_timestamp(user).first()
         assert message.bookmarked is not None

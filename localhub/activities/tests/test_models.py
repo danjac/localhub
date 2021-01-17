@@ -370,7 +370,8 @@ class TestActivityManager:
     def test_for_community(self, community: Community):
 
         post = PostFactory(
-            community=community, owner=MembershipFactory(community=community).member,
+            community=community,
+            owner=MembershipFactory(community=community).member,
         )
         PostFactory(owner=MembershipFactory(community=community).member)
         PostFactory(owner=MembershipFactory(community=community, active=False).member)
@@ -388,7 +389,10 @@ class TestActivityManager:
         post = PostFactory()
         member = MembershipFactory(community=post.community)
         CommentFactory.create_batch(
-            2, content_object=post, owner=member.member, community=member.community,
+            2,
+            content_object=post,
+            owner=member.member,
+            community=member.community,
         )
 
         assert Post.objects.with_num_comments(post.community).get().num_comments == 2
@@ -412,33 +416,42 @@ class TestActivityManager:
 
     def test_with_has_bookmarked_if_user_has_not_bookmarked(self, post, user):
         BookmarkFactory(
-            user=user, content_object=post, community=post.community,
+            user=user,
+            content_object=post,
+            community=post.community,
         )
         activity = Post.objects.with_has_bookmarked(UserFactory()).get()
         assert not activity.has_bookmarked
 
     def test_with_has_bookmarked_if_user_has_bookmarked(self, post, user):
         BookmarkFactory(
-            user=user, content_object=post, community=post.community,
+            user=user,
+            content_object=post,
+            community=post.community,
         )
         activity = Post.objects.with_has_bookmarked(user).get()
         assert activity.has_bookmarked
 
     def test_bookmarked_if_anon_user(self, post, anonymous_user):
         BookmarkFactory(
-            content_object=post, community=post.community,
+            content_object=post,
+            community=post.community,
         )
         assert Post.objects.bookmarked(anonymous_user).count() == 0
 
     def test_bookmarked_if_user_has_not_bookmarked(self, post, user):
         BookmarkFactory(
-            user=user, content_object=post, community=post.community,
+            user=user,
+            content_object=post,
+            community=post.community,
         )
         assert Post.objects.bookmarked(UserFactory()).count() == 0
 
     def test_bookmarked_if_user_has_bookmarked(self, post, user):
         BookmarkFactory(
-            user=user, content_object=post, community=post.community,
+            user=user,
+            content_object=post,
+            community=post.community,
         )
         posts = Post.objects.bookmarked(user)
         assert posts.count() == 1
@@ -446,7 +459,9 @@ class TestActivityManager:
 
     def test_with_bookmarked_timestamp_if_user_has_not_bookmarked(self, post, user):
         BookmarkFactory(
-            user=user, content_object=post, community=post.community,
+            user=user,
+            content_object=post,
+            community=post.community,
         )
         # test with *another* user
         post = Post.objects.with_bookmarked_timestamp(UserFactory()).first()
@@ -454,14 +469,18 @@ class TestActivityManager:
 
     def test_with_bookmarked_timestamp_if_user_has_bookmarked(self, post, user):
         BookmarkFactory(
-            user=user, content_object=post, community=post.community,
+            user=user,
+            content_object=post,
+            community=post.community,
         )
         post = Post.objects.with_bookmarked_timestamp(user).first()
         assert post.bookmarked is not None
 
     def test_with_has_liked_if_anon_user(self, post, anonymous_user):
         LikeFactory(
-            content_object=post, community=post.community, recipient=post.owner,
+            content_object=post,
+            community=post.community,
+            recipient=post.owner,
         )
         activity = Post.objects.with_has_liked(anonymous_user).get()
         assert not activity.has_liked

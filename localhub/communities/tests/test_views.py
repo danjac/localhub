@@ -156,7 +156,8 @@ class TestMembershipListView:
         member = MembershipFactory(community=admin.community)
 
         response = client.get(
-            reverse("communities:membership_list"), {"q": member.member.username},
+            reverse("communities:membership_list"),
+            {"q": member.member.username},
         )
         assert len(response.context["object_list"]) == 1
 

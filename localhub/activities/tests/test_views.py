@@ -81,7 +81,9 @@ class TestActivitySearchView:
     def test_get_hashtag(self, client, member, transactional_db):
         member = MembershipFactory(community=member.community)
         PostFactory(
-            community=member.community, description="#testme", owner=member.member,
+            community=member.community,
+            description="#testme",
+            owner=member.member,
         )
         response = client.get(reverse("activities:search"), {"q": "#testme"})
         assert response.status_code == 200

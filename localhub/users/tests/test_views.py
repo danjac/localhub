@@ -53,7 +53,9 @@ class TestActivityLikesView:
         )
         post = PostFactory(community=owner.community, owner=owner.member)
         LikeFactory(
-            content_object=post, community=post.community, recipient=post.owner,
+            content_object=post,
+            community=post.community,
+            recipient=post.owner,
         )
         response = client.get(reverse("users:activity_likes", args=["danjac"]))
         assert response.status_code == http.HTTPStatus.OK
@@ -79,7 +81,9 @@ class TestActivityMentionsView:
             member=UserFactory(username="danjac"), community=member.community
         )
         post = PostFactory(
-            community=member.community, owner=member.member, mentions="@danjac @tester",
+            community=member.community,
+            owner=member.member,
+            mentions="@danjac @tester",
         )
         response = client.get(reverse("users:activity_mentions", args=["danjac"]))
         assert response.status_code == http.HTTPStatus.OK
@@ -91,7 +95,10 @@ class TestCommentLikesView:
         owner = MembershipFactory(
             member=UserFactory(username="danjac"), community=member.community
         )
-        comment = CommentFactory(community=owner.community, owner=owner.member,)
+        comment = CommentFactory(
+            community=owner.community,
+            owner=owner.member,
+        )
         LikeFactory(
             content_object=comment,
             community=comment.community,
@@ -121,7 +128,9 @@ class TestCommentMentionsView:
             member=UserFactory(username="danjac"), community=member.community
         )
         comment = CommentFactory(
-            community=member.community, owner=member.member, content="@danjac @tester",
+            community=member.community,
+            owner=member.member,
+            content="@danjac @tester",
         )
         response = client.get(reverse("users:comment_mentions", args=["danjac"]))
         assert response.status_code == http.HTTPStatus.OK
@@ -159,7 +168,9 @@ class TestUserCommentsView:
     def test_get(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            content_object=post, owner=member.member, community=member.community,
+            content_object=post,
+            owner=member.member,
+            community=member.community,
         )
         LikeFactory(
             content_object=comment,
@@ -191,10 +202,14 @@ class TestUserActivitiesView:
         EventFactory(community=member.community, owner=member.member)
         # unlikely, but just for testing
         notification = NotificationFactory(
-            recipient=member.member, content_object=member.member, is_read=False,
+            recipient=member.member,
+            content_object=member.member,
+            is_read=False,
         )
         LikeFactory(
-            content_object=post, community=post.community, recipient=post.owner,
+            content_object=post,
+            community=post.community,
+            recipient=post.owner,
         )
 
         response = client.get(
@@ -217,7 +232,9 @@ class TestUserActivitiesView:
             recipient=member.member, content_object=other.member, is_read=False
         )
         LikeFactory(
-            content_object=post, community=post.community, recipient=post.owner,
+            content_object=post,
+            community=post.community,
+            recipient=post.owner,
         )
 
         response = client.get(reverse("users:activities", args=[other.member.username]))
@@ -233,7 +250,8 @@ class TestUserActivitiesView:
         Test for regex
         """
         other = MembershipFactory(
-            community=member.community, member=UserFactory(username="tester@gmail.com"),
+            community=member.community,
+            member=UserFactory(username="tester@gmail.com"),
         )
         response = client.get(reverse("users:activities", args=[other.member.username]))
         assert response.status_code == http.HTTPStatus.OK
@@ -268,7 +286,8 @@ class TestUserDeleteView:
 class TestUserFollowView:
     def test_post(self, client, member, mailoutbox, send_webpush_mock):
         user = MembershipFactory(
-            community=member.community, member=UserFactory(),
+            community=member.community,
+            member=UserFactory(),
         ).member
         response = client.post(reverse("users:follow", args=[user.username]))
         assert response.status_code == http.HTTPStatus.OK
@@ -281,7 +300,8 @@ class TestUserFollowView:
 
     def test_post_user_blocked(self, client, member):
         user = MembershipFactory(
-            community=member.community, member=UserFactory(),
+            community=member.community,
+            member=UserFactory(),
         ).member
         user.blockers.add(member.member)
         response = client.post(reverse("users:follow", args=[user.username]))
@@ -290,7 +310,8 @@ class TestUserFollowView:
 
     def test_post_user_blocking(self, client, member):
         user = MembershipFactory(
-            community=member.community, member=UserFactory(),
+            community=member.community,
+            member=UserFactory(),
         ).member
         member.member.blockers.add(user)
         response = client.post(reverse("users:follow", args=[user.username]))
@@ -356,10 +377,14 @@ class TestUserMessageListView:
     def test_get_if_other(self, client, member):
         other_user = MembershipFactory(community=member.community).member
         from_me = MessageFactory(
-            community=member.community, sender=member.member, recipient=other_user,
+            community=member.community,
+            sender=member.member,
+            recipient=other_user,
         )
         to_me = MessageFactory(
-            community=member.community, sender=other_user, recipient=member.member,
+            community=member.community,
+            sender=other_user,
+            recipient=member.member,
         )
         to_someone_else = MessageFactory(community=member.community, sender=other_user)
         response = client.get(reverse("users:messages", args=[other_user.username]))
@@ -373,10 +398,14 @@ class TestUserMessageListView:
     def test_get_if_current_user(self, client, member):
         other_user = MembershipFactory(community=member.community).member
         from_me = MessageFactory(
-            community=member.community, sender=member.member, recipient=other_user,
+            community=member.community,
+            sender=member.member,
+            recipient=other_user,
         )
         to_me = MessageFactory(
-            community=member.community, sender=other_user, recipient=member.member,
+            community=member.community,
+            sender=other_user,
+            recipient=member.member,
         )
         to_someone_else = MessageFactory(community=member.community, sender=other_user)
         response = client.get(reverse("users:messages", args=[member.member.username]))

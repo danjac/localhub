@@ -89,7 +89,8 @@ class TemplateRenderer:
             str: rendered template
         """
         return template_engine.render_to_string(
-            self.get_template_names(suffix), context=self.get_context(extra_context),
+            self.get_template_names(suffix),
+            context=self.get_context(extra_context),
         )
 
 
