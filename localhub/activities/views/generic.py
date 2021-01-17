@@ -306,7 +306,8 @@ def activity_delete_view(request, pk, model):
         obj.delete()
 
     messages.success(
-        request, model_translation_string(_("%(model)s has been deleted"), obj)
+        request,
+        model_translation_string(_("%(model)s has been deleted"), obj, capitalize=True),
     )
     target = request.POST.get("target", None)
 
