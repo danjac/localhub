@@ -35,4 +35,5 @@ class FormProcess:
 
 
 def process_form(request, form_class, **form_kwargs):
+    """Handles form processing """
     return FormProcess(request, form_class, form_kwargs)
