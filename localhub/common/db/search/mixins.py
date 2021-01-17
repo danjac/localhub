@@ -4,6 +4,7 @@
 # Django
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db import models
+from django.utils.encoding import force_str
 
 
 class SearchQuerySetMixin:
@@ -16,7 +17,7 @@ class SearchQuerySetMixin:
         """
         if not search_term:
             return self.none()
-        query = SearchQuery(search_term, search_type="websearch")
+        query = SearchQuery(force_str(search_term), search_type="websearch")
         return self.annotate(
             **{
                 search_rank_annotated_name: SearchRank(
