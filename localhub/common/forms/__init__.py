@@ -1,6 +1,8 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import contextlib
 
 # Local
 from .fields import CalendarField
@@ -16,24 +18,11 @@ __all__ = [
 ]
 
 
-class FormProcess:
-    def __init__(self, request, form_class, form_kwargs):
-        self.request = request
-        self.form_class = form_class
-        self.form_kwargs = form_kwargs
-
-    def __enter__(self):
-        if self.request.method == "POST":
-            form = self.form_class(
-                data=self.request.POST, files=self.request.FILES, **self.form_kwargs
-            )
-            return form, form.is_valid()
-        return self.form_class(**self.form_kwargs), False
-
-    def __exit__(self, *args, **kwargs):
-        ...
-
-
+@contextlib.contextmanager
 def process_form(request, form_class, **form_kwargs):
     """Handles form processing """
-    return FormProcess(request, form_class, form_kwargs)
+    if request.method == "POST":
+        form = form_class(data=request.POST, files=request.FILES, **form_kwargs)
+        yield form, form.is_valid()
+    else:
+        yield form_class(**form_kwargs), False
