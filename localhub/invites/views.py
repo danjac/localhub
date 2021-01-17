@@ -7,19 +7,24 @@ import http
 # Django
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
+from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, ListView
 
 # Third Party Libraries
 from turbo_response.views import TurboCreateView
 
 # Localhub
-from localhub.common.mixins import SearchMixin, SuccessHeaderMixin
+from localhub.common.decorators import add_messages_to_response_header
+from localhub.common.mixins import SearchMixin
 from localhub.common.views import ActionView
+from localhub.communities.decorators import community_admin_required
 from localhub.communities.mixins import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
@@ -42,33 +47,27 @@ class BaseInviteRecipientActionView(InviteRecipientQuerySetMixin, ActionView):
     ...
 
 
-class InviteResendView(SuccessHeaderMixin, BaseInviteAdminActionView):
-    def get_queryset(self):
-        return super().get_queryset().pending()
+@community_admin_required
+@login_required
+@add_messages_to_response_header
+@require_POST
+def invite_resend_view(request, pk):
+    invite = get_invite_or_404(request, pk)
+    invite.sent = timezone.now()
+    invite.save()
 
-    def get_success_message(self):
-        return _("Your invitation has been re-sent to %(email)s") % {
-            "email": self.object.email
-        }
+    send_invitation_email(invite)
+    messages.success(
+        request,
+        _("Your invitation has been re-sent to %(email)s") % {"email": invite.email},
+    )
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.sent = timezone.now()
-        self.object.save()
-
-        send_invitation_email(self.object)
-
-        messages.success(request, self.get_success_message())
-
-        return self.render_success_message(
-            HttpResponse(status=http.HTTPStatus.NO_CONTENT)
-        )
+    return HttpResponse(status=http.HTTPStatus.NO_CONTENT)
 
 
-invite_resend_view = InviteResendView.as_view()
-
-
-class InviteAcceptView(BaseInviteRecipientActionView):
+@login_required
+@require_POST
+def invite_accept_view(request, pk):
     """
     Handles an invite accept action.
 
@@ -76,30 +75,21 @@ class InviteAcceptView(BaseInviteRecipientActionView):
     community and the invite is flagged accordingly.
     """
 
-    def get_success_url(self):
-        if (
-            self.object.is_accepted()
-            and self.request.community == self.object.community
-        ):
-            return settings.HOME_PAGE_URL
-        return reverse("invites:received_list")
+    invite = get_recipient_invite_or_404(request, pk)
+    invite.accept(request.user)
+    request.user.notify_on_join(invite.community)
 
-    def get_success_message(self):
-        return _("You are now a member of %(community)s") % {
-            "community": self.object.community.name
-        }
+    messages.success(
+        request,
+        _("You are now a member of %(community)s")
+        % {"community": invite.community.name},
+    )
 
-    def post(self, request, *args, **kwargs):
-
-        self.object = self.get_object()
-        self.object.accept(self.request.user)
-        request.user.notify_on_join(self.object.community)
-
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
-
-
-invite_accept_view = InviteAcceptView.as_view()
+    return redirect(
+        settings.HOME_PAGE_URL
+        if invite.is_accepted() and request.community == invite.community
+        else "invites:received_list"
+    )
 
 
 class InviteRejectView(BaseInviteRecipientActionView):
@@ -241,3 +231,19 @@ class ReceivedInviteListView(InviteRecipientQuerySetMixin, ListView):
 
 
 received_invite_list_view = ReceivedInviteListView.as_view()
+
+
+def get_invite_or_404(request, pk):
+    return get_object_or_404(get_invite_queryset(request), pk=pk)
+
+
+def get_recipient_invite_or_404(request, pk):
+    return get_object_or_404(get_recipient_invite_queryset(request), pk=pk)
+
+
+def get_invite_queryset(request):
+    return Invite.objects.for_community(request.community).select_related("community")
+
+
+def get_recipient_invite_queryset(request):
+    return Invite.objects.pending().for_user(request.user).select_related("community")
