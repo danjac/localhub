@@ -57,11 +57,6 @@ class TestInviteResendView:
 
 
 class TestInviteDeleteView:
-    def test_get(self, client, admin, mailoutbox):
-        invite = InviteFactory(community=admin.community)
-        response = client.get(reverse("invites:delete", args=[invite.id]))
-        assert response.status_code == http.HTTPStatus.OK
-
     def test_post(self, client, admin, mailoutbox):
         invite = InviteFactory(community=admin.community)
         response = client.post(reverse("invites:delete", args=[invite.id]))
@@ -115,9 +110,17 @@ class TestInviteDetailView:
         assert invite.is_pending()
 
     def test_get_current_user_is_not_member(
-        self, client, community, login_user, mailoutbox, send_webpush_mock,
+        self,
+        client,
+        community,
+        login_user,
+        mailoutbox,
+        send_webpush_mock,
     ):
-        invite = InviteFactory(community=community, email=login_user.email,)
+        invite = InviteFactory(
+            community=community,
+            email=login_user.email,
+        )
         response = client.get(reverse("invites:detail", args=[invite.id]))
         assert response.status_code == http.HTTPStatus.OK
         invite.refresh_from_db()
@@ -141,7 +144,8 @@ class TestInviteAcceptView:
         self, client, invite, login_user, mailoutbox, send_webpush_mock
     ):
         response = client.post(
-            reverse("invites:accept", args=[invite.id]), {"accept": 1},
+            reverse("invites:accept", args=[invite.id]),
+            {"accept": 1},
         )
 
         assert response.url == reverse("invites:received_list")
