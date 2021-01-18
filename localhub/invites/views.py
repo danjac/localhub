@@ -20,7 +20,6 @@ from turbo_response import redirect_303, render_form_response
 
 # Localhub
 from localhub.common.decorators import add_messages_to_response_header
-from localhub.common.forms import process_form
 from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_admin_required
 
@@ -92,11 +91,9 @@ def invite_reject_view(request, pk):
 @community_admin_required
 def invite_create_view(request):
 
-    with process_form(request, InviteForm, community=request.community) as (
-        form,
-        success,
-    ):
-        if success:
+    if request.method == "POST":
+        form = InviteForm(data=request.POST, community=request.community)
+        if form.is_valid():
 
             invite = form.save(commit=False)
             invite.sender = request.user
@@ -114,7 +111,9 @@ def invite_create_view(request):
             )
             return redirect_303("invites:list")
 
-        return render_form_response(request, form, "invites/invite_form.html")
+    else:
+        form = InviteForm(community=request.community)
+    return render_form_response(request, form, "invites/invite_form.html")
 
 
 @require_POST

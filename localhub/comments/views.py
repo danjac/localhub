@@ -17,7 +17,6 @@ from turbo_response import TurboFrame, redirect_303, render_form_response
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
-from localhub.common.forms import process_form
 from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.flags.views import handle_flag_create
@@ -77,9 +76,10 @@ def comment_update_view(request, pk):
     comment = get_comment_or_404(request, pk, permission="comments.change_comment")
     frame = TurboFrame(f"comment-{comment.id}-content")
 
-    with process_form(request, CommentForm, instance=comment) as (form, success):
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
 
-        if success:
+        if form.is_valid():
 
             comment = form.save(commit=False)
             comment.editor = request.user
@@ -93,20 +93,22 @@ def comment_update_view(request, pk):
             return frame.template(
                 "comments/includes/content.html", {"comment": comment}
             ).response(request)
+    else:
+        form = CommentForm(instance=comment)
 
-        return frame.template(
-            "comments/includes/comment_form.html", {"form": form, "comment": comment}
-        ).response(request)
+    return frame.template(
+        "comments/includes/comment_form.html", {"form": form, "comment": comment}
+    ).response(request)
 
 
 @login_required
 @community_required
 def comment_reply_view(request, pk):
     parent = get_comment_or_404(request, pk, permission="comments.reply_to_comment")
+    if request.method == "POST":
+        form = CommentForm(request.POST)
 
-    with process_form(request, CommentForm) as (form, success):
-
-        if success:
+        if form.is_valid():
             reply = form.save(commit=False)
             reply.parent = parent
             reply.content_object = parent.content_object
@@ -120,13 +122,15 @@ def comment_reply_view(request, pk):
             return redirect_303(parent.content_object)
 
         form.fields["content"].label = _("Reply")
+    else:
+        form = CommentForm()
 
-        return render_form_response(
-            request,
-            form,
-            "comments/comment_form.html",
-            {"content_object": parent.content_object, "parent": parent},
-        )
+    return render_form_response(
+        request,
+        form,
+        "comments/comment_form.html",
+        {"content_object": parent.content_object, "parent": parent},
+    )
 
 
 @require_POST

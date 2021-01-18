@@ -27,7 +27,6 @@ from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import render_activity_stream
 from localhub.comments.models import Comment
 from localhub.comments.views import get_comment_queryset
-from localhub.common.forms import process_form
 from localhub.common.pagination import get_pagination_context, render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.communities.models import Membership
@@ -276,21 +275,24 @@ def user_autocomplete_list_view(request):
 
 @login_required
 def user_update_view(request):
-    with process_form(request, UserForm, instance=request.user) as (form, success):
-        if success:
+    if request.method == "POST":
+        form = UserForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
             form.save()
             request.user.notify_on_update()
             messages.success(request, _("Your details have been updated"))
             return redirect(request.path)
-        return render_form_response(
-            request,
-            form,
-            "users/user_form.html",
-            {
-                "is_community": request.community.active
-                and is_member(request.user, request.community)
-            },
-        )
+    else:
+        form = UserForm(instance=request.user)
+    return render_form_response(
+        request,
+        form,
+        "users/user_form.html",
+        {
+            "is_community": request.community.active
+            and is_member(request.user, request.community)
+        },
+    )
 
 
 @require_POST

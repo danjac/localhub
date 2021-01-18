@@ -13,7 +13,6 @@ from django.utils.translation import gettext as _
 from turbo_response import redirect_303, render_form_response
 
 # Localhub
-from localhub.common.forms import process_form
 from localhub.communities.decorators import community_moderator_required
 
 # Local
@@ -42,8 +41,9 @@ def flag_delete_view(request, pk):
 
 
 def handle_flag_create(request, model):
-    with process_form(request, FlagForm) as (form, success):
-        if success:
+    if request.method == "POST":
+        form = FlagForm(request.POST)
+        if form.is_valid():
             flag = form.save(commit=False)
             flag.content_object = model
             flag.community = request.community
@@ -57,7 +57,9 @@ def handle_flag_create(request, model):
             }
             messages.success(request, success_message)
             return redirect_303(model)
+    else:
+        form = FlagForm()
 
-        return render_form_response(
-            request, form, "flags/flag_form.html", context={"parent": model}
-        )
+    return render_form_response(
+        request, form, "flags/flag_form.html", context={"parent": model}
+    )

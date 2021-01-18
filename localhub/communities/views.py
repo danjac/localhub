@@ -17,7 +17,6 @@ import rules
 from turbo_response import redirect_303, render_form_response
 
 # Localhub
-from localhub.common.forms import process_form
 from localhub.common.pagination import render_paginated_queryset
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
@@ -125,19 +124,20 @@ def community_list_view(request):
 @community_admin_required
 @login_required
 def community_update_view(request):
-    with process_form(request, CommunityForm, instance=request.community) as (
-        form,
-        success,
-    ):
-        if success:
+    if request.method == "POST":
+        form = CommunityForm(request.POST, request.FILES, instance=request.community)
+        if form.is_valid():
             form.save()
             messages.success(request, _("Community settings have been updated"))
             return redirect_303(request.path)
-        return render_form_response(
-            request,
-            form,
-            "communities/community_form.html",
-        )
+    else:
+        form = CommunityForm(instance=request.community)
+
+    return render_form_response(
+        request,
+        form,
+        "communities/community_form.html",
+    )
 
 
 @community_required
@@ -232,14 +232,18 @@ def membership_update_view(request, pk):
     member = get_membership_or_404(
         request, pk, permission="communities.change_membership"
     )
-    with process_form(request, MembershipForm, instance=member) as (form, success):
-        if success:
+    if request.method == "POST":
+        form = MembershipForm(request.POST, instance=member)
+        if form.is_valid():
             form.save()
             messages.success(request, _("Membership has been updated"))
             return redirect_303(member)
-        return render_form_response(
-            request, form, "communities/membership_form.html", {"membership": member}
-        )
+    else:
+        form = MembershipForm(instance=member)
+
+    return render_form_response(
+        request, form, "communities/membership_form.html", {"membership": member}
+    )
 
 
 @require_POST

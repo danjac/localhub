@@ -20,7 +20,6 @@ from turbo_response import TurboFrame, TurboStream, redirect_303, render_form_re
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
 from localhub.common.decorators import add_messages_to_response_header
-from localhub.common.forms import process_form
 from localhub.common.pagination import get_pagination_context, render_paginated_queryset
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.communities.decorators import community_required
@@ -67,28 +66,28 @@ def create_comment_view(request, pk, model):
     )
     has_perm_or_403(request.user, "activities.create_comment", obj)
 
-    with process_form(request, CommentForm) as (form, success):
-        if success:
+    form = CommentForm(request.POST)
+    if form.is_valid():
 
-            comment = form.save(commit=False)
-            comment.content_object = obj
-            comment.community = request.community
-            comment.owner = request.user
-            comment.save()
+        comment = form.save(commit=False)
+        comment.content_object = obj
+        comment.community = request.community
+        comment.owner = request.user
+        comment.save()
 
-            comment.notify_on_create()
+        comment.notify_on_create()
 
-            messages.success(request, _("Your comment has been posted"))
+        messages.success(request, _("Your comment has been posted"))
 
-            return redirect(obj)
+        return redirect(obj)
 
-        return (
-            TurboStream("comment-form")
-            .replace.template(
-                "activities/includes/comment_form.html", {"form": form, "object": obj}
-            )
-            .response(request)
+    return (
+        TurboStream("comment-form")
+        .replace.template(
+            "activities/includes/comment_form.html", {"form": form, "object": obj}
         )
+        .response(request)
+    )
 
 
 @login_required
@@ -450,9 +449,9 @@ def handle_activity_update(
 def process_activity_create_form(
     request, model, form_class, *, is_private=False, **form_kwargs
 ):
-
-    with process_form(request, form_class, **form_kwargs) as (form, success):
-        if success:
+    if request.method == "POST":
+        form = form_class(request.POST, request.FILES, **form_kwargs)
+        if form.is_valid():
 
             publish = is_private is False and "save_private" not in request.POST
 
@@ -477,18 +476,17 @@ def process_activity_create_form(
             messages.success(request, model_translation_string(success_message, obj))
 
             return obj, form, True
+    else:
+        form = form_class(**form_kwargs)
 
     return None, form, False
 
 
 def process_activity_update_form(request, form_class, instance, **form_kwargs):
 
-    with process_form(request, form_class, instance=instance, **form_kwargs) as (
-        form,
-        success,
-    ):
-
-        if success:
+    if request.method == "POST":
+        form = form_class(request.POST, request.FILES, instance=instance, **form_kwargs)
+        if form.is_valid():
             instance = form.save(commit=False)
             instance.editor = request.user
             instance.edited = timezone.now()
@@ -506,6 +504,9 @@ def process_activity_update_form(request, form_class, instance, **form_kwargs):
             messages.success(request, success_message)
 
             return instance, form, True
+    else:
+        form = form_class(instance=instance, **form_kwargs)
+
     return instance, form, False
 
 

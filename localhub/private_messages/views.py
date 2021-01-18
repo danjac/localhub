@@ -18,7 +18,6 @@ from turbo_response import TurboFrame, TurboStream, redirect_303, render_form_re
 # Localhub
 from localhub.bookmarks.models import Bookmark
 from localhub.common.decorators import add_messages_to_response_header
-from localhub.common.forms import process_form
 from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_required
 from localhub.users.utils import has_perm_or_403
@@ -48,9 +47,10 @@ def message_reply_view(request, pk, is_follow_up=False):
     parent = get_object_or_404(qs, pk=pk)
     recipient = parent.get_other_user(request.user)
 
-    with process_form(request, MessageForm) as (form, success):
+    if request.method == "POST":
+        form = MessageForm(request.POST)
 
-        if success:
+        if form.is_valid():
 
             message = form.save(commit=False)
             message.community = request.community
@@ -69,18 +69,21 @@ def message_reply_view(request, pk, is_follow_up=False):
 
             return redirect_303(message)
 
-        form["message"].label = (
-            _("Send follow-up to %(recipient)s")
-            if is_follow_up
-            else _("Send reply to %(recipient)s")
-        ) % {"recipient": recipient.get_display_name()}
+    else:
+        form = MessageForm()
 
-        return render_form_response(
-            request,
-            form,
-            "private_messages/message_form.html",
-            {"recipient": recipient, "parent": parent},
-        )
+    form["message"].label = (
+        _("Send follow-up to %(recipient)s")
+        if is_follow_up
+        else _("Send reply to %(recipient)s")
+    ) % {"recipient": recipient.get_display_name()}
+
+    return render_form_response(
+        request,
+        form,
+        "private_messages/message_form.html",
+        {"recipient": recipient, "parent": parent},
+    )
 
 
 @login_required
@@ -97,12 +100,12 @@ def message_recipient_create_view(request, username):
         .exclude_blocking(request.user),
         username__iexact=username,
     )
+    frame = TurboFrame("modal")
 
-    with process_form(request, MessageForm) as (form, success):
+    if request.method == "POST":
+        form = MessageForm(request.POST)
 
-        frame = TurboFrame("modal")
-
-        if success:
+        if form.is_valid():
             message = form.save(commit=False)
             message.community = request.community
             message.sender = request.user
@@ -118,27 +121,29 @@ def message_recipient_create_view(request, username):
             )
 
             return frame.response()
+    else:
+        form = MessageForm()
 
-        form["message"].label = _(
-            "Send message to %(recipient)s"
-            % {"recipient": recipient.get_display_name()}
-        )
+    form["message"].label = _(
+        "Send message to %(recipient)s" % {"recipient": recipient.get_display_name()}
+    )
 
-        return frame.template(
-            "private_messages/includes/modal_message_form.html",
-            {"form": form, "recipient": recipient},
-        ).response(request)
+    return frame.template(
+        "private_messages/includes/modal_message_form.html",
+        {"form": form, "recipient": recipient},
+    ).response(request)
 
 
 @login_required
 @community_required
 def message_create_view(request):
 
-    with process_form(
-        request, MessageRecipientForm, community=request.community, sender=request.user
-    ) as (form, success):
+    if request.method == "POST":
+        form = MessageRecipientForm(
+            request.POST, community=request.community, sender=request.user
+        )
 
-        if success:
+        if form.is_valid():
             message = form.save(commit=False)
             message.community = request.community
             message.sender = request.user
@@ -153,11 +158,14 @@ def message_create_view(request):
 
             return redirect_303(message)
 
-        return render_form_response(
-            request,
-            form,
-            "private_messages/message_form.html",
-        )
+    else:
+        form = MessageRecipientForm(community=request.community, sender=request.user)
+
+    return render_form_response(
+        request,
+        form,
+        "private_messages/message_form.html",
+    )
 
 
 @login_required

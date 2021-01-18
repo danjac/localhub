@@ -15,7 +15,6 @@ from django.views.decorators.http import require_POST
 from turbo_response import redirect_303, render_form_response
 
 # Localhub
-from localhub.common.forms import process_form
 from localhub.common.pagination import render_paginated_queryset
 from localhub.communities.decorators import community_admin_required, community_required
 from localhub.communities.models import Membership
@@ -76,10 +75,11 @@ def join_request_reject_view(request, pk):
 @login_required
 @community_required(allow_non_members=True, permission="join_requests.create")
 def join_request_create_view(request):
-    with process_form(
-        request, JoinRequestForm, user=request.user, community=request.community
-    ) as (form, success):
-        if success:
+    if request.method == "POST":
+        form = JoinRequestForm(
+            data=request.POST, user=request.user, community=request.community
+        )
+        if form.is_valid():
             join_req = form.save()
             send_join_request_email(join_req)
             messages.success(
@@ -90,9 +90,9 @@ def join_request_create_view(request):
                 if request.community.public
                 else "community_welcome"
             )
-        return render_form_response(
-            request, form, "join_requests/joinrequest_form.html"
-        )
+    else:
+        form = JoinRequestForm(user=request.user, community=request.community)
+    return render_form_response(request, form, "join_requests/joinrequest_form.html")
 
 
 @require_POST
