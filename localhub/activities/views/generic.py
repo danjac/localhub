@@ -20,6 +20,7 @@ from turbo_response import TurboFrame, TurboStream, redirect_303, render_form_re
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
 from localhub.common.decorators import add_messages_to_response_header
+from localhub.common.forms import handle_form
 from localhub.common.pagination import get_pagination_context, render_paginated_queryset
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.communities.decorators import community_required
@@ -234,7 +235,7 @@ def activity_bookmark_view(request, pk, model, remove=False):
         except IntegrityError:
             pass
 
-    if request.accept_turbo_stream:
+    if request.turbo:
         return (
             TurboFrame(f"{obj.get_dom_id()}-bookmark")
             .template(
@@ -277,7 +278,7 @@ def activity_like_view(request, pk, model, remove=False):
         except IntegrityError:
             pass
 
-    if request.accept_turbo_stream:
+    if request.turbo:
         return (
             TurboFrame(f"{obj.get_dom_id()}-like")
             .template(
@@ -449,10 +450,8 @@ def handle_activity_update(
 def process_activity_create_form(
     request, model, form_class, *, is_private=False, **form_kwargs
 ):
-    if request.method == "POST":
-        form = form_class(request.POST, request.FILES, **form_kwargs)
-        if form.is_valid():
-
+    with handle_form(request, form_class, **form_kwargs) as (form, is_success):
+        if is_success:
             publish = is_private is False and "save_private" not in request.POST
 
             obj = form.save(commit=False)
@@ -476,17 +475,17 @@ def process_activity_create_form(
             messages.success(request, model_translation_string(success_message, obj))
 
             return obj, form, True
-    else:
-        form = form_class(**form_kwargs)
 
-    return None, form, False
+        return None, form, False
 
 
 def process_activity_update_form(request, form_class, instance, **form_kwargs):
 
-    if request.method == "POST":
-        form = form_class(request.POST, request.FILES, instance=instance, **form_kwargs)
-        if form.is_valid():
+    with handle_form(request, form_class, instance=instance, **form_kwargs) as (
+        form,
+        is_success,
+    ):
+        if is_success:
             instance = form.save(commit=False)
             instance.editor = request.user
             instance.edited = timezone.now()
@@ -504,8 +503,6 @@ def process_activity_update_form(request, form_class, instance, **form_kwargs):
             messages.success(request, success_message)
 
             return instance, form, True
-    else:
-        form = form_class(instance=instance, **form_kwargs)
 
     return instance, form, False
 

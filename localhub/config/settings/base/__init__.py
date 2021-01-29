@@ -103,7 +103,7 @@ MIDDLEWARE = [
     "django.contrib.sites.middleware.CurrentSiteMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-    "turbo_response.middleware.TurboStreamMiddleware",
+    "turbo_response.middleware.TurboMiddleware",
     "localhub.common.middleware.search.SearchMiddleware",
     "localhub.communities.middleware.CurrentCommunityMiddleware",
     "django.middleware.common.CommonMiddleware",
