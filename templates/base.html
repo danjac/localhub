@@ -47,7 +47,7 @@
 </head>
 
 <body class="h-screen container-lg mx-auto antialiased bg-gray-100"
-      data-controller="sidebar">
+      data-controller="sidebar modal">
 
   {% block header %}
   <header class="bg-gradient-to-b from-indigo-900 to-indigo-700 text-white">
@@ -167,7 +167,8 @@
 
       {% include "includes/footer.html" %}
 
-      <turbo-frame id="modal"></turbo-frame>
+      <div id="modal"
+           data-modal-target="modal"></div>
 </body>
 
 </html>

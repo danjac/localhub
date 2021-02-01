@@ -100,7 +100,7 @@ def message_recipient_create_view(request, username):
         .exclude_blocking(request.user),
         username__iexact=username,
     )
-    frame = TurboFrame("modal")
+    stream = TurboStream("modal")
 
     if request.method == "POST":
         form = MessageForm(request.POST)
@@ -120,7 +120,7 @@ def message_recipient_create_view(request, username):
                 % {"recipient": recipient.get_display_name()},
             )
 
-            return frame.response()
+            return stream.update.response()
     else:
         form = MessageForm()
 
@@ -128,7 +128,7 @@ def message_recipient_create_view(request, username):
         "Send message to %(recipient)s" % {"recipient": recipient.get_display_name()}
     )
 
-    return frame.template(
+    return stream.update.template(
         "private_messages/includes/modal_message_form.html",
         {"form": form, "recipient": recipient},
     ).response(request)
